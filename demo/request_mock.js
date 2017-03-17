@@ -1,6 +1,7 @@
 import Mock from 'mockjs';
 
-let user_count = 0;
+let user_count = 1;
+let request_times = 0;
 export function fetchData (count) {
 	var list = [];
 	let Random = Mock.Random;
@@ -17,6 +18,8 @@ export function fetchData (count) {
 			date: Random.date()
 		});
 	}
+
+	request_times++;
 
 	return list;
 }

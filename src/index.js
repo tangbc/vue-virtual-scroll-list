@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { throttle } from './util';
 
+// some data help to calculate
 let delta = {
 	total: 0,
 	direct: '',
@@ -10,6 +11,16 @@ let delta = {
 	all_padding: 0,
 	padding_top: 0,
 	bench_padding: 0
+};
+
+// save scroll direct and last scroll position
+const saveDirect = (scrollTop) => {
+	if (!delta.last_top) {
+		delta.last_top = scrollTop;
+	} else {
+		delta.direct = delta.last_top > scrollTop ? 'UP' : 'DOWN';
+		delta.last_top = scrollTop;
+	}
 };
 
 Vue.component('virtual-list', {
@@ -38,7 +49,7 @@ Vue.component('virtual-list', {
 			let viewHeight = cont.offsetHeight;
 			let listHeight = listbox.offsetHeight;
 
-			this.recordDirect(scrollTop);
+			saveDirect(scrollTop);
 
 			// scroll to top
 			if (scrollTop === 0) {
@@ -55,15 +66,6 @@ Vue.component('virtual-list', {
 				this.showPrev();
 			}
 		}, 16, true, true),
-
-		recordDirect (scrollTop) {
-			if (!delta.last_top) {
-				delta.last_top = scrollTop;
-			} else {
-				delta.direct = delta.last_top > scrollTop ? 'UP' : 'DOWN';
-				delta.last_top = scrollTop;
-			}
-		},
 
 		showNext () {
 			delta.page_type = 'NEXT';
@@ -95,7 +97,7 @@ Vue.component('virtual-list', {
 						}
 
 						return index >= (delta.start_index - this.pageCounts)
-							&& index <= (delta.start_index - 1);
+							&& index < delta.start_index;
 					});
 
 					if (nowStartIndex !== udf) {

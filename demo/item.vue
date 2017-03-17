@@ -37,6 +37,7 @@
 	}
 	.indx {
 		width: 50px;
+		font-weight: bold;
 	}
 	.urid {
 		width: 60px;
