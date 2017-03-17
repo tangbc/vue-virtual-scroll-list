@@ -3,11 +3,18 @@ import { throttle } from './util';
 
 // some data help to calculate
 let delta = {
-	total: 0,
+	// about scroll
 	direct: '',
 	last_top: 0,
 	page_type: '',
+
+	// about data
+	total: 0,
+	joints: 0,
 	start_index: 0,
+
+	// about style
+	view_height: 0,
 	all_padding: 0,
 	padding_top: 0,
 	bench_padding: 0
@@ -42,12 +49,8 @@ Vue.component('virtual-list', {
 
 	methods: {
 		onScroll: throttle(function () {
-			let cont = this.$refs.container;
-			let listbox = this.$refs.listbox;
-
-			let scrollTop = cont.scrollTop;
-			let viewHeight = cont.offsetHeight;
-			let listHeight = listbox.offsetHeight;
+			let scrollTop = this.$refs.container.scrollTop;
+			let listHeight = this.$refs.listbox.offsetHeight;
 
 			saveDirect(scrollTop);
 
@@ -58,7 +61,7 @@ Vue.component('virtual-list', {
 
 			// scroll to bottom
 			let paddingBottom = delta.all_padding - delta.padding_top;
-			if (listHeight <= scrollTop + viewHeight + paddingBottom) {
+			if (listHeight <= scrollTop + delta.view_height + paddingBottom) {
 				this.showNext();
 			}
 
@@ -137,9 +140,16 @@ Vue.component('virtual-list', {
 		}
 	},
 
-	mounted () {
-		delta.bench_padding = Math.ceil(this.remain / 2) * this.unit;
+	beforeMount () {
+		delta.view_height = this.remain * this.unit;
 	},
+
+	mounted () {
+		delta.joints = Math.ceil(this.remain / 2);
+		delta.bench_padding = delta.joints * this.unit;
+	},
+
+	beforeUpdate () {},
 
 	updated () {
 		window.requestAnimationFrame(() => {
@@ -156,7 +166,7 @@ Vue.component('virtual-list', {
 			'class': 'virtual-list',
 			'style': {
 				'overflow-y': 'auto',
-				'height': (this.remain * this.unit) + 'px'
+				'height': delta.view_height + 'px'
 			},
 			'on': {
 				'scroll': this.onScroll

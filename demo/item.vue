@@ -3,7 +3,6 @@
 		<ul class="user-list">
 			<li class="user-item indx">{{ item.indx }}</li>
 			<li class="user-item name">{{ item.name }}</li>
-			<li class="user-item urid">{{ item.urid }}</li>
 			<li class="user-item date">{{ item.date }}</li>
 		</ul>
 	</div>
@@ -22,30 +21,30 @@
 		height: 30px;
 		line-height: 30px;
 	}
-	.user:nth-child(2n) {
+	/*.user:nth-child(2n) {
 		background: #efefef;
 	}
 	.user:nth-child(2n-1) {
 		background: #d1e3f5;
-	}
+	}*/
 	.user-list {
 		list-style: none;
 	}
 	.user-item {
 		display: inline-block;
-		text-align: center;
 	}
 	.indx {
 		width: 50px;
 		font-weight: bold;
-	}
-	.urid {
-		width: 60px;
+		text-align: center;
 	}
 	.name {
-		width: 120px;
+		width: 180px;
+		padding-left: 20px;
+		text-align: left;
 	}
 	.date {
-		width: 130px;
+		width: 120px;
+		text-align: right;
 	}
 </style>

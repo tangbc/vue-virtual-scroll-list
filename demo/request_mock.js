@@ -13,8 +13,7 @@ export function fetchData (count) {
 	while (count--) {
 		list.push({
 			indx: user_count++,
-			urid: Random.natural(1000, 9000),
-			name: Random.cname(),
+			name: Random.name(),
 			date: Random.date()
 		});
 	}

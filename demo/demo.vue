@@ -29,6 +29,7 @@
 
 		methods: {
 			onBottom () {
+				console.log('REQUEST NEXT');
 				this.items = this.items.concat(fetchData());
 			}
 		}
