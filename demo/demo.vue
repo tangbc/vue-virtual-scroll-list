@@ -3,7 +3,7 @@
 		<virtual-list
 			:unit="30"
 			:remain="10"
-			:pageCounts="20"
+			:amount="20"
 			v-on:bottom="onBottom"
 		>
 			<Item v-for="item in items" :item="item" :key="item.id" />
@@ -20,6 +20,12 @@
 		name: 'apptest',
 
 		components: { Item },
+
+		watch: {
+			items (list) {
+				document.title = `Totoal: ${list.length}, Padding: ${(list.length - 10) * 30}`;
+			}
+		},
 
 		data () {
 			return {

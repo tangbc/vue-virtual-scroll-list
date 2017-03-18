@@ -1,35 +1,6 @@
 import Vue from 'vue';
 import { throttle } from './util';
 
-// some data help to calculate
-let delta = {
-	// about scroll
-	direct: '',
-	last_top: 0,
-	page_type: '',
-
-	// about data
-	total: 0,
-	joints: 0,
-	start_index: 0,
-
-	// about style
-	view_height: 0,
-	all_padding: 0,
-	padding_top: 0,
-	bench_padding: 0
-};
-
-// save scroll direct and last scroll position
-const saveDirect = (scrollTop) => {
-	if (!delta.last_top) {
-		delta.last_top = scrollTop;
-	} else {
-		delta.direct = delta.last_top > scrollTop ? 'UP' : 'DOWN';
-		delta.last_top = scrollTop;
-	}
-};
-
 Vue.component('virtual-list', {
 
 	props: {
@@ -41,18 +12,36 @@ Vue.component('virtual-list', {
 			type: Number,
 			required: true
 		},
-		pageCounts: {
+		amount: {
 			type: Number,
 			required: true
 		}
 	},
 
+	// an object helping to calculate
+	delta: {
+		// scroll
+		direct: '',
+		last_top: 0,
+		page_type: '',
+		// data
+		total: 0,
+		joints: 0,
+		start_index: 0,
+		// style
+		view_height: 0,
+		all_padding: 0,
+		padding_top: 0,
+		bench_padding: 0
+	},
+
 	methods: {
 		onScroll: throttle(function () {
+			let delta = this.$options.delta;
 			let scrollTop = this.$refs.container.scrollTop;
 			let listHeight = this.$refs.listbox.offsetHeight;
 
-			saveDirect(scrollTop);
+			this.saveDirect(scrollTop);
 
 			// scroll to top
 			if (scrollTop === 0) {
@@ -70,19 +59,38 @@ Vue.component('virtual-list', {
 			}
 		}, 16, true, true),
 
+		saveDirect (scrollTop) {
+			let delta = this.$options.delta;
+
+			if (!delta.last_top) {
+				delta.last_top = scrollTop;
+			} else {
+				delta.direct = delta.last_top > scrollTop ? 'UP' : 'DOWN';
+				delta.last_top = scrollTop;
+			}
+		},
+
 		showNext () {
+			let delta = this.$options.delta;
+
 			delta.page_type = 'NEXT';
-			this.$emit('bottom');
+			if (delta.total - delta.start_index <= this.amount) {
+				this.$emit('bottom');
+			} else {
+				delta.start_index = delta.start_index + this.amount;
+				this.$forceUpdate();
+			}
 		},
 
 		showPrev () {
-			delta.page_type = 'PREV';
+			this.$options.delta.page_type = 'PREV';
 			this.$forceUpdate();
 			this.$emit('prev');
 		},
 
 		filter (items) {
 			let length = items.length;
+			let delta = this.$options.delta;
 			let nowStartIndex, udf, list = [];
 
 			if (!delta.total) {
@@ -92,14 +100,14 @@ Vue.component('virtual-list', {
 			if (delta.page_type === 'PREV') {
 				// already the first page
 				if (delta.start_index === 0) {
-					list = items.slice(0, this.pageCounts);
+					list = items.slice(0, this.amount);
 				} else {
 					list = items.filter((item, index) => {
-						if (index === delta.start_index - this.pageCounts) {
+						if (index === delta.start_index - this.amount) {
 							nowStartIndex = index;
 						}
 
-						return index >= (delta.start_index - this.pageCounts)
+						return index >= (delta.start_index - this.amount)
 							&& index < delta.start_index;
 					});
 
@@ -110,30 +118,38 @@ Vue.component('virtual-list', {
 					delta.padding_top = delta.start_index * this.unit;
 				}
 			} else {
+				// flipping next or first render
+
 				// virtual list has no any increase
+				// just flip to next page from start index
 				if (length === delta.total) {
-					list = items;
+					list = items.filter((item, index) => {
+						return index >= delta.start_index
+							&& index < delta.start_index + this.amount;
+					});
 				} else {
 					list = items.filter((item, index) => {
-						if (index === delta.start_index + this.pageCounts) {
+						if (index === delta.start_index + this.amount) {
 							nowStartIndex = index;
 						}
 
-						return index >= (delta.start_index + this.pageCounts)
-							&& index < (delta.start_index + this.pageCounts * 2);
+						return index >= (delta.start_index + this.amount)
+							&& index < (delta.start_index + this.amount * 2);
 					});
 
 					if (nowStartIndex !== udf) {
 						delta.start_index = nowStartIndex;
 					}
 
-					// item counts of all virtual list
+					// save virtual list new length
 					delta.total = length;
-					// all padding pixel, except remain in viewport items
+					// all padding pixel, include top and bottom
+					// except remain and calculate when component update
 					delta.all_padding = (length - this.remain) * this.unit;
-					// padding-top piexl
-					delta.padding_top = delta.start_index * this.unit;
 				}
+
+				// padding-top piexl
+				delta.padding_top = delta.start_index * this.unit;
 			}
 
 			return list;
@@ -141,10 +157,11 @@ Vue.component('virtual-list', {
 	},
 
 	beforeMount () {
-		delta.view_height = this.remain * this.unit;
+		this.$options.delta.view_height = this.remain * this.unit;
 	},
 
 	mounted () {
+		let delta = this.$options.delta;
 		delta.joints = Math.ceil(this.remain / 2);
 		delta.bench_padding = delta.joints * this.unit;
 	},
@@ -152,12 +169,14 @@ Vue.component('virtual-list', {
 	beforeUpdate () {},
 
 	updated () {
+		let delta = this.$options.delta;
 		window.requestAnimationFrame(() => {
 			this.$refs.container.scrollTop = delta.padding_top + delta.bench_padding;
 		});
 	},
 
 	render (createElement) {
+		let delta = this.$options.delta;
 		let slots = this.$slots.default;
 		let showList = this.filter(slots);
 
