@@ -45,7 +45,7 @@ Vue.component('virtual-list', {
 
 			// scroll to top
 			if (scrollTop === 0) {
-				this.$emit('top');
+				this.$emit('toTop');
 			}
 
 			// scroll to bottom
@@ -57,7 +57,7 @@ Vue.component('virtual-list', {
 			if (delta.direct === 'UP' && scrollTop < delta.padding_top) {
 				this.showPrev();
 			}
-		}, 16, true, true),
+		}, 10, true, true),
 
 		saveDirect (scrollTop) {
 			let delta = this.$options.delta;
@@ -75,7 +75,7 @@ Vue.component('virtual-list', {
 
 			delta.page_type = 'NEXT';
 			if (delta.total - delta.start_index <= this.amount) {
-				this.$emit('bottom');
+				this.$emit('toBottom');
 			} else {
 				delta.start_index = delta.start_index + this.amount;
 				this.$forceUpdate();
@@ -85,7 +85,7 @@ Vue.component('virtual-list', {
 		showPrev () {
 			this.$options.delta.page_type = 'PREV';
 			this.$forceUpdate();
-			this.$emit('prev');
+			this.$emit('toPrev');
 		},
 
 		filter (items) {
@@ -114,9 +114,9 @@ Vue.component('virtual-list', {
 					if (nowStartIndex !== udf) {
 						delta.start_index = nowStartIndex;
 					}
-
-					delta.padding_top = delta.start_index * this.unit;
 				}
+
+				delta.padding_top = delta.start_index * this.unit;
 			} else {
 				// flipping next or first render
 
@@ -143,11 +143,11 @@ Vue.component('virtual-list', {
 
 					// save virtual list new length
 					delta.total = length;
-					// all padding pixel, include top and bottom
-					// except remain and calculate when component update
-					delta.all_padding = (length - this.remain) * this.unit;
 				}
 
+				// all padding pixel, include top and bottom
+				// except amount and calculate when component update
+				delta.all_padding = (length - this.amount) * this.unit;
 				// padding-top piexl
 				delta.padding_top = delta.start_index * this.unit;
 			}
@@ -177,8 +177,7 @@ Vue.component('virtual-list', {
 
 	render (createElement) {
 		let delta = this.$options.delta;
-		let slots = this.$slots.default;
-		let showList = this.filter(slots);
+		let showList = this.filter(this.$slots.default);
 
 		return createElement('div', {
 			'ref': 'container',

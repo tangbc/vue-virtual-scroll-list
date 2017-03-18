@@ -1,9 +1,9 @@
 <template>
-	<div class="user">
-		<ul class="user-list">
-			<li class="user-item indx">{{ item.indx }}</li>
-			<li class="user-item name">{{ item.name }}</li>
-			<li class="user-item date">{{ item.date }}</li>
+	<div class="list-item">
+		<ul class="list-item-box">
+			<li class="index">{{ item.index }}</li>
+			<li class="name">{{ item.name }}</li>
+			<li class="date">{{ item.date }}</li>
 		</ul>
 	</div>
 </template>
@@ -17,23 +17,23 @@
 </script>
 
 <style scoped>
-	.user {
+	.list-item {
 		height: 30px;
 		line-height: 30px;
 	}
-	/*.user:nth-child(2n) {
+	/*.list-item:nth-child(2n) {
 		background: #efefef;
 	}
-	.user:nth-child(2n-1) {
+	.list-item:nth-child(2n-1) {
 		background: #d1e3f5;
 	}*/
-	.user-list {
+	.list-item-box {
 		list-style: none;
 	}
-	.user-item {
+	.list-item-box li {
 		display: inline-block;
 	}
-	.indx {
+	.index {
 		width: 50px;
 		font-weight: bold;
 		text-align: center;

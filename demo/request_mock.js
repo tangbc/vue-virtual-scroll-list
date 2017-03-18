@@ -2,17 +2,17 @@ import Mock from 'mockjs';
 
 let user_count = 1;
 let request_times = 0;
-export function fetchData (count) {
+export function fetchData (count = 20, times) {
 	var list = [];
 	let Random = Mock.Random;
 
-	if (!count) {
-		count = 20;
+	if (request_times === times) {
+		return [];
 	}
 
 	while (count--) {
 		list.push({
-			indx: user_count++,
+			index: user_count++,
 			name: Random.name(),
 			date: Random.date()
 		});

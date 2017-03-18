@@ -4,10 +4,12 @@
 			:unit="30"
 			:remain="10"
 			:amount="20"
-			v-on:bottom="onBottom"
+			v-on:toBottom="onBottom"
 		>
 			<Item v-for="item in items" :item="item" :key="item.id" />
 		</virtual-list>
+
+		<!-- <Item v-for="item in items" :item="item" :key="item.id" /> -->
 	</div>
 </template>
 
@@ -23,20 +25,22 @@
 
 		watch: {
 			items (list) {
-				document.title = `Totoal: ${list.length}, Padding: ${(list.length - 10) * 30}`;
+				document.title = `Totoal: ${list.length}`;
 			}
 		},
 
 		data () {
 			return {
-				items: fetchData()
+				items: fetchData(100)
 			}
 		},
 
 		methods: {
 			onBottom () {
-				console.log('REQUEST NEXT');
-				this.items = this.items.concat(fetchData());
+				// let list = fetchData();
+				// if (list.length) {
+				// 	this.items = this.items.concat(list);
+				// }
 			}
 		}
 	}
