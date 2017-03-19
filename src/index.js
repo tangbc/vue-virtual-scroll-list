@@ -100,7 +100,9 @@ Vue.component('virtual-list', {
 			if (delta.page_type === 'PREV') {
 				// already the first page
 				if (delta.start_index === 0) {
-					list = items.slice(0, this.amount);
+					list = items.filter((item, index) => {
+						return index >= 0 && index < this.amount;
+					});
 				} else {
 					list = items.filter((item, index) => {
 						if (index === delta.start_index - this.amount) {
@@ -157,20 +159,15 @@ Vue.component('virtual-list', {
 	},
 
 	beforeMount () {
-		this.$options.delta.view_height = this.remain * this.unit;
-	},
-
-	mounted () {
 		let delta = this.$options.delta;
 		delta.joints = Math.ceil(this.remain / 2);
+		delta.view_height = this.remain * this.unit;
 		delta.bench_padding = delta.joints * this.unit;
 	},
 
-	beforeUpdate () {},
-
 	updated () {
-		let delta = this.$options.delta;
 		window.requestAnimationFrame(() => {
+			let delta = this.$options.delta;
 			this.$refs.container.scrollTop = delta.padding_top + delta.bench_padding;
 		});
 	},
