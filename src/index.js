@@ -1,18 +1,13 @@
 import Vue from 'vue';
-import { throttle } from './util';
 
-Vue.component('virtual-list', {
+const VirtualList = Vue.component('vue-virtual-scroll-list', {
 
 	props: {
-		unit: {
+		itemHeight: {
 			type: Number,
 			required: true
 		},
-		remain: {
-			type: Number,
-			required: true
-		},
-		amount: {
+		remainItems: {
 			type: Number,
 			required: true
 		}
@@ -20,168 +15,74 @@ Vue.component('virtual-list', {
 
 	// an object helping to calculate
 	delta: {
-		// scroll
-		direct: '',
-		last_top: 0,
-		page_type: '',
-		// data
-		total: 0,
-		joints: 0,
-		start_index: 0,
-		// style
-		view_height: 0,
-		all_padding: 0,
-		padding_top: 0,
-		bench_padding: 0
+		start: 0, // start index
+		end: 0, // end index
+		keeps: 0, // nums of item keeping in real dom
+		total: 0, // all items count
+		viewHeight: 0, // viewport height
+		allPadding: 0, // all padding of not-render-yet doms
+		paddingTop: 0 // container real padding-top
 	},
 
 	methods: {
-		onScroll: throttle(function () {
-			let delta = this.$options.delta;
-			let scrollTop = this.$refs.container.scrollTop;
-			let listHeight = this.$refs.listbox.offsetHeight;
-
-			this.saveDirect(scrollTop);
-
-			// scroll to top
-			if (scrollTop === 0) {
-				this.$emit('toTop');
-			}
-
-			// scroll to bottom
-			let paddingBottom = delta.all_padding - delta.padding_top;
-			if (listHeight <= scrollTop + delta.view_height + paddingBottom) {
-				this.showNext();
-			}
-
-			if (delta.direct === 'UP' && scrollTop < delta.padding_top) {
-				this.showPrev();
-			}
-		}, 10, true, true),
-
-		saveDirect (scrollTop) {
-			let delta = this.$options.delta;
-
-			if (!delta.last_top) {
-				delta.last_top = scrollTop;
-			} else {
-				delta.direct = delta.last_top > scrollTop ? 'UP' : 'DOWN';
-				delta.last_top = scrollTop;
-			}
+		onScroll () {
+			this.updateZone(this.$refs.container.scrollTop);
 		},
 
-		showNext () {
+		updateZone (offset) {
 			let delta = this.$options.delta;
+			let overs = Math.floor(offset / this.itemHeight);
 
-			delta.page_type = 'NEXT';
-			if (delta.total - delta.start_index <= this.amount) {
-				this.$emit('toBottom');
-			} else {
-				delta.start_index = delta.start_index + this.amount;
-				this.$forceUpdate();
+			// need moving items at lease one unit height
+			// @todo: consider prolong the zone range size
+			let start = overs ? overs : 0;
+			let end = overs ? (overs + delta.keeps) : delta.keeps;
+
+			if (overs + this.remainItems >= delta.total) {
+				end = delta.total;
+				start = delta.total - delta.keeps;
 			}
-		},
 
-		showPrev () {
-			this.$options.delta.page_type = 'PREV';
+			delta.end = end;
+			delta.start = start;
+
+			// call component to update items
 			this.$forceUpdate();
-			this.$emit('toPrev');
 		},
 
 		filter (items) {
-			let length = items.length;
 			let delta = this.$options.delta;
-			let nowStartIndex, udf, list = [];
 
-			if (!delta.total) {
-				delta.total = length;
-			}
+			delta.total = items.length;
+			delta.paddingTop = this.itemHeight * delta.start;
+			delta.allPadding = this.itemHeight * (items.length - delta.keeps);
 
-			if (delta.page_type === 'PREV') {
-				// already the first page
-				if (delta.start_index === 0) {
-					list = items.filter((item, index) => {
-						return index >= 0 && index < this.amount;
-					});
-				} else {
-					list = items.filter((item, index) => {
-						if (index === delta.start_index - this.amount) {
-							nowStartIndex = index;
-						}
-
-						return index >= (delta.start_index - this.amount)
-							&& index < delta.start_index;
-					});
-
-					if (nowStartIndex !== udf) {
-						delta.start_index = nowStartIndex;
-					}
-				}
-
-				delta.padding_top = delta.start_index * this.unit;
-			} else {
-				// flipping next or first render
-
-				// virtual list has no any increase
-				// just flip to next page from start index
-				if (length === delta.total) {
-					list = items.filter((item, index) => {
-						return index >= delta.start_index
-							&& index < delta.start_index + this.amount;
-					});
-				} else {
-					list = items.filter((item, index) => {
-						if (index === delta.start_index + this.amount) {
-							nowStartIndex = index;
-						}
-
-						return index >= (delta.start_index + this.amount)
-							&& index < (delta.start_index + this.amount * 2);
-					});
-
-					if (nowStartIndex !== udf) {
-						delta.start_index = nowStartIndex;
-					}
-
-					// save virtual list new length
-					delta.total = length;
-				}
-
-				// all padding pixel, include top and bottom
-				// except amount and calculate when component update
-				delta.all_padding = (length - this.amount) * this.unit;
-				// padding-top piexl
-				delta.padding_top = delta.start_index * this.unit;
-			}
-
-			return list;
+			return items.filter((item, index) => {
+				return index >= delta.start && index <= delta.end;
+			});
 		}
 	},
 
 	beforeMount () {
+		let remains = this.remainItems;
 		let delta = this.$options.delta;
-		delta.joints = Math.ceil(this.remain / 2);
-		delta.view_height = this.remain * this.unit;
-		delta.bench_padding = delta.joints * this.unit;
-	},
+		let bench = Math.ceil(remains / 2);
 
-	updated () {
-		window.requestAnimationFrame(() => {
-			let delta = this.$options.delta;
-			this.$refs.container.scrollTop = delta.padding_top + delta.bench_padding;
-		});
+		delta.end = remains + bench;
+		delta.keeps = remains + bench;
+		delta.viewHeight = this.itemHeight * remains;
 	},
 
 	render (createElement) {
-		let delta = this.$options.delta;
 		let showList = this.filter(this.$slots.default);
+		let { viewHeight, paddingTop, allPadding } = this.$options.delta;
 
 		return createElement('div', {
 			'ref': 'container',
 			'class': 'virtual-list',
 			'style': {
 				'overflow-y': 'auto',
-				'height': delta.view_height + 'px'
+				'height': viewHeight + 'px'
 			},
 			'on': {
 				'scroll': this.onScroll
@@ -194,11 +95,13 @@ Vue.component('virtual-list', {
 				createElement('div', {
 					'class': 'virtual-list-box-padding',
 					'style': {
-						'padding-top': delta.padding_top + 'px',
-						'padding-bottom': (delta.all_padding - delta.padding_top) + 'px'
+						'padding-top': paddingTop + 'px',
+						'padding-bottom': (allPadding - paddingTop) + 'px'
 					}
 				}, showList)
 			])
 		]);
 	}
 });
+
+export default VirtualList;

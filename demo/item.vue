@@ -20,6 +20,7 @@
 	.list-item {
 		height: 30px;
 		line-height: 30px;
+		border-bottom: 1px solid #eee;
 	}
 	/*.list-item:nth-child(2n) {
 		background: #efefef;

@@ -1,27 +1,24 @@
 <template>
 	<div>
-		<virtual-list
-			:unit="30"
-			:remain="10"
-			:amount="20"
+		<VirtualList
+			:itemHeight="30"
+			:remainItems="10"
 			v-on:toBottom="onBottom"
 		>
-			<Item v-for="item in items" :item="item" :key="item.id" />
-		</virtual-list>
-
-		<!-- <Item v-for="item in items" :item="item" :key="item.id" /> -->
+			<Item v-for="item in items" :item="item" :key="$index" />
+		</VirtualList>
 	</div>
 </template>
 
 <script>
-	import 'virtual-list';
 	import Item from './item.vue';
+	import VirtualList from 'virtual-list';
 	import { fetchData } from './request_mock';
 
 	export default {
 		name: 'apptest',
 
-		components: { Item },
+		components: { Item, VirtualList },
 
 		watch: {
 			items (list) {
@@ -37,7 +34,7 @@
 
 		methods: {
 			onBottom () {
-				// let list = fetchData();
+				// let list = fetchData(20);
 				// if (list.length) {
 				// 	this.items = this.items.concat(list);
 				// }

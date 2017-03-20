@@ -1,6 +1,6 @@
 import Mock from 'mockjs';
 
-let user_count = 1;
+let user_count = 0;
 let request_times = 0;
 export function fetchData (count = 20, times) {
 	var list = [];
