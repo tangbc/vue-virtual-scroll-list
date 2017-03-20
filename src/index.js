@@ -10,7 +10,8 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 		remainItems: {
 			type: Number,
 			required: true
-		}
+		},
+		onScroll: Function
 	},
 
 	// an object helping to calculate
@@ -25,8 +26,14 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 	},
 
 	methods: {
-		onScroll () {
-			this.updateZone(this.$refs.container.scrollTop);
+		handleScroll (e) {
+			let scrollTop = this.$refs.container.scrollTop;
+
+			this.updateZone(scrollTop);
+
+			if (this.onScroll) {
+				this.onScroll(e, scrollTop);
+			}
 		},
 
 		updateZone (offset) {
@@ -41,6 +48,7 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			if (overs + this.remainItems >= delta.total) {
 				end = delta.total;
 				start = delta.total - delta.keeps;
+				this.$emit('end');
 			}
 
 			delta.end = end;
@@ -85,7 +93,7 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 				'height': viewHeight + 'px'
 			},
 			'on': {
-				'scroll': this.onScroll
+				'scroll': this.handleScroll
 			}
 		}, [
 			createElement('div', {
