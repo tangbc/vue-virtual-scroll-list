@@ -3,11 +3,11 @@ import Vue from 'vue';
 const VirtualList = Vue.component('vue-virtual-scroll-list', {
 
 	props: {
-		itemHeight: {
+		size: {
 			type: Number,
 			required: true
 		},
-		remainItems: {
+		remain: {
 			type: Number,
 			required: true
 		},
@@ -38,7 +38,11 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 
 		updateZone (offset) {
 			let delta = this.$options.delta;
-			let overs = Math.floor(offset / this.itemHeight);
+			let overs = Math.floor(offset / this.size);
+
+			if (!offset) {
+				this.$emit('toTop');
+			}
 
 			// need moving items at lease one unit height
 			// @todo: consider prolong the zone range size
@@ -46,7 +50,7 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			let end = overs ? (overs + delta.keeps) : delta.keeps;
 
 			// avoid overflow range
-			if (overs + this.remainItems >= delta.total) {
+			if (overs + this.remain >= delta.total) {
 				end = delta.total;
 				start = delta.total - delta.keeps;
 				this.$emit('toBottom');
@@ -63,8 +67,8 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			let delta = this.$options.delta;
 
 			delta.total = slots.length;
-			delta.paddingTop = this.itemHeight * delta.start;
-			delta.allPadding = this.itemHeight * (slots.length - delta.keeps);
+			delta.paddingTop = this.size * delta.start;
+			delta.allPadding = this.size * (slots.length - delta.keeps);
 
 			return slots.filter((slot, index) => {
 				return index >= delta.start && index <= delta.end;
@@ -73,13 +77,13 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 	},
 
 	beforeMount () {
-		let remains = this.remainItems;
+		let remains = this.remain;
 		let delta = this.$options.delta;
 		let benchs = Math.ceil(remains / 2);
 
 		delta.end = remains + benchs;
 		delta.keeps = remains + benchs;
-		delta.viewHeight = this.itemHeight * remains;
+		delta.viewHeight = this.size * remains;
 	},
 
 	render (createElement) {

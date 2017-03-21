@@ -1,10 +1,10 @@
 {
   "name": "vue-virtual-scroll-list",
   "version": "1.0.0",
-  "description": "A vue component that support big data by using virtual scroll list.",
+  "description": "A vue component that support big data by using virtual scroll list. Tiny, smooth and without any dependence.",
   "main": "src/index.js",
   "scripts": {
-    "demo": "webpack --watch --config webpack.dev.config.js"
+    "demo": "webpack --watch --config webpack.config.js"
   },
   "keywords": [
     "vue",
@@ -20,7 +20,6 @@
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.0",
     "css-loader": "^0.27.2",
-    "mockjs": "^1.0.1-beta3",
     "vue": "^2.2.2",
     "vue-loader": "^11.1.4",
     "vue-template-compiler": "^2.2.2",

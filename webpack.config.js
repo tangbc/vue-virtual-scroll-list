@@ -2,10 +2,14 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-	entry: './demo/index.js',
+	entry: {
+		finite: './demo/finite/index.js',
+		infinite: './demo/infinite/index.js'
+	},
 	output: {
-		path: './demo',
-		filename: 'build.js'
+		filename: '[name].js',
+		chunkFilename: '[id].js',
+		path: path.join(__dirname, 'demo/build'),
 	},
 	module: {
 		rules: [
@@ -25,7 +29,7 @@ module.exports = {
 	},
 	resolve: {
 		alias: {
-			'vue': 'vue/dist/vue.js',
+			'vue': 'vue/dist/vue.min.js',
 			'virtual-list': path.resolve(__dirname, './src')
 		}
 	},
