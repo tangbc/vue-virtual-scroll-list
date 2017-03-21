@@ -18,11 +18,11 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 	delta: {
 		start: 0, // start index
 		end: 0, // end index
-		keeps: 0, // nums of item keeping in real dom
 		total: 0, // all items count
-		viewHeight: 0, // viewport height
+		keeps: 0, // nums of item keeping in real dom
+		viewHeight: 0, // container wrapper viewport height
 		allPadding: 0, // all padding of not-render-yet doms
-		paddingTop: 0 // container real padding-top
+		paddingTop: 0 // container wrapper real padding-top
 	},
 
 	methods: {
@@ -45,10 +45,11 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			let start = overs ? overs : 0;
 			let end = overs ? (overs + delta.keeps) : delta.keeps;
 
+			// avoid overflow range
 			if (overs + this.remainItems >= delta.total) {
 				end = delta.total;
 				start = delta.total - delta.keeps;
-				this.$emit('end');
+				this.$emit('toBottom');
 			}
 
 			delta.end = end;
@@ -58,14 +59,14 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			this.$forceUpdate();
 		},
 
-		filter (items) {
+		filter (slots) {
 			let delta = this.$options.delta;
 
-			delta.total = items.length;
+			delta.total = slots.length;
 			delta.paddingTop = this.itemHeight * delta.start;
-			delta.allPadding = this.itemHeight * (items.length - delta.keeps);
+			delta.allPadding = this.itemHeight * (slots.length - delta.keeps);
 
-			return items.filter((item, index) => {
+			return slots.filter((slot, index) => {
 				return index >= delta.start && index <= delta.end;
 			});
 		}
@@ -74,10 +75,10 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 	beforeMount () {
 		let remains = this.remainItems;
 		let delta = this.$options.delta;
-		let bench = Math.ceil(remains / 2);
+		let benchs = Math.ceil(remains / 2);
 
-		delta.end = remains + bench;
-		delta.keeps = remains + bench;
+		delta.end = remains + benchs;
+		delta.keeps = remains + benchs;
 		delta.viewHeight = this.itemHeight * remains;
 	},
 

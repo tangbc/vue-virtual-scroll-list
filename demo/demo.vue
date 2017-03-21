@@ -4,9 +4,9 @@
 			:itemHeight="30"
 			:remainItems="10"
 			:onScroll="onListScroll"
-			v-on:end="onEnd"
+			v-on:toBottom="onBottom"
 		>
-			<Item v-for="item in items" :item="item" :key="$index" />
+			<Item v-for="item in items" :item="item" :key="item.index" />
 		</VirtualList>
 	</div>
 </template>
@@ -29,20 +29,20 @@
 
 		data () {
 			return {
-				items: fetchData(20000)
+				items: fetchData(20)
 			}
 		},
 
 		methods: {
-			onEnd () {
-				// let list = fetchData(20);
-				// if (list.length) {
-				// 	this.items = this.items.concat(list);
-				// }
+			onBottom () {
+				let list = fetchData(20);
+				if (list.length) {
+					this.items = this.items.concat(list);
+				}
 			},
 
 			onListScroll (offset, e) {
-				console.log(offset, e)
+				// console.log(offset, e)
 			}
 		}
 	}
