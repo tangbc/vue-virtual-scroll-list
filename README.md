@@ -14,7 +14,7 @@
 
 ## Demos
 
-* [vue-virtual-scroll-list with 10,0000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/demo/finite/).
+* [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/demo/finite/).
 
 * [vue-virtual-scroll-list infinite data by increasing 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/demo/infinite/).
 
