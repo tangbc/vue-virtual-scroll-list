@@ -4,7 +4,7 @@
 
 ## vue-virtual-scroll-list
 
-> A vue component support big data by using virtual scroll list. Tiny, smooth and without any dependence.
+> A vue (2.x) component support big data by using virtual scroll list. Tiny, smooth and without any dependence.
 
 
 ## How it works
@@ -66,7 +66,7 @@ The `<Item />` component is defined outside but included inside the `<VirtualLis
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
-| size | Number | ✓ | Each list item height (pixel). |
+| size | Number | ✓ | Each list item height, currently only supports fixed height. |
 | remain | Number | ✓ | How many items except show in virtual list viewport, so `size` and `remian` will determine the virtual list outside container height (size × remian). |
 | onScroll | Function | * | Call on virtual list scroll event hanlding, param: `(scrollTop, e)`  |
 | toTop | Event | * | An event emit by virtual list component when the list is scrolled on top. |
