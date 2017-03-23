@@ -1,10 +1,6 @@
 <template>
 	<div>
-		<VirtualList
-			:size="40"
-			:remain="8"
-			v-on:toBottom="onBottom"
-		>
+		<VirtualList :size="40" :remain="8" v-on:toBottom="onBottom">
 			<Item v-for="(udf, index) of items" :index="index" :key="index" />
 		</VirtualList>
 	</div>
@@ -31,7 +27,7 @@
 
 		methods: {
 			onBottom () {
-				this.items = this.items.concat(getList());
+				this.items = this.items.concat(getList(20));
 			}
 		}
 	}
@@ -41,6 +37,8 @@
 	.virtual-list {
 		border-radius: 3px;
 		border: 1px solid #ddd;
+		-webkit-overflow-scrolling: touch;
+		overflow-scrolling: touch;
 	}
 </style>
 

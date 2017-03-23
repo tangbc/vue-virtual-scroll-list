@@ -3377,9 +3377,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -3407,7 +3404,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.virtual-list[data-v-2aca78aa] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/finite/finite.vue?8d86c4a4"],"names":[],"mappings":";AA6BA;CACA,mBAAA;CACA,uBAAA;CACA","file":"finite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList\n\t\t\t:size=\"40\"\n\t\t\t:remain=\"8\"\n\t\t>\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\texport default {\n\t\tname: 'finite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: new Array(100000)\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.virtual-list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.virtual-list[data-v-2aca78aa] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n\t-webkit-overflow-scrolling: touch;\n\toverflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/finite/finite.vue?218f2252"],"names":[],"mappings":";AA0BA;CACA,mBAAA;CACA,uBAAA;CACA,kCAAA;CACA,0BAAA;CACA","file":"finite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList :size=\"40\" :remain=\"8\">\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\texport default {\n\t\tname: 'finite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: new Array(100000)\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.virtual-list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t\t-webkit-overflow-scrolling: touch;\n\t\toverflow-scrolling: touch;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 

@@ -3378,10 +3378,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -3403,7 +3399,7 @@ function getList(length) {
 
 	methods: {
 		onBottom() {
-			this.items = this.items.concat(getList());
+			this.items = this.items.concat(getList(20));
 		}
 	}
 };
@@ -3417,7 +3413,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.virtual-list[data-v-0311096a] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/infinite/infinite.vue?19542e56"],"names":[],"mappings":";AAwCA;CACA,mBAAA;CACA,uBAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList\n\t\t\t:size=\"40\"\n\t\t\t:remain=\"8\"\n\t\t\tv-on:toBottom=\"onBottom\"\n\t\t>\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\tfunction getList (length) {\n\t\treturn new Array(length);\n\t}\n\n\texport default {\n\t\tname: 'infinite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: getList(20)\n\t\t\t}\n\t\t},\n\n\t\tmethods: {\n\t\t\tonBottom () {\n\t\t\t\tthis.items = this.items.concat(getList());\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.virtual-list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.virtual-list[data-v-0311096a] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n\t-webkit-overflow-scrolling: touch;\n\toverflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/infinite/infinite.vue?2df10592"],"names":[],"mappings":";AAoCA;CACA,mBAAA;CACA,uBAAA;CACA,kCAAA;CACA,0BAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList :size=\"40\" :remain=\"8\" v-on:toBottom=\"onBottom\">\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\tfunction getList (length) {\n\t\treturn new Array(length);\n\t}\n\n\texport default {\n\t\tname: 'infinite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: getList(20)\n\t\t\t}\n\t\t},\n\n\t\tmethods: {\n\t\t\tonBottom () {\n\t\t\t\tthis.items = this.items.concat(getList(20));\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.virtual-list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t\t-webkit-overflow-scrolling: touch;\n\t\toverflow-scrolling: touch;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 

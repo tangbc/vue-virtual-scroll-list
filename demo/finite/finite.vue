@@ -1,9 +1,6 @@
 <template>
 	<div>
-		<VirtualList
-			:size="40"
-			:remain="8"
-		>
+		<VirtualList :size="40" :remain="8">
 			<Item v-for="(udf, index) of items" :index="index" :key="index" />
 		</VirtualList>
 	</div>
@@ -30,6 +27,8 @@
 	.virtual-list {
 		border-radius: 3px;
 		border: 1px solid #ddd;
+		-webkit-overflow-scrolling: touch;
+		overflow-scrolling: touch;
 	}
 </style>
 

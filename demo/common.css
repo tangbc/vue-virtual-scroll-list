@@ -5,9 +5,12 @@
 }
 .appWraper {
 	width: 440px;
-	position: absolute;
-	left: 50%;
-	margin-left: -220px;
+	margin: 0 auto;
 	overflow-y: auto;
 	box-shadow: 4px 6px 20px #e6e6e6;
+}
+@media (max-width: 1024px) {
+	.appWraper {
+		width: 100%;
+	}
 }

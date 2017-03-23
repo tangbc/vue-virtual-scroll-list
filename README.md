@@ -4,12 +4,12 @@
 
 ## vue-virtual-scroll-list
 
-> A vue component that support big data by using virtual scroll list. Tiny, smooth and without any dependence.
+> A vue component support big data by using virtual scroll list. Tiny, smooth and without any dependence.
 
 
 ## How it works
 
-<img src="https://tangbc.github.io/github-images/virtual-scroll-list-4.gif">
+<img src="https://tangbc.github.io/github-images/virtual-scroll-list-2.gif">
 
 
 ## Demos
@@ -35,10 +35,7 @@ Using Vue single file components:
 ```javascript
 <template>
 	<div>
-		<VirtualList
-			:size="40"
-			:remain="8"
-		>
+		<VirtualList :size="40" :remain="8">
 			<Item v-for="(item, index) of items" :item="item" :key="item.id" />
 		</VirtualList>
 	</div>
@@ -74,6 +71,11 @@ The `<Item />` component is defined outside but included inside the `<VirtualLis
 | onScroll | Function | * | Call on virtual list scroll event hanlding, param: `(scrollTop, e)`  |
 | toTop | Event | * | An event emit by virtual list component when the list is scrolled on top. |
 | toBottom | Event | * | An event emit by virtual list component when the list is scrolled on bottom. |
+
+
+## Contributions
+
+Welcome to improve vue-virtual-scroll-list by any pull request or issue!
 
 
 ## License
