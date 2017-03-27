@@ -1,10 +1,14 @@
 {
   "name": "vue-virtual-scroll-list",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A vue component support big data by using virtual scroll list. Tiny, smooth and without any dependence.",
-  "main": "src/index.js",
+  "main": "dist/vue-virtual-scroll-list.js",
+  "files": [
+    "dist/vue-virtual-scroll-list.js"
+  ],
   "scripts": {
-    "demo": "webpack --watch --config webpack.config.js"
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "demo": "cross-env NODE_ENV=development webpack --watch --config webpack.config.js"
   },
   "keywords": [
     "vue",

@@ -117,4 +117,4 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 	}
 });
 
-export default VirtualList;
+module.exports = VirtualList;

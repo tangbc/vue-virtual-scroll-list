@@ -19,18 +19,13 @@
 * [vue-virtual-scroll-list infinite data by increasing 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/demo/infinite/).
 
 
-## Usage
+## Example
 
-Using by npm:
+#### Using by npm:
 
 ```
 npm install vue-virtual-scroll-list --save
 ```
-
-
-## Example
-
-Using Vue single file components:
 
 ```javascript
 <template>
@@ -60,6 +55,33 @@ Using Vue single file components:
 ```
 
 The `<Item />` component is defined outside but included inside the `<VirtualList />` component. `VirtualList` has nothing to do with `<Item />`, so you can use virtual list with any list item component your project need, you just want to care about component `<Item />` and data `items`.
+
+#### Using by script tag:
+
+```html
+<script src="https://unpkg.com/vue@2.0.0/dist/vue.js"></script>
+<script src="https://tangbc.github.io/vue-virtual-scroll-list/dist/vue-virtual-scroll-list.js"></script>
+
+<div id="app">
+	<virtual-list :size="40" :remain="8">
+		<div class="item" v-for="(item, index) of items" :key="index">Item: # {{ index }}</div>
+	</virtual-list>
+</div>
+```
+
+```javascript
+new Vue({
+	el: '#app',
+	data: {
+		items: new Array(10000)
+	},
+	components: {
+		'virtual-list': VirutalList
+	}
+});
+```
+
+**Notice: list Item component or frag using `v-for` must designate the `:key` property.**
 
 
 ## Support props type
