@@ -1,6 +1,12 @@
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
 	<img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg?style=flat" alt="NPM version"/>
 </a>
+<a href="https://vuejs.org/">
+	<img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="Vue version"/>
+</a>
+<a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
+	<img src="https://img.shields.io/github/license/tangbc/vue-virtual-scroll-list.svg" alt="MIT License"/>
+</a>
 
 ## vue-virtual-scroll-list
 
@@ -30,31 +36,29 @@ npm install vue-virtual-scroll-list --save
 ```javascript
 <template>
 	<div>
-		<VirtualList :size="40" :remain="8">
+		<virtualList :size="40" :remain="8">
 			<Item v-for="(item, index) of items" :item="item" :key="item.id" />
-		</VirtualList>
+		</virtualList>
 	</div>
 </template>
 
 <script>
 	import Item from '../item.vue';
-	import VirtualList from 'vue-virtual-scroll-list';
+	import virtualList from 'vue-virtual-scroll-list';
 
 	export default {
 		name: 'demo',
-
-		components: { Item, VirtualList },
-
 		data () {
 			return {
 				items: [...]
 			}
-		}
+		},
+		components: { Item, virtualList }
 	}
 </script>
 ```
 
-The `<Item />` component is defined outside but included inside the `<VirtualList />` component. `VirtualList` has nothing to do with `<Item />`, so you can use virtual list with any list item component your project need, you just want to care about component `<Item />` and data `items`.
+The `<Item>` component is included inside but defined outside the `<virtualList>` component. We see that `<virtualList>` **not** rely on `<Item>` component. So you can use virtual-list with any list item component freely.
 
 #### Using by script tag:
 
@@ -73,7 +77,7 @@ The `<Item />` component is defined outside but included inside the `<VirtualLis
 new Vue({
 	el: '#app',
 	data: {
-		items: new Array(10000)
+		items: new Array(100000)
 	},
 	components: {
 		'virtual-list': VirutalList
@@ -81,7 +85,7 @@ new Vue({
 });
 ```
 
-**Notice: list Item component or frag using `v-for` must designate the `:key` property.**
+**Notice: list Item component or DOM frag using `v-for` must designate the `:key` property.**
 
 
 ## Support props type
@@ -89,10 +93,10 @@ new Vue({
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, currently only supports fixed height. |
-| remain | Number | ✓ | How many items except show in virtual list viewport, so `size` and `remian` will determine the virtual list outside container height (size × remian). |
-| onScroll | Function | * | Call on virtual list scroll event hanlding, param: `(scrollTop, e)`  |
-| toTop | Event | * | An event emit by virtual list component when the list is scrolled on top. |
-| toBottom | Event | * | An event emit by virtual list component when the list is scrolled on bottom. |
+| remain | Number | ✓ | How many items except show in virtual-list viewport, so `size` and `remian` will determine the virtual-list outside container height (size × remian). |
+| onScroll | Function | * | Call on virtual-list scroll event hanlding, param: `(scrollTop, e)`  |
+| toTop | Event | * | An event emit by virtual-list component when the list is scrolled on top. |
+| toBottom | Event | * | An event emit by virtual-list component when the list is scrolled on bottom. |
 
 
 ## Contributions
