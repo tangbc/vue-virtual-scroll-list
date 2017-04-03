@@ -1,6 +1,6 @@
 {
   "name": "vue-virtual-scroll-list",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A vue component support big data by using virtual scroll list. Tiny, smooth and without any dependence.",
   "main": "dist/vue-virtual-scroll-list.js",
   "files": [
