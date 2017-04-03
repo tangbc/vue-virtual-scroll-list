@@ -94,7 +94,8 @@ new Vue({
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, currently only supports fixed height. |
 | remain | Number | ✓ | How many items except show in virtual-list viewport, so `size` and `remian` will determine the virtual-list outside container height (size × remian). |
-| onScroll | Function | * | Call on virtual-list scroll event hanlding, param: `(scrollTop, e)`  |
+| klass | String | * | Add a custom classname to virtual-list component default is `virtual-scroll-list`. |
+| onScroll | Function | * | Call on virtual-list scroll event hanlding, param: `(e, scrollTop)`  |
 | toTop | Event | * | An event emit by virtual-list component when the list is scrolled on top. |
 | toBottom | Event | * | An event emit by virtual-list component when the list is scrolled on bottom. |
 

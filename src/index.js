@@ -11,6 +11,10 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			type: Number,
 			required: true
 		},
+		klass: {
+			type: String,
+			default: 'virtual-scroll-list'
+		},
 		onScroll: Function
 	},
 
@@ -79,7 +83,7 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 	beforeMount () {
 		let remains = this.remain;
 		let delta = this.$options.delta;
-		let benchs = Math.ceil(remains / 2);
+		let benchs = Math.round(remains / 2);
 
 		delta.end = remains + benchs;
 		delta.keeps = remains + benchs;
@@ -92,7 +96,7 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 
 		return createElement('div', {
 			'ref': 'container',
-			'class': 'virtual-list',
+			'class': this.klass,
 			'style': {
 				'overflow-y': 'auto',
 				'height': viewHeight + 'px'
@@ -102,17 +106,11 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			}
 		}, [
 			createElement('div', {
-				'ref': 'listbox',
-				'class': 'virtual-list-box',
-			}, [
-				createElement('div', {
-					'class': 'virtual-list-box-padding',
-					'style': {
-						'padding-top': paddingTop + 'px',
-						'padding-bottom': (allPadding - paddingTop) + 'px'
-					}
-				}, showList)
-			])
+				'style': {
+					'padding-top': paddingTop + 'px',
+					'padding-bottom': allPadding - paddingTop + 'px'
+				}
+			}, showList)
 		]);
 	}
 });
