@@ -10,7 +10,7 @@
 
 ## vue-virtual-scroll-list
 
-> A vue (2.x) component support big data by using virtual scroll list. Tiny, smooth and without any dependence.
+> A vue (2.x) component support big data and infinite loading by using virtual scroll list.
 
 
 ## How it works
