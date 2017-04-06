@@ -4,7 +4,7 @@
   "description": "A vue (2.x) component support big data and infinite loading by using virtual scroll list.",
   "main": "dist/vue-virtual-scroll-list.js",
   "files": [
-    "dist/vue-virtual-scroll-list.js"
+    "dist/vue-virtual-scroll-list.js",
     "dist/vue-virtual-scroll-list.js.map"
   ],
   "scripts": {
