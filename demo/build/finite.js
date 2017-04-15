@@ -9692,10 +9692,6 @@ var VirtualList = _vue2.default.component('vue-virtual-scroll-list', {
 			type: Number,
 			required: true
 		},
-		klass: {
-			type: String,
-			default: 'virtual-scroll-list'
-		},
 		onScroll: Function
 	},
 
@@ -9728,6 +9724,7 @@ var VirtualList = _vue2.default.component('vue-virtual-scroll-list', {
 				this.$emit('toTop');
 			}
 
+			// need moving items at lease one unit height
 			// @todo: consider prolong the zone range size
 			var start = overs ? overs : 0;
 			var end = overs ? overs + delta.keeps : delta.keeps;
@@ -9777,7 +9774,6 @@ var VirtualList = _vue2.default.component('vue-virtual-scroll-list', {
 
 		return createElement('div', {
 			'ref': 'container',
-			'class': this.klass,
 			'style': {
 				'overflow-y': 'auto',
 				'height': viewHeight + 'px'
@@ -12593,7 +12589,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.list[data-v-2aca78aa] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n\t-webkit-overflow-scrolling: touch;\n\toverflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/finite/finite.vue?8ad51110"],"names":[],"mappings":";AA0BA;CACA,mBAAA;CACA,uBAAA;CACA,kCAAA;CACA,0BAAA;CACA","file":"finite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList :size=\"50\" :remain=\"6\" :klass=\"'list'\">\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\texport default {\n\t\tname: 'finite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: new Array(100000)\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t\t-webkit-overflow-scrolling: touch;\n\t\toverflow-scrolling: touch;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.list[data-v-2aca78aa] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n\t-webkit-overflow-scrolling: touch;\n\toverflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/finite/finite.vue?3b2b66c4"],"names":[],"mappings":";AA0BA;CACA,mBAAA;CACA,uBAAA;CACA,kCAAA;CACA,0BAAA;CACA","file":"finite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList :size=\"50\" :remain=\"6\" class=\"list\">\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\texport default {\n\t\tname: 'finite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: new Array(100000)\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t\t-webkit-overflow-scrolling: touch;\n\t\toverflow-scrolling: touch;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12605,10 +12601,10 @@ exports.push([module.i, "\n.list[data-v-2aca78aa] {\n\tborder-radius: 3px;\n\tbo
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('VirtualList', {
+    staticClass: "list",
     attrs: {
       "size": 50,
-      "remain": 6,
-      "klass": 'list'
+      "remain": 6
     }
   }, _vm._l((_vm.items), function(udf, index) {
     return _c('Item', {

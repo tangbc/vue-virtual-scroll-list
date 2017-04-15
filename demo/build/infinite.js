@@ -9692,10 +9692,6 @@ var VirtualList = _vue2.default.component('vue-virtual-scroll-list', {
 			type: Number,
 			required: true
 		},
-		klass: {
-			type: String,
-			default: 'virtual-scroll-list'
-		},
 		onScroll: Function
 	},
 
@@ -9728,6 +9724,7 @@ var VirtualList = _vue2.default.component('vue-virtual-scroll-list', {
 				this.$emit('toTop');
 			}
 
+			// need moving items at lease one unit height
 			// @todo: consider prolong the zone range size
 			var start = overs ? overs : 0;
 			var end = overs ? overs + delta.keeps : delta.keeps;
@@ -9777,7 +9774,6 @@ var VirtualList = _vue2.default.component('vue-virtual-scroll-list', {
 
 		return createElement('div', {
 			'ref': 'container',
-			'class': this.klass,
 			'style': {
 				'overflow-y': 'auto',
 				'height': viewHeight + 'px'
@@ -12602,7 +12598,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.virtual-scroll-list[data-v-0311096a] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n\t-webkit-overflow-scrolling: touch;\n\toverflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/infinite/infinite.vue?a77639be"],"names":[],"mappings":";AAoCA;CACA,mBAAA;CACA,uBAAA;CACA,kCAAA;CACA,0BAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList :size=\"50\" :remain=\"6\" v-on:toBottom=\"onBottom\">\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\tfunction getList (length) {\n\t\treturn new Array(length);\n\t}\n\n\texport default {\n\t\tname: 'infinite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: getList(20)\n\t\t\t}\n\t\t},\n\n\t\tmethods: {\n\t\t\tonBottom () {\n\t\t\t\tthis.items = this.items.concat(getList(20));\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.virtual-scroll-list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t\t-webkit-overflow-scrolling: touch;\n\t\toverflow-scrolling: touch;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.list[data-v-0311096a] {\n\tborder-radius: 3px;\n\tborder: 1px solid #ddd;\n\t-webkit-overflow-scrolling: touch;\n\toverflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/demo/infinite/infinite.vue?2fe942b4"],"names":[],"mappings":";AAoCA;CACA,mBAAA;CACA,uBAAA;CACA,kCAAA;CACA,0BAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n\t<div>\n\t\t<VirtualList class=\"list\" :size=\"50\" :remain=\"6\" v-on:toBottom=\"onBottom\">\n\t\t\t<Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n\t\t</VirtualList>\n\t</div>\n</template>\n\n<script>\n\timport Item from '../item.vue';\n\timport VirtualList from 'virtual-list';\n\n\tfunction getList (length) {\n\t\treturn new Array(length);\n\t}\n\n\texport default {\n\t\tname: 'infinite-test',\n\n\t\tcomponents: { Item, VirtualList },\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\titems: getList(20)\n\t\t\t}\n\t\t},\n\n\t\tmethods: {\n\t\t\tonBottom () {\n\t\t\t\tthis.items = this.items.concat(getList(20));\n\t\t\t}\n\t\t}\n\t}\n</script>\n\n<style scoped>\n\t.list {\n\t\tborder-radius: 3px;\n\t\tborder: 1px solid #ddd;\n\t\t-webkit-overflow-scrolling: touch;\n\t\toverflow-scrolling: touch;\n\t}\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12614,6 +12610,7 @@ exports.push([module.i, "\n.virtual-scroll-list[data-v-0311096a] {\n\tborder-rad
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('VirtualList', {
+    staticClass: "list",
     attrs: {
       "size": 50,
       "remain": 6

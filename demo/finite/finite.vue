@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<VirtualList :size="50" :remain="6" :klass="'list'">
+		<VirtualList :size="50" :remain="6" class="list">
 			<Item v-for="(udf, index) of items" :index="index" :key="index" />
 		</VirtualList>
 	</div>

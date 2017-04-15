@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<VirtualList :size="50" :remain="6" v-on:toBottom="onBottom">
+		<VirtualList class="list" :size="50" :remain="6" v-on:toBottom="onBottom">
 			<Item v-for="(udf, index) of items" :index="index" :key="index" />
 		</VirtualList>
 	</div>
@@ -34,7 +34,7 @@
 </script>
 
 <style scoped>
-	.virtual-scroll-list {
+	.list {
 		border-radius: 3px;
 		border: 1px solid #ddd;
 		-webkit-overflow-scrolling: touch;

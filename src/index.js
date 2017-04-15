@@ -11,10 +11,6 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 			type: Number,
 			required: true
 		},
-		klass: {
-			type: String,
-			default: 'virtual-scroll-list'
-		},
 		onScroll: Function
 	},
 
@@ -96,7 +92,6 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 
 		return createElement('div', {
 			'ref': 'container',
-			'class': this.klass,
 			'style': {
 				'overflow-y': 'auto',
 				'height': viewHeight + 'px'
