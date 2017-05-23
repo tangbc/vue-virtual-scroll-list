@@ -21,7 +21,6 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 
 	computed: {
 		computedRemain() {
-			console.log('REMAIN', this.remain)
 			return this.remain
 		}
 	},
@@ -136,7 +135,6 @@ const VirtualList = Vue.component('vue-virtual-scroll-list', {
 		if(this.$slots.default){
 			length = this.$slots.default.length
 		}
-		console.log('LENGTH', length, 'OLD', this.length)
 		if(length !== this.length){
 			this.length = length
 			this.reset()
