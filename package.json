@@ -2,10 +2,10 @@
   "name": "vue-virtual-scroll-list",
   "version": "1.1.0",
   "description": "A vue (2.x) component support big data and infinite loading by using virtual scroll list.",
-  "main": "dist/vue-virtual-scroll-list.js",
+  "main": "dist/index.js",
   "files": [
-    "dist/vue-virtual-scroll-list.js",
-    "dist/vue-virtual-scroll-list.js.map"
+    "dist/index.js",
+    "dist/index.js.map"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot",
