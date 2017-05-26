@@ -1,0 +1,137 @@
+[
+  {
+    "_id": "59241c9a2aee1593c7442c12",
+    "index": 0,
+    "guid": "d8ca0950-1168-4f52-9c30-840476adb2da",
+    "isActive": false,
+    "balance": "$3,087.65",
+    "picture": "http://placehold.it/32x32",
+    "age": 25,
+    "eyeColor": "brown",
+    "name": "Nielsen Boyle",
+    "gender": "male",
+    "company": "MANGELICA",
+    "email": "nielsenboyle@mangelica.com",
+    "phone": "+1 (986) 449-3148",
+    "address": "496 Hoyts Lane, Sheatown, Texas, 2318",
+    "about": "Qui esse in in est. Magna tempor ut minim velit dolore laboris mollit anim consequat incididunt esse. Laborum ea culpa veniam id id deserunt sunt. Voluptate incididunt do exercitation laboris sint ipsum dolore et in est cillum. Mollit ullamco ut nisi non reprehenderit ullamco occaecat excepteur nostrud deserunt elit mollit. Esse reprehenderit et deserunt dolor cillum aliquip ad anim anim magna ea labore cupidatat.\r\n",
+    "registered": "2017-04-15T01:58:45 -02:00",
+    "latitude": -9.599253,
+    "longitude": 47.558954,
+    "tags": [
+      "Lorem",
+      "magna",
+      "ad",
+      "tempor",
+      "ut",
+      "sint",
+      "amet"
+    ],
+    "friends": [
+      {
+        "id": 0,
+        "name": "Kristen Hernandez"
+      },
+      {
+        "id": 1,
+        "name": "Tara Kinney"
+      },
+      {
+        "id": 2,
+        "name": "Jewell Barnett"
+      }
+    ],
+    "greeting": "Hello, Nielsen Boyle! You have 6 unread messages.",
+    "favoriteFruit": "banana"
+  },
+  {
+    "_id": "59241c9a94213aa5a5d1ebb6",
+    "index": 1,
+    "guid": "47bbead2-d00c-4aec-a000-a64df872b4da",
+    "isActive": true,
+    "balance": "$1,895.70",
+    "picture": "http://placehold.it/32x32",
+    "age": 22,
+    "eyeColor": "green",
+    "name": "Bernard Ballard",
+    "gender": "male",
+    "company": "BULLZONE",
+    "email": "bernardballard@bullzone.com",
+    "phone": "+1 (800) 594-3367",
+    "address": "815 Auburn Place, Madrid, South Carolina, 5708",
+    "about": "Commodo eiusmod excepteur do incididunt ut id cillum nulla do. Tempor aute est amet fugiat do dolore velit id commodo enim culpa deserunt commodo do. Sint ullamco cillum magna tempor commodo do. Elit ad velit qui tempor et est est irure.\r\n",
+    "registered": "2016-07-22T04:25:46 -02:00",
+    "latitude": -4.606829,
+    "longitude": 0.192874,
+    "tags": [
+      "incididunt",
+      "commodo",
+      "proident",
+      "eu",
+      "consequat",
+      "in",
+      "occaecat"
+    ],
+    "friends": [
+      {
+        "id": 0,
+        "name": "Farrell Warner"
+      },
+      {
+        "id": 1,
+        "name": "Henrietta Combs"
+      },
+      {
+        "id": 2,
+        "name": "Skinner Hill"
+      }
+    ],
+    "greeting": "Hello, Bernard Ballard! You have 2 unread messages.",
+    "favoriteFruit": "strawberry"
+  },
+  {
+    "_id": "59241c9a409f148d88507772",
+    "index": 2,
+    "guid": "d97aecac-0889-47a2-9b5a-450cc13b5e93",
+    "isActive": false,
+    "balance": "$2,517.86",
+    "picture": "http://placehold.it/32x32",
+    "age": 28,
+    "eyeColor": "brown",
+    "name": "Clements Mills",
+    "gender": "male",
+    "company": "RODEOLOGY",
+    "email": "clementsmills@rodeology.com",
+    "phone": "+1 (927) 533-2704",
+    "address": "376 Irving Place, Walker, Maryland, 6891",
+    "about": "Cupidatat eu esse eu ad dolore occaecat incididunt id excepteur aute ullamco Lorem. Eiusmod ea cupidatat veniam consequat dolor ullamco. In nulla et nulla eu exercitation ut sint quis qui officia aliqua eu. Consectetur excepteur culpa nisi ullamco elit qui. Culpa nulla proident commodo minim ut commodo anim voluptate voluptate. Id irure nostrud culpa est cupidatat ea. Enim commodo magna commodo consequat id officia pariatur reprehenderit.\r\n",
+    "registered": "2016-06-03T09:21:04 -02:00",
+    "latitude": 53.520875,
+    "longitude": 170.953259,
+    "tags": [
+      "non",
+      "magna",
+      "id",
+      "nulla",
+      "id",
+      "mollit",
+      "exercitation"
+    ],
+    "friends": [
+      {
+        "id": 0,
+        "name": "Lilian Trujillo"
+      },
+      {
+        "id": 1,
+        "name": "Christian Bright"
+      },
+      {
+        "id": 2,
+        "name": "Mathews Rogers"
+      }
+    ],
+    "greeting": "Hello, Clements Mills! You have 9 unread messages.",
+    "favoriteFruit": "banana"
+  }
+]
