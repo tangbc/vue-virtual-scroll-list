@@ -1,11 +1,11 @@
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
-	<img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg?style=flat" alt="NPM version"/>
+    <img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg?style=flat" alt="NPM version"/>
 </a>
 <a href="https://vuejs.org/">
-	<img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="Vue version"/>
+    <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="Vue version"/>
 </a>
 <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
-	<img src="https://img.shields.io/github/license/tangbc/vue-virtual-scroll-list.svg" alt="MIT License"/>
+    <img src="https://img.shields.io/github/license/tangbc/vue-virtual-scroll-list.svg" alt="MIT License"/>
 </a>
 
 ## vue-virtual-scroll-list
@@ -20,12 +20,12 @@
 
 ## Demos
 
-* [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/demo/finite/).
+* [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
 
-* [vue-virtual-scroll-list infinite data by increasing 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/demo/infinite/).
+* [vue-virtual-scroll-list infinite data by increasing 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
 
 
-## Example
+## Usage
 
 #### Using by npm:
 
@@ -35,26 +35,26 @@ npm install vue-virtual-scroll-list --save
 
 ```javascript
 <template>
-	<div>
-		<virtualList :size="40" :remain="8">
-			<Item v-for="(item, index) of items" :item="item" :key="item.id" />
-		</virtualList>
-	</div>
+    <div>
+        <virtualList :size="40" :remain="8">
+            <Item v-for="(item, index) of items" :item="item" :key="item.id" />
+        </virtualList>
+    </div>
 </template>
 
 <script>
-	import Item from '../item.vue';
-	import virtualList from 'vue-virtual-scroll-list';
+    import Item from '../item.vue'
+    import virtualList from 'vue-virtual-scroll-list'
 
-	export default {
-		name: 'demo',
-		data () {
-			return {
-				items: [...]
-			}
-		},
-		components: { Item, virtualList }
-	}
+    export default {
+        name: 'demo',
+        data () {
+            return {
+                items: [...]
+            }
+        },
+        components: { Item, virtualList }
+    }
 </script>
 ```
 
@@ -67,21 +67,21 @@ The `<Item>` component is included inside but defined outside the `<virtualList>
 <script src="https://tangbc.github.io/vue-virtual-scroll-list/dist/vue-virtual-scroll-list.js"></script>
 
 <div id="app">
-	<virtual-list :size="40" :remain="8">
-		<div class="item" v-for="(item, index) of items" :key="index">Item: # {{ index }}</div>
-	</virtual-list>
+    <virtual-list :size="40" :remain="8">
+        <div class="item" v-for="(item, index) of items" :key="index">Item: # {{ index }}</div>
+    </virtual-list>
 </div>
 ```
 
 ```javascript
 new Vue({
-	el: '#app',
-	data: {
-		items: new Array(100000)
-	},
-	components: {
-		'virtual-list': VirutalList
-	}
+    el: '#app',
+    data: {
+        items: new Array(100000)
+    },
+    components: {
+        'virtual-list': VirutalList
+    }
 });
 ```
 
