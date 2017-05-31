@@ -1,24 +1,24 @@
 var path = require('path')
 var webpack = require('webpack')
+var entries = require('./entries')
+
+var multiEntry = {}
+entries.forEach(function (entry) {
+    multiEntry[entry] = path.resolve(__dirname, entry)
+})
 
 // This config for building examples
 module.exports = {
-    entry: {
-        finite: './examples/finite/index.js',
-        infinite: './examples/infinite/index.js'
-    },
+    entry: multiEntry,
     output: {
         filename: '[name].js',
-        path: path.join(__dirname, 'examples/build'),
+        path: path.resolve(__dirname, 'build'),
     },
     module: {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    /* vue-loader option setting */
-                }
+                loader: 'vue-loader'
             },
             {
                 test: /.js$/,
@@ -35,7 +35,7 @@ module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.js',
-            'virtual-list': path.resolve(__dirname, './index.js')
+            'virtual-list': path.resolve(__dirname, '../index.js')
         }
     },
     devtool: '#source-map'

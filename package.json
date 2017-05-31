@@ -7,7 +7,7 @@
     "index.js"
   ],
   "scripts": {
-    "examples": "webpack --watch --config webpack.config.js"
+    "examples": "webpack --watch --config ./examples/webpack.conf.js"
   },
   "keywords": [
     "vue",

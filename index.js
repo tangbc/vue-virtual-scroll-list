@@ -1,17 +1,17 @@
-(function (root, factory) {
+(function (root, moduleName, factory) {
     if (typeof exports === 'object' && typeof module === 'object') {
         module.exports = factory(require('vue'))
     } else if (typeof define === 'function' && define.amd) {
         define(['vue'], factory)
     } else if (typeof exports === 'object') {
-        exports['VirutalScrollList'] = factory(require('vue'))
+        exports[moduleName] = factory(require('vue'))
     } else {
-        root['VirutalScrollList'] = factory(root['Vue'])
+        root[moduleName] = factory(root['Vue'])
     }
-})(this, function (Vue) {
+})(this, 'VirutalList', function (Vue2) {
     'use strict'
 
-    return Vue.component('vue-virtual-scroll-list', {
+    return Vue2.component('vue-virtual-scroll-list', {
         props: {
             size: {
                 type: Number,
@@ -69,7 +69,7 @@
                 delta.end = end
                 delta.start = start
 
-                // call component to update items
+                // call component to update shown items
                 this.$forceUpdate()
             },
 

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import Item from '../item.vue'
+    import Item from './item.vue'
     import VirtualList from 'virtual-list'
 
     function getList (length) {
