@@ -64,7 +64,7 @@ The `<Item>` component is included inside but defined outside the `<virtualList>
 
 ```html
 <script src="https://unpkg.com/vue@2.0.0/dist/vue.js"></script>
-<script src="https://tangbc.github.io/vue-virtual-scroll-list/dist/vue-virtual-scroll-list.js"></script>
+<script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script>
 
 <div id="app">
     <virtual-list :size="40" :remain="8">
@@ -80,7 +80,7 @@ new Vue({
         items: new Array(100000)
     },
     components: {
-        'virtual-list': VirutalList
+        'virtual-list': VirutalScrollList // Global name as `VirutalScrollList`
     }
 });
 ```
@@ -94,6 +94,8 @@ new Vue({
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, currently only supports fixed height. |
 | remain | Number | ✓ | How many items except show in virtual-list viewport, so `size` and `remian` will determine the virtual-list outside container height (size × remian). |
+| rtag | String | * | Default value is `div`, the virtual-list's root HTMLElement tag name, in all case it's style is set to `display: block;` |
+| wtag | String | * | Default value is `div`, the virtual-list's item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
 | onScroll | Function | * | Call on virtual-list scroll event hanlding, param: `(e, scrollTop)`  |
 | toTop | Event | * | An event emit by virtual-list component when the list is scrolled on top. |
 | toBottom | Event | * | An event emit by virtual-list component when the list is scrolled on bottom. |

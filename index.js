@@ -8,7 +8,7 @@
     } else {
         root[moduleName] = factory(root['Vue'])
     }
-})(this, 'VirutalList', function (Vue2) {
+})(this, 'VirutalScrollList', function (Vue2) {
     'use strict'
 
     return Vue2.component('vue-virtual-scroll-list', {
@@ -20,6 +20,14 @@
             remain: {
                 type: Number,
                 required: true
+            },
+            rtag: {
+                type: String,
+                default: 'div'
+            },
+            wtag: {
+                type: String,
+                default: 'div'
             },
             onScroll: Function
         },
@@ -100,9 +108,10 @@
             var showList = this.filter(this.$slots.default)
             var delta = this.$options.delta
 
-            return createElement('div', {
+            return createElement(this.rtag, {
                 'ref': 'container',
                 'style': {
+                    'display': 'block',
                     'overflow-y': 'auto',
                     'height': delta.viewHeight + 'px'
                 },
@@ -110,8 +119,9 @@
                     'scroll': this.handleScroll
                 }
             }, [
-                createElement('div', {
+                createElement(this.wtag, {
                     'style': {
+                        'display': 'block',
                         'padding-top': delta.paddingTop + 'px',
                         'padding-bottom': delta.allPadding - delta.paddingTop + 'px'
                     }
