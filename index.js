@@ -58,7 +58,7 @@
                 var delta = this.$options.delta
                 var overs = Math.floor(offset / this.size)
 
-                if (!offset) {
+                if (!offset && delta.total) {
                     this.$emit('toTop')
                 }
 
@@ -66,9 +66,10 @@
                 // @todo: consider prolong the zone range size
                 var start = overs ? overs : 0
                 var end = overs ? (overs + delta.keeps) : delta.keeps
+                var isOverflow = delta.total - delta.keeps > 0
 
                 // avoid overflow range
-                if (overs + this.remain >= delta.total) {
+                if (isOverflow && overs + this.remain >= delta.total) {
                     end = delta.total
                     start = delta.total - delta.keeps
                     this.$emit('toBottom')
@@ -83,6 +84,11 @@
 
             filter: function (slots) {
                 var delta = this.$options.delta
+
+                if (!slots) {
+                    slots = []
+                    delta.start = 0
+                }
 
                 delta.total = slots.length
                 delta.paddingTop = this.size * delta.start
