@@ -10166,7 +10166,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     } else {
         root[moduleName] = factory(root['Vue']);
     }
-})(undefined, 'VirutalList', function (Vue2) {
+})(undefined, 'VirutalScrollList', function (Vue2) {
     'use strict';
 
     return Vue2.component('vue-virtual-scroll-list', {
@@ -10178,6 +10178,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             remain: {
                 type: Number,
                 required: true
+            },
+            rtag: {
+                type: String,
+                default: 'div'
+            },
+            wtag: {
+                type: String,
+                default: 'div'
             },
             onScroll: Function
         },
@@ -10208,7 +10216,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var delta = this.$options.delta;
                 var overs = Math.floor(offset / this.size);
 
-                if (!offset) {
+                if (!offset && delta.total) {
                     this.$emit('toTop');
                 }
 
@@ -10216,9 +10224,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 // @todo: consider prolong the zone range size
                 var start = overs ? overs : 0;
                 var end = overs ? overs + delta.keeps : delta.keeps;
+                var isOverflow = delta.total - delta.keeps > 0;
 
                 // avoid overflow range
-                if (overs + this.remain >= delta.total) {
+                if (isOverflow && overs + this.remain >= delta.total) {
                     end = delta.total;
                     start = delta.total - delta.keeps;
                     this.$emit('toBottom');
@@ -10233,6 +10242,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             filter: function filter(slots) {
                 var delta = this.$options.delta;
+
+                if (!slots) {
+                    slots = [];
+                    delta.start = 0;
+                }
 
                 delta.total = slots.length;
                 delta.paddingTop = this.size * delta.start;
@@ -10258,17 +10272,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var showList = this.filter(this.$slots.default);
             var delta = this.$options.delta;
 
-            return createElement('div', {
+            return createElement(this.rtag, {
                 'ref': 'container',
                 'style': {
+                    'display': 'block',
                     'overflow-y': 'auto',
                     'height': delta.viewHeight + 'px'
                 },
                 'on': {
                     'scroll': this.handleScroll
                 }
-            }, [createElement('div', {
+            }, [createElement(this.wtag, {
                 'style': {
+                    'display': 'block',
                     'padding-top': delta.paddingTop + 'px',
                     'padding-bottom': delta.allPadding - delta.paddingTop + 'px'
                 }
