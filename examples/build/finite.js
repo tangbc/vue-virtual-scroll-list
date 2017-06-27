@@ -10169,6 +10169,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })(undefined, 'VirutalScrollList', function (Vue2) {
     'use strict';
 
+    if ((typeof Vue2 === 'undefined' ? 'undefined' : _typeof(Vue2)) === 'object' && typeof Vue2.default === 'function') {
+        Vue2 = Vue2.default;
+    }
+
     return Vue2.component('vue-virtual-scroll-list', {
         props: {
             size: {
