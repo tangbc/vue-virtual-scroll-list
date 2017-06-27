@@ -1,6 +1,6 @@
 {
   "name": "vue-virtual-scroll-list",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A vue (2.x) component support big data and infinite loading by using virtual scroll list.",
   "main": "index.js",
   "files": [

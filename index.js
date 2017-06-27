@@ -8,8 +8,11 @@
     } else {
         root[moduleName] = factory(root['Vue'])
     }
-})(this, 'VirutalScrollList', function (Vue2) {
-    'use strict'
+})(this, 'VirutalScrollList', function (Vue2) { 'use strict'
+
+    if (typeof Vue2 === 'object' && typeof Vue2.default === 'function') {
+        Vue2 = Vue2.default
+    }
 
     return Vue2.component('vue-virtual-scroll-list', {
         props: {
