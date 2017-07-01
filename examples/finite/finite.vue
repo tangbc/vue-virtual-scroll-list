@@ -3,7 +3,7 @@
         <div class="scrollToIndex">
             <span>Scroll to index</span>
             <input type="text" v-model.number.lazy="startIndex">
-            <small>Change and blur to set startIndex.</small>
+            <small>Change and blur to set start index.</small>
         </div>
         <VirtualList :size="50" :remain="6" class="list" :start="startIndex">
             <Item v-for="(udf, index) of items" :index="index" :key="index"></Item>
@@ -45,6 +45,9 @@
         border: 1px solid;
         border-color: #dddddd;
         font-size: 16px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
     }
     input:focus {
         border-color: #6495ed;
@@ -67,6 +70,11 @@
         color: #999;
         text-decoration: none;
         font-weight: 100;
+    }
+    @media (max-width: 640px) {
+        small {
+            display: none;
+        }
     }
 </style>
 

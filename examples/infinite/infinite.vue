@@ -15,7 +15,9 @@
             <Loading class="list-loading" :loading="loading"></Loading>
         </div>
         <div class="source">
-            <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1">View this demo source code</a>
+            <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1">
+                View this demo source code
+            </a>
         </div>
     </div>
 </template>
@@ -91,6 +93,14 @@
         color: #999;
         text-decoration: none;
         font-weight: 100;
+    }
+    @media (max-width: 640px) {
+        .times, .count {
+            display: block;
+        }
+        .count {
+            position: relative;
+        }
     }
 </style>
 
