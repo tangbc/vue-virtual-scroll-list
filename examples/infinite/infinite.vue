@@ -15,6 +15,9 @@
             </VirtualList>
             <Loading class="list-loading" :loading="loading"></Loading>
         </div>
+        <div class="source">
+            <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1">View this demo source code</a>
+        </div>
     </div>
 </template>
 
@@ -83,6 +86,15 @@
         border: 1px solid #ddd;
         -webkit-overflow-scrolling: touch;
         overflow-scrolling: touch;
+    }
+    .source {
+        text-align: center;
+        padding-top: 20px;
+    }
+    .source a {
+        color: #999;
+        text-decoration: none;
+        font-weight: 100;
     }
 </style>
 
