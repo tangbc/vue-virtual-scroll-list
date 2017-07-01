@@ -12521,15 +12521,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
 
 
-function getList(length) {
+const getList = length => {
     return new Array(length);
-}
+};
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'infinite-test',
@@ -12545,19 +12544,16 @@ function getList(length) {
     },
 
     methods: {
-        toTop() {
-            console.log('At top now.');
-        },
-
         toBottom() {
-            this.loading = true;
-            console.log('At bottom now.');
-
-            setTimeout(() => {
-                this.times++;
-                this.loading = false;
-                this.items = this.items.concat(getList(20));
-            }, 2017);
+            if (!this.loading) {
+                this.loading = true;
+                // Mock for requesting delay.
+                setTimeout(() => {
+                    this.times++;
+                    this.loading = false;
+                    this.items = this.items.concat(getList(20));
+                }, 2017);
+            }
         }
     }
 });
@@ -12695,7 +12691,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.counter[data-v-c3ee5d9e] {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count[data-v-c3ee5d9e] {\n    position: absolute;\n    right: 0;\n}\n.listWrap[data-v-c3ee5d9e] {\n    position: relative;\n}\n.list-loading[data-v-c3ee5d9e] {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list[data-v-c3ee5d9e] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-c3ee5d9e] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-c3ee5d9e] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue?37f222a7"],"names":[],"mappings":";AAiEA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :totop=\"toTop\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1\">View this demo source code</a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'virtual-list'\n\n    function getList (length) {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toTop () {\n                console.log('At top now.')\n            },\n\n            toBottom () {\n                this.loading = true\n                console.log('At bottom now.')\n\n                setTimeout(() => {\n                    this.times++\n                    this.loading = false\n                    this.items = this.items.concat(getList(20))\n                }, 2017)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.counter[data-v-c3ee5d9e] {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count[data-v-c3ee5d9e] {\n    position: absolute;\n    right: 0;\n}\n.listWrap[data-v-c3ee5d9e] {\n    position: relative;\n}\n.list-loading[data-v-c3ee5d9e] {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list[data-v-c3ee5d9e] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-c3ee5d9e] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-c3ee5d9e] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue?3a22d598"],"names":[],"mappings":";AA6DA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1\">View this demo source code</a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'virtual-list'\n\n    const getList = (length) => {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toBottom () {\n                if (!this.loading) {\n                    this.loading = true\n                    // Mock for requesting delay.\n                    setTimeout(() => {\n                        this.times++\n                        this.loading = false\n                        this.items = this.items.concat(getList(20))\n                    }, 2017)\n                }\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12845,7 +12841,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "size": 50,
       "remain": 6,
-      "totop": _vm.toTop,
       "tobottom": _vm.toBottom
     }
   }, _vm._l((_vm.items), function(udf, index) {

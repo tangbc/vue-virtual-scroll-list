@@ -8,7 +8,6 @@
             <VirtualList class="list"
                 :size="50"
                 :remain="6"
-                :totop="toTop"
                 :tobottom="toBottom"
             >
                 <Item v-for="(udf, index) of items" :index="index" :key="index"></Item>
@@ -26,7 +25,7 @@
     import Loading from './loading.vue'
     import VirtualList from 'virtual-list'
 
-    function getList (length) {
+    const getList = (length) => {
         return new Array(length)
     }
 
@@ -44,19 +43,16 @@
         },
 
         methods: {
-            toTop () {
-                console.log('At top now.')
-            },
-
             toBottom () {
-                this.loading = true
-                console.log('At bottom now.')
-
-                setTimeout(() => {
-                    this.times++
-                    this.loading = false
-                    this.items = this.items.concat(getList(20))
-                }, 2017)
+                if (!this.loading) {
+                    this.loading = true
+                    // Mock for requesting delay.
+                    setTimeout(() => {
+                        this.times++
+                        this.loading = false
+                        this.items = this.items.concat(getList(20))
+                    }, 2017)
+                }
             }
         }
     }
