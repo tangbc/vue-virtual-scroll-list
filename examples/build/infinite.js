@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 20);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10153,7 +10153,7 @@ module.exports = g;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-(function (root, moduleName, factory) {
+(function (root, ns, factory) {
     if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') {
         module.exports = factory(__webpack_require__(0));
     } else if (true) {
@@ -10162,47 +10162,73 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
-        exports[moduleName] = factory(require('vue'));
+        exports[ns] = factory(require('vue'));
     } else {
-        root[moduleName] = factory(root['Vue']);
+        root[ns] = factory(root['Vue']);
     }
 })(undefined, 'VirutalScrollList', function (Vue2) {
-    'use strict';
-
     if ((typeof Vue2 === 'undefined' ? 'undefined' : _typeof(Vue2)) === 'object' && typeof Vue2.default === 'function') {
         Vue2 = Vue2.default;
     }
 
-    return Vue2.component('vue-virtual-scroll-list', {
+    var innerns = 'vue-virtual-scroll-list';
+
+    return Vue2.component(innerns, {
         props: {
-            size: {
-                type: Number,
-                required: true
-            },
-            remain: {
-                type: Number,
-                required: true
-            },
-            rtag: {
-                type: String,
-                default: 'div'
-            },
-            wtag: {
-                type: String,
-                default: 'div'
-            },
-            onScroll: Function
+            size: { type: Number, required: true },
+            remain: { type: Number, required: true },
+            rtag: { type: String, default: 'div' },
+            wtag: { type: String, default: 'div' },
+            start: { type: Number, default: 0 },
+            totop: Function,
+            tobottom: Function,
+            onscroll: Function
         },
 
-        // an object helping to calculate
+        // An object helping to calculate.
         delta: {
-            start: 0, // start index
-            end: 0, // end index
-            total: 0, // all items count
-            keeps: 0, // nums of item keeping in real dom
-            viewHeight: 0, // container wrapper viewport height
-            allPadding: 0, // all padding of not-render-yet doms
-            paddingTop: 0 // container wrapper real padding-top
+            start: 0, // Start index.
+            end: 0, // End index.
+            total: 0, // All items count.
+            keeps: 0, // Nums of item keeping in real dom.
+            viewHeight: 0, // Container wrapper viewport height.
+            allPadding: 0, // All padding of not-render-yet doms.
+            paddingTop: 0, // Container wrapper real padding-top.
+            scrollTop: 0, // Store scrollTop.
+            scrollDirect: 'd', // Scroll direction.
+            fireTime: 0 // Store last event time avoiding compact fire.
+        },
+
+        watch: {
+            start: function start(index) {
+                var delta = this.$options.delta;
+
+                if (index !== parseInt(index, 10)) {
+                    return console.warn(innerns + ': start ' + index + ' is not integer.');
+                }
+                if (index < 0 || index > delta.total - 1) {
+                    return console.warn(innerns + ': start ' + index + ' is overflow.');
+                }
+
+                var start, end, scrollTop;
+
+                if (this.isOverflow(index)) {
+                    var zone = this.getLastZone();
+                    end = zone.end;
+                    start = zone.start;
+                    scrollTop = delta.total * this.size;
+                } else {
+                    start = index;
+                    end = start + delta.keeps;
+                    scrollTop = start * this.size;
+                }
+
+                delta.end = end;
+                delta.start = start;
+
+                this.$forceUpdate();
+                Vue2.nextTick(this.setScrollTop.bind(this, scrollTop));
+            }
         },
 
         methods: {
@@ -10211,8 +10237,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 this.updateZone(scrollTop);
 
-                if (this.onScroll) {
-                    this.onScroll(e, scrollTop);
+                if (this.onscroll) {
+                    this.onscroll(e, scrollTop);
                 }
             },
 
@@ -10221,27 +10247,63 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var overs = Math.floor(offset / this.size);
 
                 if (!offset && delta.total) {
-                    this.$emit('toTop');
+                    this.fireEvent('totop');
                 }
 
-                // need moving items at lease one unit height
-                // @todo: consider prolong the zone range size
-                var start = overs ? overs : 0;
-                var end = overs ? overs + delta.keeps : delta.keeps;
-                var isOverflow = delta.total - delta.keeps > 0;
+                delta.scrollDirect = delta.scrollTop > offset ? 'u' : 'd';
+                delta.scrollTop = offset;
 
-                // avoid overflow range
-                if (isOverflow && overs + this.remain >= delta.total) {
-                    end = delta.total;
-                    start = delta.total - delta.keeps;
-                    this.$emit('toBottom');
+                // Need moving items at lease one unit height.
+                // @todo: consider prolong the zone range size.
+                var start = overs || 0;
+                var end = overs ? overs + delta.keeps : delta.keeps;
+
+                if (this.isOverflow(start)) {
+                    var zone = this.getLastZone();
+                    end = zone.end;
+                    start = zone.start;
                 }
 
                 delta.end = end;
                 delta.start = start;
 
-                // call component to update shown items
+                // Call component to update shown items.
                 this.$forceUpdate();
+            },
+
+            // Avoid overflow range.
+            isOverflow: function isOverflow(start) {
+                var delta = this.$options.delta;
+                var overflow = delta.total - delta.keeps > 0 && start + this.remain >= delta.total;
+                if (overflow && delta.scrollDirect === 'd') {
+                    this.fireEvent('tobottom');
+                }
+                return overflow;
+            },
+
+            // Fire a props event to parent.
+            fireEvent: function fireEvent(event) {
+                var cb = this[event];
+                var now = +new Date();
+                var delta = this.$options.delta;
+                if (cb && now - delta.fireTime > 35) {
+                    cb();
+                    delta.fireTime = now;
+                }
+            },
+
+            // If overflow range return the last zone.
+            getLastZone: function getLastZone() {
+                var delta = this.$options.delta;
+                return {
+                    end: delta.total,
+                    start: delta.total - delta.keeps
+                };
+            },
+
+            // Set manual scrollTop
+            setScrollTop: function setScrollTop(scrollTop) {
+                this.$refs.container.scrollTop = scrollTop;
             },
 
             filter: function filter(slots) {
@@ -10267,10 +10329,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var delta = this.$options.delta;
             var benchs = Math.round(remains / 2);
 
-            delta.end = remains + benchs;
+            delta.start = this.start;
+            delta.end = this.start + remains + benchs;
             delta.keeps = remains + benchs;
             delta.viewHeight = this.size * remains;
         },
+
+        mounted: function mounted() {
+            this.setScrollTop(this.start * this.size);
+        },
+
 
         render: function render(createElement) {
             var showList = this.filter(this.$slots.default);
@@ -12385,13 +12453,13 @@ module.exports = function(module) {
 
 
 /* styles */
-__webpack_require__(33)
+__webpack_require__(38)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(16),
   /* template */
-  __webpack_require__(29),
+  __webpack_require__(33),
   /* scopeId */
   "data-v-c3ee5d9e",
   /* cssModules */
@@ -12425,10 +12493,12 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__item_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_virtual_list__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_virtual_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_virtual_list__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_vue__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__loading_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_virtual_list__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_virtual_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_virtual_list__);
 //
 //
 //
@@ -12437,6 +12507,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -12448,17 +12531,30 @@ function getList(length) {
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'infinite-test',
 
-    components: { Item: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a, VirtualList: __WEBPACK_IMPORTED_MODULE_1_virtual_list___default.a },
+    components: { Item: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a, VirtualList: __WEBPACK_IMPORTED_MODULE_2_virtual_list___default.a, Loading: __WEBPACK_IMPORTED_MODULE_1__loading_vue___default.a },
 
     data() {
         return {
+            times: 0,
+            loading: false,
             items: getList(20)
         };
     },
 
     methods: {
-        onBottom() {
-            this.items = this.items.concat(getList(20));
+        toTop() {
+            console.log('At top now.');
+        },
+
+        toBottom() {
+            this.loading = true;
+            console.log('At bottom now.');
+
+            setTimeout(() => {
+                this.times++;
+                this.loading = false;
+                this.items = this.items.concat(getList(20));
+            }, 2017);
         }
     }
 });
@@ -12483,8 +12579,56 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 18 */,
-/* 19 */
+/* 18 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+
+    name: 'Loader',
+
+    props: {
+        loading: {
+            type: Boolean,
+            default: true
+        },
+        color: {
+            type: String,
+            default: '#6495ed'
+        },
+        size: {
+            type: Number,
+            default: 20
+        },
+        borderWidth: {
+            type: Number,
+            default: 2
+        }
+    },
+
+    computed: {
+        clipStyle() {
+            return {
+                width: this.size + 'px',
+                height: this.size + 'px',
+                borderWidth: this.borderWidth + 'px',
+                borderColor: this.color + ' ' + this.color + ' transparent'
+            };
+        }
+    }
+});
+
+/***/ }),
+/* 19 */,
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12510,9 +12654,23 @@ new _vue2.default({
 });
 
 /***/ }),
-/* 20 */,
 /* 21 */,
 /* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.spinner[data-v-35e952af] {\n    text-align: center;\n}\n.spinner .clip[data-v-35e952af] {\n    display: inline-block;\n    animation: clipDelay 750ms 0s infinite linear;\n    animation-fill-mode: both;\n}\n@keyframes clipDelay {\n0% {\n        transform: rotate(0deg) scale(1);\n}\n50% {\n        transform: rotate(180deg) scale(0.8);\n}\n100% {\n        transform: rotate(360deg) scale(1);\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/loading.vue?17c57d96"],"names":[],"mappings":";AA4CA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,8CAAA;IACA,0BAAA;CACA;AACA;AACA;QACA,iCAAA;CACA;AACA;QACA,qCAAA;CACA;AACA;QACA,mCAAA;CACA;CACA","file":"loading.vue","sourcesContent":["<template>\n    <div class=\"spinner\" v-show=\"loading\">\n        <div class=\"clip\" :style=\"clipStyle\" style=\"background: transparent; border-style: solid; border-radius: 100%;\"></div>\n    </div>\n</template>\n\n<script>\n    export default {\n\n        name: 'Loader',\n\n        props: {\n            loading: {\n                type: Boolean,\n                default: true\n            },\n            color: {\n                type: String,\n                default: '#6495ed'\n            },\n            size: {\n                type: Number,\n                default: 20\n            },\n            borderWidth: {\n                type: Number,\n                default: 2\n            }\n        },\n\n        computed: {\n            clipStyle () {\n                return {\n                    width: this.size + 'px',\n                    height: this.size + 'px',\n                    borderWidth: this.borderWidth + 'px',\n                    borderColor: this.color + ' ' + this.color + ' transparent'\n                }\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .spinner {\n        text-align: center;\n    }\n    .spinner .clip {\n        display: inline-block;\n        animation: clipDelay 750ms 0s infinite linear;\n        animation-fill-mode: both;\n    }\n    @keyframes clipDelay {\n        0% {\n            transform: rotate(0deg) scale(1);\n        }\n        50% {\n            transform: rotate(180deg) scale(0.8);\n        }\n        100% {\n            transform: rotate(360deg) scale(1);\n        }\n    }\n</style>"],"sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 23 */,
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12526,7 +12684,7 @@ exports.push([module.i, "\n.item[data-v-8f8155a0] {\n    height: 50px;\n    line
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12534,25 +12692,25 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.list[data-v-c3ee5d9e] {\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue?39b7493a"],"names":[],"mappings":";AAoCA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <VirtualList class=\"list\" :size=\"50\" :remain=\"6\" v-on:toBottom=\"onBottom\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n        </VirtualList>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'virtual-list'\n\n    function getList (length) {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            onBottom () {\n                this.items = this.items.concat(getList(20))\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .list {\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.counter[data-v-c3ee5d9e] {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count[data-v-c3ee5d9e] {\n    position: absolute;\n    right: 0;\n}\n.listWrap[data-v-c3ee5d9e] {\n    position: relative;\n}\n.list-loading[data-v-c3ee5d9e] {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list[data-v-c3ee5d9e] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue?50b2f866"],"names":[],"mappings":";AA8DA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :totop=\"toTop\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'virtual-list'\n\n    function getList (length) {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toTop () {\n                console.log('At top now.')\n            },\n\n            toBottom () {\n                this.loading = true\n                console.log('At bottom now.')\n\n                setTimeout(() => {\n                    this.times++\n                    this.loading = false\n                    this.items = this.items.concat(getList(20))\n                }, 2017)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 24 */,
-/* 25 */
+/* 26 */,
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(32)
+__webpack_require__(37)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(17),
   /* template */
-  __webpack_require__(28),
+  __webpack_require__(32),
   /* scopeId */
   "data-v-8f8155a0",
   /* cssModules */
@@ -12579,9 +12737,78 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 26 */,
-/* 27 */,
 /* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(35)
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(18),
+  /* template */
+  __webpack_require__(30),
+  /* scopeId */
+  "data-v-35e952af",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/loading.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] loading.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-35e952af", Component.options)
+  } else {
+    hotAPI.reload("data-v-35e952af", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 29 */,
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.loading),
+      expression: "loading"
+    }],
+    staticClass: "spinner"
+  }, [_c('div', {
+    staticClass: "clip",
+    staticStyle: {
+      "background": "transparent",
+      "border-style": "solid",
+      "border-radius": "100%"
+    },
+    style: (_vm.clipStyle)
+  })])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-35e952af", module.exports)
+  }
+}
+
+/***/ }),
+/* 31 */,
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12598,18 +12825,25 @@ if (false) {
 }
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('VirtualList', {
+  return _c('div', [_c('div', {
+    staticClass: "counter"
+  }, [_c('span', {
+    staticClass: "times"
+  }, [_vm._v("Request times: " + _vm._s(_vm.times))]), _vm._v(" "), _c('span', {
+    staticClass: "count"
+  }, [_vm._v("Items count: (" + _vm._s(_vm.times) + " + 1) × 20 = " + _vm._s(_vm.items.length))])]), _vm._v(" "), _c('div', {
+    staticClass: "listWrap"
+  }, [_c('VirtualList', {
     staticClass: "list",
     attrs: {
       "size": 50,
-      "remain": 6
-    },
-    on: {
-      "toBottom": _vm.onBottom
+      "remain": 6,
+      "totop": _vm.toTop,
+      "tobottom": _vm.toBottom
     }
   }, _vm._l((_vm.items), function(udf, index) {
     return _c('Item', {
@@ -12618,7 +12852,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "index": index
       }
     })
-  }))], 1)
+  })), _vm._v(" "), _c('Loading', {
+    staticClass: "list-loading",
+    attrs: {
+      "loading": _vm.loading
+    }
+  })], 1)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -12629,15 +12868,41 @@ if (false) {
 }
 
 /***/ }),
-/* 30 */,
-/* 31 */,
-/* 32 */
+/* 34 */,
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
 var content = __webpack_require__(22);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("87175d88", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 36 */,
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(24);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12657,13 +12922,13 @@ if(false) {
 }
 
 /***/ }),
-/* 33 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(23);
+var content = __webpack_require__(25);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM

@@ -1,49 +1,76 @@
-(function (root, moduleName, factory) {
+(function (root, ns, factory) {
     if (typeof exports === 'object' && typeof module === 'object') {
         module.exports = factory(require('vue'))
     } else if (typeof define === 'function' && define.amd) {
         define(['vue'], factory)
     } else if (typeof exports === 'object') {
-        exports[moduleName] = factory(require('vue'))
+        exports[ns] = factory(require('vue'))
     } else {
-        root[moduleName] = factory(root['Vue'])
+        root[ns] = factory(root['Vue'])
     }
-})(this, 'VirutalScrollList', function (Vue2) { 'use strict'
-
+})(this, 'VirutalScrollList', function (Vue2) {
     if (typeof Vue2 === 'object' && typeof Vue2.default === 'function') {
         Vue2 = Vue2.default
     }
 
-    return Vue2.component('vue-virtual-scroll-list', {
+    var innerns = 'vue-virtual-scroll-list'
+
+    return Vue2.component(innerns, {
         props: {
-            size: {
-                type: Number,
-                required: true
-            },
-            remain: {
-                type: Number,
-                required: true
-            },
-            rtag: {
-                type: String,
-                default: 'div'
-            },
-            wtag: {
-                type: String,
-                default: 'div'
-            },
-            onScroll: Function
+            size: { type: Number, required: true },
+            remain: { type: Number, required: true },
+            rtag: { type: String, default: 'div' },
+            wtag: { type: String, default: 'div' },
+            start: { type: Number, default: 0 },
+            totop: Function,
+            tobottom: Function,
+            onscroll: Function
         },
 
-        // an object helping to calculate
+        // An object helping to calculate.
         delta: {
-            start: 0, // start index
-            end: 0, // end index
-            total: 0, // all items count
-            keeps: 0, // nums of item keeping in real dom
-            viewHeight: 0, // container wrapper viewport height
-            allPadding: 0, // all padding of not-render-yet doms
-            paddingTop: 0 // container wrapper real padding-top
+            start: 0, // Start index.
+            end: 0, // End index.
+            total: 0, // All items count.
+            keeps: 0, // Nums of item keeping in real dom.
+            viewHeight: 0, // Container wrapper viewport height.
+            allPadding: 0, // All padding of not-render-yet doms.
+            paddingTop: 0, // Container wrapper real padding-top.
+            scrollTop: 0, // Store scrollTop.
+            scrollDirect: 'd', // Scroll direction.
+            fireTime: 0 // Store last event time avoiding compact fire.
+        },
+
+        watch: {
+            start: function (index) {
+                var delta = this.$options.delta
+
+                if (index !== parseInt(index, 10)) {
+                    return console.warn(innerns + ': start ' + index + ' is not integer.')
+                }
+                if (index < 0 || index > delta.total - 1) {
+                    return console.warn(innerns + ': start ' + index + ' is overflow.')
+                }
+
+                var start, end, scrollTop
+
+                if (this.isOverflow(index)) {
+                    var zone = this.getLastZone()
+                    end = zone.end
+                    start = zone.start
+                    scrollTop = delta.total * this.size
+                } else {
+                    start = index
+                    end = start + delta.keeps
+                    scrollTop = start * this.size
+                }
+
+                delta.end = end
+                delta.start = start
+
+                this.$forceUpdate()
+                Vue2.nextTick(this.setScrollTop.bind(this, scrollTop))
+            }
         },
 
         methods: {
@@ -52,8 +79,8 @@
 
                 this.updateZone(scrollTop)
 
-                if (this.onScroll) {
-                    this.onScroll(e, scrollTop)
+                if (this.onscroll) {
+                    this.onscroll(e, scrollTop)
                 }
             },
 
@@ -62,27 +89,63 @@
                 var overs = Math.floor(offset / this.size)
 
                 if (!offset && delta.total) {
-                    this.$emit('toTop')
+                    this.fireEvent('totop')
                 }
 
-                // need moving items at lease one unit height
-                // @todo: consider prolong the zone range size
-                var start = overs ? overs : 0
-                var end = overs ? (overs + delta.keeps) : delta.keeps
-                var isOverflow = delta.total - delta.keeps > 0
+                delta.scrollDirect = delta.scrollTop > offset ? 'u' : 'd'
+                delta.scrollTop = offset
 
-                // avoid overflow range
-                if (isOverflow && overs + this.remain >= delta.total) {
-                    end = delta.total
-                    start = delta.total - delta.keeps
-                    this.$emit('toBottom')
+                // Need moving items at lease one unit height.
+                // @todo: consider prolong the zone range size.
+                var start = overs || 0
+                var end = overs ? (overs + delta.keeps) : delta.keeps
+
+                if (this.isOverflow(start)) {
+                    var zone = this.getLastZone()
+                    end = zone.end
+                    start = zone.start
                 }
 
                 delta.end = end
                 delta.start = start
 
-                // call component to update shown items
+                // Call component to update shown items.
                 this.$forceUpdate()
+            },
+
+            // Avoid overflow range.
+            isOverflow: function (start) {
+                var delta = this.$options.delta
+                var overflow = delta.total - delta.keeps > 0 && (start + this.remain >= delta.total)
+                if (overflow && delta.scrollDirect === 'd') {
+                    this.fireEvent('tobottom')
+                }
+                return overflow
+            },
+
+            // Fire a props event to parent.
+            fireEvent: function (event) {
+                var cb = this[event]
+                var now = +new Date()
+                var delta = this.$options.delta
+                if (cb && (now - delta.fireTime > 35)) {
+                    cb()
+                    delta.fireTime = now
+                }
+            },
+
+            // If overflow range return the last zone.
+            getLastZone: function () {
+                var delta = this.$options.delta
+                return {
+                    end: delta.total,
+                    start: delta.total - delta.keeps
+                }
+            },
+
+            // Set manual scrollTop
+            setScrollTop: function (scrollTop) {
+                this.$refs.container.scrollTop = scrollTop
             },
 
             filter: function (slots) {
@@ -108,9 +171,14 @@
             var delta = this.$options.delta
             var benchs = Math.round(remains / 2)
 
-            delta.end = remains + benchs
+            delta.start = this.start
+            delta.end = this.start + remains + benchs
             delta.keeps = remains + benchs
             delta.viewHeight = this.size * remains
+        },
+
+        mounted () {
+            this.setScrollTop(this.start * this.size)
         },
 
         render: function (createElement) {

@@ -1,4 +1,4 @@
 dev
 node_modules
 npm-debug.log
-examples/build/*.map
+examples/**/*.map

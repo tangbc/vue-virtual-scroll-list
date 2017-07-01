@@ -5,16 +5,13 @@
     <title>Vue virtual list (finite data)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-    .title {
-        font-size: 25px;
-        font-weight: 100;
-        text-align: center;
+    body {
+        background: #fffaf0;
     }
     .appWraper {
         width: 440px;
         margin: 0 auto;
         overflow-y: auto;
-        box-shadow: 4px 6px 20px #e6e6e6;
     }
     @media (max-width: 1024px) {
         .appWraper {
@@ -24,7 +21,9 @@
     </style>
 </head>
 <body>
-    <h1 class="title">Vue virtual list, with 100,000 finite data.</h1>
+    <h1 style="font-size: 25px;font-weight: 100;text-align: center;">
+        Vue virtual list, with 100,000 finite data.
+    </h1>
     <div class="appWraper">
         <div id="app"></div>
     </div>

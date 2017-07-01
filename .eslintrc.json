@@ -1,0 +1,20 @@
+{
+    "extends": "standard",
+    "env": {
+        "browser": true,
+        "amd": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 5,
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": ["error", 4],
+        // allow paren-less arrow functions
+        "arrow-parens": 0,
+        // allow async-await
+        "generator-star-spacing": 0,
+        // disallow trailing whitespace at the end of lines
+        "no-trailing-spaces": [0, { "skipBlankLines": true }]
+    }
+}

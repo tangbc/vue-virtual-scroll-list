@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10153,7 +10153,7 @@ module.exports = g;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-(function (root, moduleName, factory) {
+(function (root, ns, factory) {
     if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') {
         module.exports = factory(__webpack_require__(0));
     } else if (true) {
@@ -10162,47 +10162,73 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
-        exports[moduleName] = factory(require('vue'));
+        exports[ns] = factory(require('vue'));
     } else {
-        root[moduleName] = factory(root['Vue']);
+        root[ns] = factory(root['Vue']);
     }
 })(undefined, 'VirutalScrollList', function (Vue2) {
-    'use strict';
-
     if ((typeof Vue2 === 'undefined' ? 'undefined' : _typeof(Vue2)) === 'object' && typeof Vue2.default === 'function') {
         Vue2 = Vue2.default;
     }
 
-    return Vue2.component('vue-virtual-scroll-list', {
+    var innerns = 'vue-virtual-scroll-list';
+
+    return Vue2.component(innerns, {
         props: {
-            size: {
-                type: Number,
-                required: true
-            },
-            remain: {
-                type: Number,
-                required: true
-            },
-            rtag: {
-                type: String,
-                default: 'div'
-            },
-            wtag: {
-                type: String,
-                default: 'div'
-            },
-            onScroll: Function
+            size: { type: Number, required: true },
+            remain: { type: Number, required: true },
+            rtag: { type: String, default: 'div' },
+            wtag: { type: String, default: 'div' },
+            start: { type: Number, default: 0 },
+            totop: Function,
+            tobottom: Function,
+            onscroll: Function
         },
 
-        // an object helping to calculate
+        // An object helping to calculate.
         delta: {
-            start: 0, // start index
-            end: 0, // end index
-            total: 0, // all items count
-            keeps: 0, // nums of item keeping in real dom
-            viewHeight: 0, // container wrapper viewport height
-            allPadding: 0, // all padding of not-render-yet doms
-            paddingTop: 0 // container wrapper real padding-top
+            start: 0, // Start index.
+            end: 0, // End index.
+            total: 0, // All items count.
+            keeps: 0, // Nums of item keeping in real dom.
+            viewHeight: 0, // Container wrapper viewport height.
+            allPadding: 0, // All padding of not-render-yet doms.
+            paddingTop: 0, // Container wrapper real padding-top.
+            scrollTop: 0, // Store scrollTop.
+            scrollDirect: 'd', // Scroll direction.
+            fireTime: 0 // Store last event time avoiding compact fire.
+        },
+
+        watch: {
+            start: function start(index) {
+                var delta = this.$options.delta;
+
+                if (index !== parseInt(index, 10)) {
+                    return console.warn(innerns + ': start ' + index + ' is not integer.');
+                }
+                if (index < 0 || index > delta.total - 1) {
+                    return console.warn(innerns + ': start ' + index + ' is overflow.');
+                }
+
+                var start, end, scrollTop;
+
+                if (this.isOverflow(index)) {
+                    var zone = this.getLastZone();
+                    end = zone.end;
+                    start = zone.start;
+                    scrollTop = delta.total * this.size;
+                } else {
+                    start = index;
+                    end = start + delta.keeps;
+                    scrollTop = start * this.size;
+                }
+
+                delta.end = end;
+                delta.start = start;
+
+                this.$forceUpdate();
+                Vue2.nextTick(this.setScrollTop.bind(this, scrollTop));
+            }
         },
 
         methods: {
@@ -10211,8 +10237,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 this.updateZone(scrollTop);
 
-                if (this.onScroll) {
-                    this.onScroll(e, scrollTop);
+                if (this.onscroll) {
+                    this.onscroll(e, scrollTop);
                 }
             },
 
@@ -10221,27 +10247,63 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var overs = Math.floor(offset / this.size);
 
                 if (!offset && delta.total) {
-                    this.$emit('toTop');
+                    this.fireEvent('totop');
                 }
 
-                // need moving items at lease one unit height
-                // @todo: consider prolong the zone range size
-                var start = overs ? overs : 0;
-                var end = overs ? overs + delta.keeps : delta.keeps;
-                var isOverflow = delta.total - delta.keeps > 0;
+                delta.scrollDirect = delta.scrollTop > offset ? 'u' : 'd';
+                delta.scrollTop = offset;
 
-                // avoid overflow range
-                if (isOverflow && overs + this.remain >= delta.total) {
-                    end = delta.total;
-                    start = delta.total - delta.keeps;
-                    this.$emit('toBottom');
+                // Need moving items at lease one unit height.
+                // @todo: consider prolong the zone range size.
+                var start = overs || 0;
+                var end = overs ? overs + delta.keeps : delta.keeps;
+
+                if (this.isOverflow(start)) {
+                    var zone = this.getLastZone();
+                    end = zone.end;
+                    start = zone.start;
                 }
 
                 delta.end = end;
                 delta.start = start;
 
-                // call component to update shown items
+                // Call component to update shown items.
                 this.$forceUpdate();
+            },
+
+            // Avoid overflow range.
+            isOverflow: function isOverflow(start) {
+                var delta = this.$options.delta;
+                var overflow = delta.total - delta.keeps > 0 && start + this.remain >= delta.total;
+                if (overflow && delta.scrollDirect === 'd') {
+                    this.fireEvent('tobottom');
+                }
+                return overflow;
+            },
+
+            // Fire a props event to parent.
+            fireEvent: function fireEvent(event) {
+                var cb = this[event];
+                var now = +new Date();
+                var delta = this.$options.delta;
+                if (cb && now - delta.fireTime > 35) {
+                    cb();
+                    delta.fireTime = now;
+                }
+            },
+
+            // If overflow range return the last zone.
+            getLastZone: function getLastZone() {
+                var delta = this.$options.delta;
+                return {
+                    end: delta.total,
+                    start: delta.total - delta.keeps
+                };
+            },
+
+            // Set manual scrollTop
+            setScrollTop: function setScrollTop(scrollTop) {
+                this.$refs.container.scrollTop = scrollTop;
             },
 
             filter: function filter(slots) {
@@ -10267,10 +10329,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var delta = this.$options.delta;
             var benchs = Math.round(remains / 2);
 
-            delta.end = remains + benchs;
+            delta.start = this.start;
+            delta.end = this.start + remains + benchs;
             delta.keeps = remains + benchs;
             delta.viewHeight = this.size * remains;
         },
+
+        mounted: function mounted() {
+            this.setScrollTop(this.start * this.size);
+        },
+
 
         render: function render(createElement) {
             var showList = this.filter(this.$slots.default);
@@ -12384,13 +12452,13 @@ module.exports = function(module) {
 
 
 /* styles */
-__webpack_require__(30)
+__webpack_require__(34)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(14),
   /* template */
-  __webpack_require__(26),
+  __webpack_require__(29),
   /* scopeId */
   "data-v-2b4206de",
   /* cssModules */
@@ -12423,10 +12491,15 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__item_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_virtual_list__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_virtual_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_virtual_list__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12446,6 +12519,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     data() {
         return {
+            startIndex: 0,
             items: new Array(100000)
         };
     }
@@ -12473,7 +12547,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ }),
 /* 16 */,
 /* 17 */,
-/* 18 */
+/* 18 */,
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12499,8 +12574,8 @@ new _vue2.default({
 });
 
 /***/ }),
-/* 19 */,
-/* 20 */
+/* 20 */,
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12508,13 +12583,14 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.list[data-v-2b4206de] {\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?165c7515"],"names":[],"mappings":";AA0BA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <VirtualList :size=\"50\" :remain=\"6\" class=\"list\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\" />\n        </VirtualList>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'virtual-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .list {\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    margin: 0 .8em;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?bbb4f88e"],"names":[],"mappings":";AAgCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,eAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index</span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set startIndex.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'virtual-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        margin: 0 .8em;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 21 */
+/* 22 */,
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12528,20 +12604,20 @@ exports.push([module.i, "\n.item[data-v-6bd9c375] {\n    height: 50px;\n    line
 
 
 /***/ }),
-/* 22 */,
-/* 23 */,
-/* 24 */
+/* 24 */,
+/* 25 */,
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(31)
+__webpack_require__(36)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(15),
   /* template */
-  __webpack_require__(27),
+  __webpack_require__(31),
   /* scopeId */
   "data-v-6bd9c375",
   /* cssModules */
@@ -12568,16 +12644,45 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 25 */,
-/* 26 */
+/* 27 */,
+/* 28 */,
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('VirtualList', {
+  return _c('div', [_c('div', {
+    staticClass: "scrollToIndex"
+  }, [_c('span', [_vm._v("Scroll to index")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.number.lazy",
+      value: (_vm.startIndex),
+      expression: "startIndex",
+      modifiers: {
+        "number": true,
+        "lazy": true
+      }
+    }],
+    attrs: {
+      "type": "text"
+    },
+    domProps: {
+      "value": (_vm.startIndex)
+    },
+    on: {
+      "change": function($event) {
+        _vm.startIndex = _vm._n($event.target.value)
+      },
+      "blur": function($event) {
+        _vm.$forceUpdate()
+      }
+    }
+  }), _vm._v(" "), _c('small', [_vm._v("Change and blur to set startIndex.")])]), _vm._v(" "), _c('VirtualList', {
     staticClass: "list",
     attrs: {
       "size": 50,
-      "remain": 6
+      "remain": 6,
+      "start": _vm.startIndex
     }
   }, _vm._l((_vm.items), function(udf, index) {
     return _c('Item', {
@@ -12597,7 +12702,8 @@ if (false) {
 }
 
 /***/ }),
-/* 27 */
+/* 30 */,
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12614,15 +12720,15 @@ if (false) {
 }
 
 /***/ }),
-/* 28 */,
-/* 29 */,
-/* 30 */
+/* 32 */,
+/* 33 */,
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(20);
+var content = __webpack_require__(21);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12642,13 +12748,14 @@ if(false) {
 }
 
 /***/ }),
-/* 31 */
+/* 35 */,
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(21);
+var content = __webpack_require__(23);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
