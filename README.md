@@ -12,6 +12,14 @@
 
 > A vue (2.x) component support big data and infinite loading by using virtual scroll list.
 
+* Tiny and easy to use.
+
+* Big data list and infinite loading.
+
+* Set the initial scroll index or change any.
+
+* List scrolling, to top and bottom can be detected.
+
 
 ## How it works
 
@@ -22,7 +30,7 @@
 
 * [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
 
-* [vue-virtual-scroll-list infinite data by increasing 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
+* [vue-virtual-scroll-list infinite data by request 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
 
 
 ## Usage
@@ -74,36 +82,37 @@ The `<Item>` component is included inside but defined outside the `<virtualList>
 ```
 
 ```javascript
+// Global name as `VirutalScrollList`
+Vue.component('virtual-list', VirutalScrollList)
+
 new Vue({
     el: '#app',
     data: {
         items: new Array(100000)
-    },
-    components: {
-        'virtual-list': VirutalScrollList // Global name as `VirutalScrollList`
     }
-});
+})
 ```
 
 **Notice: list Item component or DOM frag using `v-for` must designate the `:key` property.**
 
 
-## Support props type
+## Props
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, currently only supports fixed height. |
 | remain | Number | ✓ | How many items except show in virtual-list viewport, so `size` and `remian` will determine the virtual-list outside container height (size × remian). |
+| start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, do nothing but throw a warnning if not match.  |
 | rtag | String | * | Default value is `div`, the virtual-list's root HTMLElement tag name, in all case it's style is set to `display: block;` |
 | wtag | String | * | Default value is `div`, the virtual-list's item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
-| onScroll | Function | * | Call on virtual-list scroll event hanlding, param: `(e, scrollTop)`  |
-| toTop | Event | * | An event emit by virtual-list component when the list is scrolled on top. |
-| toBottom | Event | * | An event emit by virtual-list component when the list is scrolled on bottom. |
+| onscroll | Function | * | Call on virtual-list scroll event hanlding, param: `(e, scrollTop)`. |
+| totop | Function | * | A function triggered when the virtual-list is scrolled to top. |
+| tobottom | Function | * | A function triggered when the virtual-list is scrolled to bottom. |
 
 
 ## Contributions
 
-Welcome to improve vue-virtual-scroll-list by any pull request or issue!
+Welcome to improve vue-virtual-scroll-list by any pull request or issue.
 
 
 ## License
