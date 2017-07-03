@@ -177,7 +177,7 @@
             delta.viewHeight = this.size * remains
         },
 
-        mounted () {
+        mounted: function () {
             this.setScrollTop(this.start * this.size)
         },
 
