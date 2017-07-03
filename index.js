@@ -66,7 +66,7 @@
                 }
 
                 delta.end = end
-                delta.start = start
+                delta.start = start >= this.remain ? start : 0
 
                 this.$forceUpdate()
                 Vue2.nextTick(this.setScrollTop.bind(this, scrollTop))
@@ -171,7 +171,7 @@
             var delta = this.$options.delta
             var benchs = Math.round(remains / 2)
 
-            delta.start = this.start
+            delta.start = this.start >= remains ? this.start : 0
             delta.end = this.start + remains + benchs
             delta.keeps = remains + benchs
             delta.viewHeight = this.size * remains
