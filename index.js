@@ -66,7 +66,7 @@
                 }
 
                 delta.end = end
-                delta.start = start
+                if (start >= this.remain) delta.start = start
 
                 this.$forceUpdate()
                 Vue2.nextTick(this.setScrollTop.bind(this, scrollTop))
