@@ -7,6 +7,11 @@
 <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/tangbc/vue-virtual-scroll-list.svg" alt="MIT License"/>
 </a>
+<br/>
+<a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
+    <img src="https://nodei.co/npm/vue-virtual-scroll-list.png?downloads=true&downloadRank=true&stars=true" alt="NPM Info"/>
+</a>
+
 
 ## vue-virtual-scroll-list
 
@@ -26,14 +31,14 @@
 <img src="https://tangbc.github.io/github-images/virtual-scroll-list-2.gif">
 
 
-## Demos
+## Live demos
 
 * [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
 
 * [vue-virtual-scroll-list infinite data by request 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
 
 
-## Usage
+## Simple usage
 
 #### Using by npm:
 
@@ -96,7 +101,7 @@ new Vue({
 **Notice: list Item component or DOM frag using `v-for` must designate the `:key` property.**
 
 
-## Props
+## Props type
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
@@ -105,15 +110,19 @@ new Vue({
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, do nothing but throw a warnning if not match.  |
 | rtag | String | * | Default value is `div`, the virtual-list's root HTMLElement tag name, in all case it's style is set to `display: block;` |
 | wtag | String | * | Default value is `div`, the virtual-list's item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
-| onscroll | Function | * | Call on virtual-list scroll event hanlding, param: `(e, scrollTop)`. |
-| totop | Function | * | A function triggered when the virtual-list is scrolled to top. |
-| tobottom | Function | * | A function triggered when the virtual-list is scrolled to bottom. |
+| onscroll | Function | * | Called when virtual-list scroll event hanlding, param: `(e, scrollTop)`. |
+| totop | Function | * | Called when the virtual-list is scrolled to top. |
+| tobottom | Function | * | Called when the virtual-list is scrolled to bottom. |
 
 
 ## Contributions
 
 Welcome to improve vue-virtual-scroll-list by any pull request or issue.
 
+
+## Changelogs
+
+See [releasese](https://github.com/tangbc/vue-virtual-scroll-list/releases).
 
 ## License
 
