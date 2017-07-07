@@ -25,7 +25,7 @@
 <script>
     import Item from './item.vue'
     import Loading from './loading.vue'
-    import VirtualList from 'virtual-list'
+    import VirtualList from 'vue-virtual-scroll-list'
 
     const getList = (length) => {
         return new Array(length)

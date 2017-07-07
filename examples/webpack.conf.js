@@ -35,7 +35,7 @@ module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.js',
-            'virtual-list': path.resolve(__dirname, '../index.js')
+            'vue-virtual-scroll-list': path.resolve(__dirname, '../index.js')
         }
     },
     devtool: '#source-map'

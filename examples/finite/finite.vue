@@ -9,14 +9,16 @@
             <Item v-for="(udf, index) of items" :index="index" :key="index"></Item>
         </VirtualList>
         <div class="source">
-            <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1">View this demo source code</a>
+            <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1">
+                View this demo source code
+            </a>
         </div>
     </div>
 </template>
 
 <script>
     import Item from './item.vue'
-    import VirtualList from 'virtual-list'
+    import VirtualList from 'vue-virtual-scroll-list'
 
     export default {
         name: 'finite-test',
