@@ -7,28 +7,19 @@
 <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/tangbc/vue-virtual-scroll-list.svg" alt="MIT License"/>
 </a>
-<br/>
-<a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
-    <img src="https://nodei.co/npm/vue-virtual-scroll-list.png?downloads=true&downloadRank=true&stars=true" alt="NPM Info"/>
-</a>
 
 
 ## vue-virtual-scroll-list
 
 > A vue (2.x) component support big data and infinite loading by using virtual scroll list.
 
-* Tiny and easy to use.
+* Tiny and very easy to use.
 
-* Big data list and infinite loading.
+* Big data list and infinite loading with high performance.
 
-* Set the initial scroll index or change any.
+* Support set the initial scroll index or change any.
 
-* List scrolling, to top and bottom can be detected.
-
-
-## How it works
-
-<img src="https://tangbc.github.io/github-images/virtual-scroll-list-2.gif">
+* Event scrolling, reach top and bottom can be detected.
 
 
 ## Live demos
@@ -36,6 +27,11 @@
 * [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
 
 * [vue-virtual-scroll-list infinite data by request 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
+
+
+## How it works
+
+<img src="https://tangbc.github.io/github-images/virtual-scroll-list-2.gif">
 
 
 ## Simple usage
@@ -98,7 +94,12 @@ new Vue({
 })
 ```
 
-**Notice: list Item component or DOM frag using `v-for` must designate the `:key` property.**
+
+## Notice
+
+* List `<Item/>` component or DOM frag using `v-for` must designate the `:key` property.
+
+* Consider use `box-sizing: border-box;` on `<Item/>` if you want absolutely correct scroll height.
 
 
 ## Props type
@@ -122,7 +123,7 @@ Welcome to improve vue-virtual-scroll-list by any pull request or issue.
 
 ## Changelogs
 
-See [releasese](https://github.com/tangbc/vue-virtual-scroll-list/releases).
+Maintain and update occasionally, changes see [releasese](https://github.com/tangbc/vue-virtual-scroll-list/releases).
 
 ## License
 
