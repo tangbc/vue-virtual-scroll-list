@@ -27,29 +27,29 @@
             onscroll: Function
         },
 
-        // An object helping to calculate.
-        delta: {
-            start: 0, // Start index.
-            end: 0, // End index.
-            total: 0, // All items count.
-            keeps: 0, // Nums of item keeping in real dom.
-            viewHeight: 0, // Container wrapper viewport height.
-            allPadding: 0, // All padding of not-render-yet doms.
-            paddingTop: 0, // Container wrapper real padding-top.
-            scrollTop: 0, // Store scrollTop.
-            scrollDirect: 'd', // Scroll direction.
-            fireTime: 0 // Store last event time avoiding compact fire.
+        created: function () {
+            // An object helping to calculate.
+            this.delta = {
+                start: 0, // Start index.
+                end: 0, // End index.
+                total: 0, // All items count.
+                keeps: 0, // Nums keeping in real dom.
+                benchs: 0, // Nums scroll pass should force update.
+                scrollTop: 0, // Store scrollTop.
+                scrollDirect: 'd', // Scroll direction.
+                viewHeight: 0, // Container wrapper viewport height.
+                allPadding: 0, // All padding of not-render-yet doms.
+                paddingTop: 0, // Container wrapper real padding-top.
+                timeStamp: 0 // Last event fire timestamp avoid compact fire.
+            }
         },
 
         watch: {
             start: function (index) {
-                var delta = this.$options.delta
+                var delta = this.delta
 
-                if (index !== parseInt(index, 10)) {
-                    return console.warn(innerns + ': start ' + index + ' is not integer.')
-                }
-                if (index < 0 || index > delta.total - 1) {
-                    return console.warn(innerns + ': start ' + index + ' is overflow.')
+                if (!this.validStart(index)) {
+                    return
                 }
 
                 var start, end, scrollTop
@@ -85,7 +85,7 @@
             },
 
             updateZone: function (offset) {
-                var delta = this.$options.delta
+                var delta = this.delta
                 var overs = Math.floor(offset / this.size)
 
                 if (!offset && delta.total) {
@@ -95,8 +95,7 @@
                 delta.scrollDirect = delta.scrollTop > offset ? 'u' : 'd'
                 delta.scrollTop = offset
 
-                // Need moving items at lease one unit height.
-                // @todo: consider prolong the zone range size.
+                // Calculate the start and end by moving items.
                 var start = overs || 0
                 var end = overs ? (overs + delta.keeps) : delta.keeps
 
@@ -104,6 +103,11 @@
                     var zone = this.getLastZone()
                     end = zone.end
                     start = zone.start
+                }
+
+                // If scroll pass items within now benchs, do not update.
+                if (overs > delta.start && overs - delta.start <= delta.benchs) {
+                    return
                 }
 
                 delta.end = end
@@ -115,7 +119,7 @@
 
             // Avoid overflow range.
             isOverflow: function (start) {
-                var delta = this.$options.delta
+                var delta = this.delta
                 var overflow = delta.total - delta.keeps > 0 && (start + this.remain >= delta.total)
                 if (overflow && delta.scrollDirect === 'd') {
                     this.fireEvent('tobottom')
@@ -125,21 +129,32 @@
 
             // Fire a props event to parent.
             fireEvent: function (event) {
-                var cb = this[event]
                 var now = +new Date()
-                var delta = this.$options.delta
-                if (cb && (now - delta.fireTime > 35)) {
-                    cb()
-                    delta.fireTime = now
+                if (this[event] && now - this.delta.timeStamp > 30) {
+                    this[event]()
+                    this.delta.timeStamp = now
                 }
+            },
+
+            // Check if given start is valid.
+            validStart: function (start) {
+                let valid = 1
+                if (start !== parseInt(start, 10)) {
+                    valid = 0
+                    console.warn(innerns + ': start ' + start + ' is not an integer.')
+                }
+                if (start < 0 || start > this.delta.total - 1) {
+                    valid = 0
+                    console.warn(innerns + ': start ' + start + ' is an overflow index.')
+                }
+                return !!valid
             },
 
             // If overflow range return the last zone.
             getLastZone: function () {
-                var delta = this.$options.delta
                 return {
-                    end: delta.total,
-                    start: delta.total - delta.keeps
+                    end: this.delta.total,
+                    start: this.delta.total - this.delta.keeps
                 }
             },
 
@@ -148,8 +163,9 @@
                 this.$refs.container.scrollTop = scrollTop
             },
 
+            // Filter the shown items base on start and end.
             filter: function (slots) {
-                var delta = this.$options.delta
+                var delta = this.delta
 
                 if (!slots) {
                     slots = []
@@ -167,23 +183,26 @@
         },
 
         beforeMount: function () {
-            var remains = this.remain
-            var delta = this.$options.delta
-            var benchs = Math.round(remains / 2)
+            var delta = this.delta
+            var remain = this.remain
+            var benchs = Math.round(remain / 2)
 
-            delta.start = this.start >= remains ? this.start : 0
-            delta.end = this.start + remains + benchs
-            delta.keeps = remains + benchs
-            delta.viewHeight = this.size * remains
+            delta.benchs = benchs
+            delta.keeps = remain + benchs
+            delta.viewHeight = this.size * remain
+            delta.start = this.start >= remain ? this.start : 0
+            delta.end = this.start + remain + benchs
         },
 
         mounted: function () {
-            this.setScrollTop(this.start * this.size)
+            if (this.validStart(this.start)) {
+                this.setScrollTop(this.start * this.size)
+            }
         },
 
         render: function (createElement) {
             var showList = this.filter(this.$slots.default)
-            var delta = this.$options.delta
+            var delta = this.delta
 
             return createElement(this.rtag, {
                 'ref': 'container',
