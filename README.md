@@ -110,7 +110,9 @@ new Vue({
 | remain | Number | ✓ | How many items except show in virtual-list viewport, so `size` and `remian` will determine the virtual-list outside container height (size × remian). |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, do nothing but throw a warnning if not match.  |
 | rtag | String | * | Default value is `div`, the virtual-list's root HTMLElement tag name, in all case it's style is set to `display: block;` |
+| rtagClass | String | * | Default value is an empty string, the virtual-list's root HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
 | wtag | String | * | Default value is `div`, the virtual-list's item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
+| wtagClass | String | * | Default value is an empty string, the virtual-list's item wrapper HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
 | onscroll | Function | * | Called when virtual-list scroll event hanlding, param: `(e, scrollTop)`. |
 | totop | Function | * | Called when the virtual-list is scrolled to top. |
 | tobottom | Function | * | Called when the virtual-list is scrolled to bottom. |
