@@ -107,7 +107,7 @@ new Vue({
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, currently only supports fixed height. |
-| remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remainn` will determine the virtual-list outside container height (size × remian). |
+| remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` will determine the virtual-list outside container height (size × remian). |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, throws a warning if index does not exist.  |
 | rtag | String | * | Default value is `div`, the virtual-list's root HTMLElement tag name, in all case it's style is set to `display: block;` |
 | rtagClass | String | * | Default value is an empty string, the virtual-list's root HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
