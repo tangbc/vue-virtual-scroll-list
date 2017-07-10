@@ -11,7 +11,7 @@
 
 ## vue-virtual-scroll-list
 
-> A vue (2.x) component support big data and infinite loading by using virtual scroll list.
+> A vue (2.x) component that supports big data and infinite loading by using virtual scroll list.
 
 * Tiny and very easy to use.
 
@@ -67,7 +67,7 @@ npm install vue-virtual-scroll-list --save
 </script>
 ```
 
-The `<Item>` component is included inside but defined outside the `<virtualList>` component. We see that `<virtualList>` **not** rely on `<Item>` component. So you can use virtual-list with any list item component freely.
+The `<Item>` component is included inside but defined outside the `<virtualList>` component. We see that `<virtualList>` does **not** rely on the `<Item>` component. So you can use virtual-list with any list item component freely.
 
 #### Using by script tag:
 
@@ -107,11 +107,13 @@ new Vue({
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, currently only supports fixed height. |
-| remain | Number | ✓ | How many items except show in virtual-list viewport, so `size` and `remian` will determine the virtual-list outside container height (size × remian). |
-| start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, do nothing but throw a warnning if not match.  |
+| remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` will determine the virtual-list outside container height (size × remian). |
+| start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, throws a warning if index does not exist.  |
 | rtag | String | * | Default value is `div`, the virtual-list's root HTMLElement tag name, in all case it's style is set to `display: block;` |
+| rclass | String | * | Default value is an empty string, the virtual-list's root HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
 | wtag | String | * | Default value is `div`, the virtual-list's item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
-| onscroll | Function | * | Called when virtual-list scroll event hanlding, param: `(e, scrollTop)`. |
+| wclass | String | * | Default value is an empty string, the virtual-list's item wrapper HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
+| onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, scrollTop)`. |
 | totop | Function | * | Called when the virtual-list is scrolled to top. |
 | tobottom | Function | * | Called when the virtual-list is scrolled to bottom. |
 
@@ -123,7 +125,7 @@ Welcome to improve vue-virtual-scroll-list by any pull request or issue.
 
 ## Changelogs
 
-Maintain and update occasionally, changes see [releasese](https://github.com/tangbc/vue-virtual-scroll-list/releases).
+Maintain and update occasionally, for changes see [release](https://github.com/tangbc/vue-virtual-scroll-list/releases).
 
 ## License
 
