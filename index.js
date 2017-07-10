@@ -20,9 +20,9 @@
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
             rtag: { type: String, default: 'div' },
-            rtagClass: { type: String, default: '' },
+            rclass: { type: String, default: '' },
             wtag: { type: String, default: 'div' },
-            wtagClass: { type: String, default: '' },
+            wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
             totop: Function,
             tobottom: Function,
@@ -216,7 +216,7 @@
                 'on': {
                     'scroll': this.handleScroll
                 },
-                'class': this.rtagClass
+                'class': this.rclass
             }, [
                 createElement(this.wtag, {
                     'style': {
@@ -224,7 +224,7 @@
                         'padding-top': delta.paddingTop + 'px',
                         'padding-bottom': delta.allPadding - delta.paddingTop + 'px'
                     },
-                    'class': this.wtagClass
+                    'class': this.wclass
                 }, showList)
             ])
         }

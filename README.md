@@ -110,9 +110,9 @@ new Vue({
 | remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` will determine the virtual-list outside container height (size × remian). |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, throws a warning if index does not exist.  |
 | rtag | String | * | Default value is `div`, the virtual-list's root HTMLElement tag name, in all case it's style is set to `display: block;` |
-| rtagClass | String | * | Default value is an empty string, the virtual-list's root HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
+| rclass | String | * | Default value is an empty string, the virtual-list's root HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
 | wtag | String | * | Default value is `div`, the virtual-list's item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
-| wtagClass | String | * | Default value is an empty string, the virtual-list's item wrapper HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
+| wclass | String | * | Default value is an empty string, the virtual-list's item wrapper HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
 | onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, scrollTop)`. |
 | totop | Function | * | Called when the virtual-list is scrolled to top. |
 | tobottom | Function | * | Called when the virtual-list is scrolled to bottom. |
