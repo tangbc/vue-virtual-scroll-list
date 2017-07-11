@@ -48,12 +48,11 @@
 
         watch: {
             start: function (index) {
-                var delta = this.delta
-
                 if (!this.validStart(index)) {
                     return
                 }
 
+                var delta = this.delta
                 var start, end, scrollTop
 
                 if (this.isOverflow(index)) {
@@ -101,14 +100,15 @@
                 var start = overs || 0
                 var end = overs ? (overs + delta.keeps) : delta.keeps
 
-                if (this.isOverflow(start)) {
+                var isOver = this.isOverflow(start)
+                if (isOver) {
                     var zone = this.getLastZone()
                     end = zone.end
                     start = zone.start
                 }
 
                 // If scroll pass items within now benchs, do not update.
-                if (overs > delta.start && overs - delta.start <= delta.benchs) {
+                if (!isOver && (overs > delta.start) && (overs - delta.start <= delta.benchs)) {
                     return
                 }
 
@@ -122,7 +122,7 @@
             // Avoid overflow range.
             isOverflow: function (start) {
                 var delta = this.delta
-                var overflow = delta.total - delta.keeps > 0 && (start + this.remain >= delta.total)
+                var overflow = (delta.total - delta.keeps > 0) && (start + this.remain >= delta.total)
                 if (overflow && delta.scrollDirect === 'd') {
                     this.fireEvent('tobottom')
                 }
@@ -140,7 +140,7 @@
 
             // Check if given start is valid.
             validStart: function (start) {
-                let valid = 1
+                var valid = 1
                 if (start !== parseInt(start, 10)) {
                     valid = 0
                     console.warn(innerns + ': start ' + start + ' is not an integer.')
