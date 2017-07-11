@@ -10178,7 +10178,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
             rtag: { type: String, default: 'div' },
+            rclass: { type: String, default: '' },
             wtag: { type: String, default: 'div' },
+            wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
             totop: Function,
             tobottom: Function,
@@ -10204,12 +10206,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         watch: {
             start: function start(index) {
-                var delta = this.delta;
-
                 if (!this.validStart(index)) {
                     return;
                 }
 
+                var delta = this.delta;
                 var start, end, scrollTop;
 
                 if (this.isOverflow(index)) {
@@ -10257,14 +10258,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var start = overs || 0;
                 var end = overs ? overs + delta.keeps : delta.keeps;
 
-                if (this.isOverflow(start)) {
+                var isOver = this.isOverflow(start);
+                if (isOver) {
                     var zone = this.getLastZone();
                     end = zone.end;
                     start = zone.start;
                 }
 
                 // If scroll pass items within now benchs, do not update.
-                if (overs > delta.start && overs - delta.start <= delta.benchs) {
+                if (!isOver && overs > delta.start && overs - delta.start <= delta.benchs) {
                     return;
                 }
 
@@ -10371,13 +10373,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 },
                 'on': {
                     'scroll': this.handleScroll
-                }
+                },
+                'class': this.rclass
             }, [createElement(this.wtag, {
                 'style': {
                     'display': 'block',
                     'padding-top': delta.paddingTop + 'px',
                     'padding-bottom': delta.allPadding - delta.paddingTop + 'px'
-                }
+                },
+                'class': this.wclass
             }, showList)]);
         }
     });
