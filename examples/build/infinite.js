@@ -10332,9 +10332,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     delta.start = 0;
                 }
 
+                var hasPadding = slots.length > delta.keeps;
+
                 delta.total = slots.length;
-                delta.paddingTop = this.size * delta.start;
-                delta.allPadding = this.size * (slots.length - delta.keeps);
+                delta.paddingTop = this.size * (hasPadding ? delta.start : 0);
+                delta.allPadding = this.size * (hasPadding ? slots.length - delta.keeps : 0);
 
                 return slots.filter(function (slot, index) {
                     return index >= delta.start && index <= delta.end;
