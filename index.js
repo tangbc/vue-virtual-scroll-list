@@ -8,7 +8,7 @@
     } else {
         root[ns] = factory(root['Vue'])
     }
-})(this, 'VirutalScrollList', function (Vue2) {
+})(this, 'VirtualScrollList', function (Vue2) {
     if (typeof Vue2 === 'object' && typeof Vue2.default === 'function') {
         Vue2 = Vue2.default
     }
