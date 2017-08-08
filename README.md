@@ -83,8 +83,8 @@ The `<Item>` component is included inside but defined outside the `<virtualList>
 ```
 
 ```javascript
-// Global name as `VirutalScrollList`
-Vue.component('virtual-list', VirutalScrollList)
+// Global name as `VirtualScrollList`
+Vue.component('virtual-list', VirtualScrollList)
 
 new Vue({
     el: '#app',
