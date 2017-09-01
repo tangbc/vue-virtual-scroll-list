@@ -15,6 +15,26 @@
 
     var innerns = 'vue-virtual-scroll-list'
 
+    var _debounce = function (func, wait, immediate) {
+        var timeout
+        return function () {
+            var context = this
+            var args = arguments
+            var later = function () {
+                timeout = null
+                if (!immediate) {
+                    func.apply(context, args)
+                }
+            }
+            var callNow = immediate && !timeout
+            clearTimeout(timeout)
+            timeout = setTimeout(later, wait)
+            if (callNow) {
+                func.apply(context, args)
+            }
+        }
+    }
+
     return Vue2.component(innerns, {
         props: {
             size: { type: Number, required: true },
@@ -24,6 +44,7 @@
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
+            debounce: { type: Number, default: 0 },
             totop: Function,
             tobottom: Function,
             onscroll: Function
@@ -207,6 +228,7 @@
         render: function (createElement) {
             var showList = this.filter(this.$slots.default)
             var delta = this.delta
+            var dbc = this.debounce
 
             return createElement(this.rtag, {
                 'ref': 'container',
@@ -216,7 +238,7 @@
                     'height': delta.viewHeight + 'px'
                 },
                 'on': {
-                    'scroll': this.handleScroll
+                    'scroll': dbc ? _debounce(this.handleScroll.bind(this), dbc) : this.handleScroll
                 },
                 'class': this.rclass
             }, [
