@@ -10166,12 +10166,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     } else {
         root[ns] = factory(root['Vue']);
     }
-})(undefined, 'VirutalScrollList', function (Vue2) {
+})(undefined, 'VirtualScrollList', function (Vue2) {
     if ((typeof Vue2 === 'undefined' ? 'undefined' : _typeof(Vue2)) === 'object' && typeof Vue2.default === 'function') {
         Vue2 = Vue2.default;
     }
 
     var innerns = 'vue-virtual-scroll-list';
+
+    var _debounce = function _debounce(func, wait, immediate) {
+        var timeout;
+        return function () {
+            var context = this,
+                args = arguments;
+            var later = function later() {
+                timeout = null;
+                if (!immediate) {
+                    func.apply(context, args);
+                }
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) {
+                func.apply(context, args);
+            }
+        };
+    };
 
     return Vue2.component(innerns, {
         props: {
@@ -10182,6 +10202,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
+            debounce: { type: Number, default: 0 },
             totop: Function,
             tobottom: Function,
             onscroll: Function
@@ -10365,6 +10386,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         render: function render(createElement) {
             var showList = this.filter(this.$slots.default);
             var delta = this.delta;
+            var dbc = this.debounce;
 
             return createElement(this.rtag, {
                 'ref': 'container',
@@ -10374,7 +10396,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     'height': delta.viewHeight + 'px'
                 },
                 'on': {
-                    'scroll': this.handleScroll
+                    'scroll': dbc ? _debounce(this.handleScroll.bind(this), dbc) : this.handleScroll
                 },
                 'class': this.rclass
             }, [createElement(this.wtag, {
