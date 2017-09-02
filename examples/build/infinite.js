@@ -10176,8 +10176,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var _debounce = function _debounce(func, wait, immediate) {
         var timeout;
         return function () {
-            var context = this,
-                args = arguments;
+            var context = this;
+            var args = arguments;
             var later = function later() {
                 timeout = null;
                 if (!immediate) {
@@ -10203,6 +10203,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
             debounce: { type: Number, default: 0 },
+            bench: Number,
             totop: Function,
             tobottom: Function,
             onscroll: Function
@@ -10215,9 +10216,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 end: 0, // End index.
                 total: 0, // All items count.
                 keeps: 0, // Nums keeping in real dom.
-                benchs: 0, // Nums scroll pass should force update.
+                bench: 0, // Nums scroll pass should force update.
                 scrollTop: 0, // Store scrollTop.
-                scrollDirect: 'd', // Scroll direction.
+                scrollDirect: 'd', // Store scroll direction.
                 viewHeight: 0, // Container wrapper viewport height.
                 allPadding: 0, // All padding of not-render-yet doms.
                 paddingTop: 0, // Container wrapper real padding-top.
@@ -10286,8 +10287,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     start = zone.start;
                 }
 
-                // If scroll pass items within now benchs, do not update.
-                if (!isOver && overs > delta.start && overs - delta.start <= delta.benchs) {
+                // For better performance, if scroll pass items within now bench, do not update.
+                if (!isOver && overs > delta.start && overs - delta.start <= delta.bench) {
                     return;
                 }
 
@@ -10354,7 +10355,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
 
                 var hasPadding = slots.length > delta.keeps;
-
                 delta.total = slots.length;
                 delta.paddingTop = this.size * (hasPadding ? delta.start : 0);
                 delta.allPadding = this.size * (hasPadding ? slots.length - delta.keeps : 0);
@@ -10367,14 +10367,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         beforeMount: function beforeMount() {
             var delta = this.delta;
-            var remain = this.remain;
-            var benchs = Math.round(remain / 2);
-
-            delta.benchs = benchs;
-            delta.keeps = remain + benchs;
-            delta.viewHeight = this.size * remain;
-            delta.start = this.start >= remain ? this.start : 0;
-            delta.end = this.start + remain + benchs;
+            delta.bench = this.bench || this.remain;
+            delta.keeps = this.remain + delta.bench;
+            delta.viewHeight = this.size * this.remain;
+            delta.start = this.start >= this.remain ? this.start : 0;
+            delta.end = this.start + this.remain + delta.bench;
         },
 
         mounted: function mounted() {

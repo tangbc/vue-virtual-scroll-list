@@ -10176,8 +10176,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var _debounce = function _debounce(func, wait, immediate) {
         var timeout;
         return function () {
-            var context = this,
-                args = arguments;
+            var context = this;
+            var args = arguments;
             var later = function later() {
                 timeout = null;
                 if (!immediate) {
@@ -10203,6 +10203,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
             debounce: { type: Number, default: 0 },
+            bench: Number,
             totop: Function,
             tobottom: Function,
             onscroll: Function
@@ -10215,9 +10216,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 end: 0, // End index.
                 total: 0, // All items count.
                 keeps: 0, // Nums keeping in real dom.
-                benchs: 0, // Nums scroll pass should force update.
+                bench: 0, // Nums scroll pass should force update.
                 scrollTop: 0, // Store scrollTop.
-                scrollDirect: 'd', // Scroll direction.
+                scrollDirect: 'd', // Store scroll direction.
                 viewHeight: 0, // Container wrapper viewport height.
                 allPadding: 0, // All padding of not-render-yet doms.
                 paddingTop: 0, // Container wrapper real padding-top.
@@ -10286,8 +10287,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     start = zone.start;
                 }
 
-                // If scroll pass items within now benchs, do not update.
-                if (!isOver && overs > delta.start && overs - delta.start <= delta.benchs) {
+                // For better performance, if scroll pass items within now bench, do not update.
+                if (!isOver && overs > delta.start && overs - delta.start <= delta.bench) {
                     return;
                 }
 
@@ -10354,7 +10355,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
 
                 var hasPadding = slots.length > delta.keeps;
-
                 delta.total = slots.length;
                 delta.paddingTop = this.size * (hasPadding ? delta.start : 0);
                 delta.allPadding = this.size * (hasPadding ? slots.length - delta.keeps : 0);
@@ -10367,14 +10367,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         beforeMount: function beforeMount() {
             var delta = this.delta;
-            var remain = this.remain;
-            var benchs = Math.round(remain / 2);
-
-            delta.benchs = benchs;
-            delta.keeps = remain + benchs;
-            delta.viewHeight = this.size * remain;
-            delta.start = this.start >= remain ? this.start : 0;
-            delta.end = this.start + remain + benchs;
+            delta.bench = this.bench || this.remain;
+            delta.keeps = this.remain + delta.bench;
+            delta.viewHeight = this.size * this.remain;
+            delta.start = this.start >= this.remain ? this.start : 0;
+            delta.end = this.start + this.remain + delta.bench;
         },
 
         mounted: function mounted() {
@@ -12634,7 +12631,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    margin: 0 .8em;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-2b4206de] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-2b4206de] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall[data-v-2b4206de] {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?db456634"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,eAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index</span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        margin: 0 .8em;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    margin: 0 .8em;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-2b4206de] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-2b4206de] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall[data-v-2b4206de] {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?72869be9"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,eAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index</span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"15\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        margin: 0 .8em;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12733,6 +12730,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "size": 50,
       "remain": 6,
+      "bench": 15,
       "start": _vm.startIndex
     }
   }, _vm._l((_vm.items), function(udf, index) {
