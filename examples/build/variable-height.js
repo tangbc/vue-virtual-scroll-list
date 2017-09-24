@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -12566,26 +12566,27 @@ module.exports = function(module) {
 
 /***/ }),
 /* 12 */,
-/* 13 */
+/* 13 */,
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(50)
+__webpack_require__(47)
 
 var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(17),
+  __webpack_require__(21),
   /* template */
-  __webpack_require__(43),
+  __webpack_require__(40),
   /* scopeId */
-  "data-v-c3ee5d9e",
+  null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue"
+Component.options.__file = "/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable-height/variable.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] infinite.vue: functional components are not supported with templates, they should use render functions.")}
+if (Component.options.functional) {console.error("[vue-loader] variable.vue: functional components are not supported with templates, they should use render functions.")}
 
 /* hot reload */
 if (false) {(function () {
@@ -12594,9 +12595,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-c3ee5d9e", Component.options)
+    hotAPI.createRecord("data-v-3f99eefe", Component.options)
   } else {
-    hotAPI.reload("data-v-c3ee5d9e", Component.options)
+    hotAPI.reload("data-v-3f99eefe", Component.options)
   }
 })()}
 
@@ -12604,83 +12605,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 14 */,
 /* 15 */,
 /* 16 */,
-/* 17 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__item_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_vue__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__loading_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-const getList = length => {
-    return new Array(length);
-};
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'infinite-test',
-
-    components: { Item: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a, VirtualList: __WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list___default.a, Loading: __WEBPACK_IMPORTED_MODULE_1__loading_vue___default.a },
-
-    data() {
-        return {
-            times: 0,
-            loading: false,
-            items: getList(20)
-        };
-    },
-
-    methods: {
-        toBottom() {
-            if (!this.loading) {
-                this.loading = true;
-                // Mock for requesting delay.
-                setTimeout(() => {
-                    this.times++;
-                    this.loading = false;
-                    this.items = this.items.concat(getList(20));
-                }, 2017);
-            }
-        }
-    }
-});
-
-/***/ }),
-/* 18 */
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12694,63 +12624,114 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
-        index: Number
-    }
-});
-
-/***/ }),
-/* 19 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-
-    name: 'Loader',
-
-    props: {
-        loading: {
-            type: Boolean,
-            default: true
-        },
-        color: {
-            type: String,
-            default: '#6495ed'
-        },
-        size: {
-            type: Number,
-            default: 20
-        },
-        borderWidth: {
-            type: Number,
-            default: 2
-        }
+        title: String,
+        height: Number
     },
 
     computed: {
-        clipStyle() {
+        style() {
             return {
-                width: this.size + 'px',
-                height: this.size + 'px',
-                borderWidth: this.borderWidth + 'px',
-                borderColor: this.color + ' ' + this.color + ' transparent'
+                'height': this.height + 'px',
+                'line-height': this.height + 'px'
             };
         }
     }
 });
 
 /***/ }),
-/* 20 */,
-/* 21 */,
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__item_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__getItems__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__getItems___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__getItems__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+const items = __WEBPACK_IMPORTED_MODULE_2__getItems___default()(1000);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'variable-test',
+
+    components: { Item: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a, VirtualList: __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list___default.a },
+
+    data() {
+        return {
+            items: items
+        };
+    },
+
+    methods: {
+        getVariableHeight(index) {
+            let targetItem = this.items[index];
+            return targetItem && targetItem.height || 50;
+        }
+    }
+});
+
+/***/ }),
 /* 22 */,
-/* 23 */
+/* 23 */,
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (count) {
+    var heights = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [30, 40, 50, 80, 100, 140, 180];
+
+    var items = [];
+    var ri = count;
+    var hl = heights.length;
+
+    while (ri--) {
+        var index = getRandomInt(0, hl - 1);
+        items.push({
+            height: heights[index],
+            title: "Item # " + (count - ri - 1)
+        });
+    }
+
+    return items;
+};
+
+function getRandomInt(min, max) {
+    return parseInt(Math.random() * (max - min + 1)) + min;
+}
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12760,9 +12741,9 @@ var _vue = __webpack_require__(0);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _infinite = __webpack_require__(13);
+var _variable = __webpack_require__(14);
 
-var _infinite2 = _interopRequireDefault(_infinite);
+var _variable2 = _interopRequireDefault(_variable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12771,16 +12752,28 @@ _vue2.default.config.productionTip = false;
 
 new _vue2.default({
     el: '#app',
-    template: '<InfiniteDemo />',
-    components: { InfiniteDemo: _infinite2.default }
+    template: '<VariableDemo />',
+    components: { VariableDemo: _variable2.default }
 });
 
 /***/ }),
-/* 24 */,
-/* 25 */,
-/* 26 */,
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.item {\n    /* height: 50px; */\n    /* line-height: 50px; */\n    padding-left: 20px;\n    box-sizing: border-box;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable-height/item.vue?84581712"],"names":[],"mappings":";AAyBA;IACA,mBAAA;IACA,wBAAA;IACA,mBAAA;IACA,uBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\" :style=\"style\">\n        <span>{{ title }}</span>\n    </div>\n</template>\n\n<script>\n    export default {\n        props: {\n            title: String,\n            height: Number\n        },\n\n        computed: {\n            style () {\n                return {\n                    'height': this.height + 'px',\n                    'line-height': this.height + 'px'\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .item {\n        /* height: 50px; */\n        /* line-height: 50px; */\n        padding-left: 20px;\n        box-sizing: border-box;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
 /* 27 */,
-/* 28 */
+/* 28 */,
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12788,61 +12781,36 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.spinner[data-v-35e952af] {\n    text-align: center;\n}\n.spinner .clip[data-v-35e952af] {\n    display: inline-block;\n    animation: clipDelay 750ms 0s infinite linear;\n    animation-fill-mode: both;\n}\n@keyframes clipDelay {\n0% {\n        transform: rotate(0deg) scale(1);\n}\n50% {\n        transform: rotate(180deg) scale(0.8);\n}\n100% {\n        transform: rotate(360deg) scale(1);\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/loading.vue?17c57d96"],"names":[],"mappings":";AA4CA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,8CAAA;IACA,0BAAA;CACA;AACA;AACA;QACA,iCAAA;CACA;AACA;QACA,qCAAA;CACA;AACA;QACA,mCAAA;CACA;CACA","file":"loading.vue","sourcesContent":["<template>\n    <div class=\"spinner\" v-show=\"loading\">\n        <div class=\"clip\" :style=\"clipStyle\" style=\"background: transparent; border-style: solid; border-radius: 100%;\"></div>\n    </div>\n</template>\n\n<script>\n    export default {\n\n        name: 'Loader',\n\n        props: {\n            loading: {\n                type: Boolean,\n                default: true\n            },\n            color: {\n                type: String,\n                default: '#6495ed'\n            },\n            size: {\n                type: Number,\n                default: 20\n            },\n            borderWidth: {\n                type: Number,\n                default: 2\n            }\n        },\n\n        computed: {\n            clipStyle () {\n                return {\n                    width: this.size + 'px',\n                    height: this.size + 'px',\n                    borderWidth: this.borderWidth + 'px',\n                    borderColor: this.color + ' ' + this.color + ' transparent'\n                }\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .spinner {\n        text-align: center;\n    }\n    .spinner .clip {\n        display: inline-block;\n        animation: clipDelay 750ms 0s infinite linear;\n        animation-fill-mode: both;\n    }\n    @keyframes clipDelay {\n        0% {\n            transform: rotate(0deg) scale(1);\n        }\n        50% {\n            transform: rotate(180deg) scale(0.8);\n        }\n        100% {\n            transform: rotate(360deg) scale(1);\n        }\n    }\n</style>"],"sourceRoot":""}]);
+exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable-height/variable.vue?de42b4e8"],"names":[],"mappings":";AA+CA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"variable.vue","sourcesContent":["<template>\n    <div>\n        <VirtualList :variable=\"getVariableHeight\" :size=\"50\" :remain=\"6\" class=\"list\">\n            <Item\n                v-for=\"(item, index) of items\"\n                :key=\"index\"\n                :title=\"item.title\"\n                :height=\"item.height\"\n            ></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable-height/variable-height.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    import getItems from './getItems'\n\n    const items = getItems(1000)\n\n    export default {\n        name: 'variable-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                items: items\n            }\n        },\n\n        methods: {\n            getVariableHeight (index) {\n                let targetItem = this.items[index]\n                return targetItem && targetItem.height || 50\n            }\n        }\n    }\n</script>\n\n<style>\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 29 */,
 /* 30 */,
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)(true);
-// imports
-
-
-// module
-exports.push([module.i, "\n.item[data-v-8f8155a0] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/item.vue?0de020f3"],"names":[],"mappings":";AAeA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">\n        <span>Item # {{ index }}</span>\n    </div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style scoped>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
-
-// exports
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)(true);
-// imports
-
-
-// module
-exports.push([module.i, "\n.counter[data-v-c3ee5d9e] {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count[data-v-c3ee5d9e] {\n    position: absolute;\n    right: 0;\n}\n.listWrap[data-v-c3ee5d9e] {\n    position: relative;\n}\n.list-loading[data-v-c3ee5d9e] {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list[data-v-c3ee5d9e] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-c3ee5d9e] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-c3ee5d9e] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\n.times[data-v-c3ee5d9e], .count[data-v-c3ee5d9e] {\n        display: block;\n}\n.count[data-v-c3ee5d9e] {\n        position: relative;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue?2e030721"],"names":[],"mappings":";AA+DA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,eAAA;CACA;AACA;QACA,mBAAA;CACA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    const getList = (length) => {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toBottom () {\n                if (!this.loading) {\n                    this.loading = true\n                    // Mock for requesting delay.\n                    setTimeout(() => {\n                        this.times++\n                        this.loading = false\n                        this.items = this.items.concat(getList(20))\n                    }, 2017)\n                }\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        .times, .count {\n            display: block;\n        }\n        .count {\n            position: relative;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
-
-// exports
-
-
-/***/ }),
+/* 31 */,
+/* 32 */,
 /* 33 */,
-/* 34 */
+/* 34 */,
+/* 35 */,
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(49)
+__webpack_require__(44)
 
 var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(18),
+  __webpack_require__(20),
   /* template */
-  __webpack_require__(42),
+  __webpack_require__(37),
   /* scopeId */
-  "data-v-8f8155a0",
+  null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/item.vue"
+Component.options.__file = "/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable-height/item.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] item.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -12853,9 +12821,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8f8155a0", Component.options)
+    hotAPI.createRecord("data-v-25174c18", Component.options)
   } else {
-    hotAPI.reload("data-v-8f8155a0", Component.options)
+    hotAPI.reload("data-v-25174c18", Component.options)
   }
 })()}
 
@@ -12863,135 +12831,52 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
-/* styles */
-__webpack_require__(46)
-
-var Component = __webpack_require__(2)(
-  /* script */
-  __webpack_require__(19),
-  /* template */
-  __webpack_require__(39),
-  /* scopeId */
-  "data-v-35e952af",
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/loading.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] loading.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "item",
+    style: (_vm.style)
+  }, [_c('span', [_vm._v(_vm._s(_vm.title))])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
   module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-35e952af", Component.options)
-  } else {
-    hotAPI.reload("data-v-35e952af", Component.options)
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-25174c18", module.exports)
   }
-})()}
-
-module.exports = Component.exports
-
+}
 
 /***/ }),
-/* 36 */,
-/* 37 */,
 /* 38 */,
-/* 39 */
+/* 39 */,
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.loading),
-      expression: "loading"
-    }],
-    staticClass: "spinner"
-  }, [_c('div', {
-    staticClass: "clip",
-    staticStyle: {
-      "background": "transparent",
-      "border-style": "solid",
-      "border-radius": "100%"
-    },
-    style: (_vm.clipStyle)
-  })])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-35e952af", module.exports)
-  }
-}
-
-/***/ }),
-/* 40 */,
-/* 41 */,
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "item"
-  }, [_c('span', [_vm._v("Item # " + _vm._s(_vm.index))])])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-8f8155a0", module.exports)
-  }
-}
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
-    staticClass: "counter"
-  }, [_c('span', {
-    staticClass: "times"
-  }, [_vm._v("Request times: " + _vm._s(_vm.times))]), _vm._v(" "), _c('span', {
-    staticClass: "count"
-  }, [_vm._v("Items count: (" + _vm._s(_vm.times) + " + 1) × 20 = " + _vm._s(_vm.items.length))])]), _vm._v(" "), _c('div', {
-    staticClass: "listWrap"
-  }, [_c('VirtualList', {
+  return _c('div', [_c('VirtualList', {
     staticClass: "list",
     attrs: {
+      "variable": _vm.getVariableHeight,
       "size": 50,
-      "remain": 6,
-      "tobottom": _vm.toBottom
+      "remain": 6
     }
-  }, _vm._l((_vm.items), function(udf, index) {
+  }, _vm._l((_vm.items), function(item, index) {
     return _c('Item', {
       key: index,
       attrs: {
-        "index": index
+        "title": item.title,
+        "height": item.height
       }
     })
-  })), _vm._v(" "), _c('Loading', {
-    staticClass: "list-loading",
-    attrs: {
-      "loading": _vm.loading
-    }
-  })], 1), _vm._v(" "), _vm._m(0)])
+  })), _vm._v(" "), _vm._m(0)], 1)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "source"
   }, [_c('a', {
     attrs: {
-      "href": "https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1"
+      "href": "https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable-height/variable-height.vue#L1"
     }
   }, [_vm._v("\n            View this demo source code\n        ")])])
 }]}
@@ -12999,84 +12884,59 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-c3ee5d9e", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-3f99eefe", module.exports)
   }
 }
 
 /***/ }),
-/* 44 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(26);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("a86ca2de", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-25174c18\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-25174c18\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
 /* 45 */,
-/* 46 */
+/* 46 */,
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(28);
+var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("87175d88", content, false);
+var update = __webpack_require__(3)("2e9fff4a", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 47 */,
-/* 48 */,
-/* 49 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(31);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(3)("01eae3ea", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8f8155a0\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8f8155a0\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(32);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(3)("ab682cd6", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-c3ee5d9e\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./infinite.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-c3ee5d9e\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./infinite.vue");
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-3f99eefe\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./variable.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-3f99eefe\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./variable.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -13087,4 +12947,4 @@ if(false) {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=infinite.js.map
+//# sourceMappingURL=variable-height.js.map

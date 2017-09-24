@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10153,25 +10153,24 @@ module.exports = g;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-(function (root, ns, factory) {
+(function (root, factory) {
+    var namespace = 'VirtualScrollList';
     if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') {
-        module.exports = factory(__webpack_require__(0));
+        module.exports = factory(namespace, __webpack_require__(0));
     } else if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory.bind(root, namespace)),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
-        exports[ns] = factory(require('vue'));
+        exports[namespace] = factory(namespace, require('vue'));
     } else {
-        root[ns] = factory(root['Vue']);
+        root[namespace] = factory(namespace, root['Vue']);
     }
-})(undefined, 'VirtualScrollList', function (Vue2) {
+})(undefined, function (namespace, Vue2) {
     if ((typeof Vue2 === 'undefined' ? 'undefined' : _typeof(Vue2)) === 'object' && typeof Vue2.default === 'function') {
         Vue2 = Vue2.default;
     }
-
-    var innerns = 'vue-virtual-scroll-list';
 
     var _debounce = function _debounce(func, wait, immediate) {
         var timeout;
@@ -10193,37 +10192,61 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     };
 
-    return Vue2.component(innerns, {
+    return Vue2.component(namespace, {
         props: {
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
             rtag: { type: String, default: 'div' },
-            rclass: { type: String, default: '' },
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
-            debounce: { type: Number, default: 0 },
+            variable: [Array, Function],
             bench: Number,
+            debounce: Number,
             totop: Function,
             tobottom: Function,
             onscroll: Function
         },
 
         created: function created() {
+            var slots = this.$slots.default;
+            var bench = this.bench || this.remain;
+
             // An object helping to calculate.
             this.delta = {
-                start: 0, // Start index.
-                end: 0, // End index.
-                total: 0, // All items count.
-                keeps: 0, // Nums keeping in real dom.
-                bench: 0, // Nums scroll pass should force update.
-                scrollTop: 0, // Store scrollTop.
-                scrollDirect: 'd', // Store scroll direction.
-                viewHeight: 0, // Container wrapper viewport height.
-                allPadding: 0, // All padding of not-render-yet doms.
-                paddingTop: 0, // Container wrapper real padding-top.
-                timeStamp: 0 // Last event fire timestamp avoid compact fire.
+                // Start index.
+                start: this.start >= this.remain ? this.start : 0,
+                // End index.
+                end: this.start + this.remain + bench,
+                // All items count.
+                total: slots && slots.length || 0,
+                // Nums keeping in real dom.
+                keeps: this.remain + bench,
+                // Nums scroll pass should force update.
+                bench: bench,
+                // Store scrollTop.
+                scrollTop: 0,
+                // Store scroll direction.
+                scrollDirect: 'd',
+                // Container wrapper viewport height.
+                viewHeight: this.size * this.remain,
+                // Container wrapper real padding-top.
+                paddingTop: 0,
+                // Container wrapper real padding-bottom.
+                paddingBottom: 0,
+                // Last event fire timestamp avoid compact fire.
+                fireTime: 0,
+                // Data to store variable index height.
+                varHeight: {},
+                // Data to store variable index ahead padding.
+                varPadding: {}
             };
+        },
+
+        mounted: function mounted() {
+            if (this.start && this.validStart(this.start)) {
+                this.setScrollTop(this.start * this.size);
+            }
         },
 
         watch: {
@@ -10267,7 +10290,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             updateZone: function updateZone(offset) {
                 var delta = this.delta;
-                var overs = Math.floor(offset / this.size);
 
                 if (!offset && delta.total) {
                     this.fireEvent('totop');
@@ -10275,6 +10297,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 delta.scrollDirect = delta.scrollTop > offset ? 'u' : 'd';
                 delta.scrollTop = offset;
+
+                var overs;
+                if (this.variable) {
+                    overs = this.getVarOvers(offset);
+                } else {
+                    overs = Math.floor(offset / this.size);
+                }
 
                 // Calculate the start and end by moving items.
                 var start = overs || 0;
@@ -10299,6 +10328,65 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.$forceUpdate();
             },
 
+            // return the scroll passed items count in variable height.
+            getVarOvers: function getVarOvers(offset) {
+                var delta = this.delta;
+                var low = 0;
+                var high = delta.total;
+
+                var middle = 0;
+                var middlePadding = 0;
+                while (low <= high) {
+                    middle = low + Math.floor((high - low) / 2);
+                    middlePadding = this.getVarPadding(middle);
+
+                    if (middlePadding === offset) {
+                        return middle;
+                    } else if (middlePadding < offset) {
+                        low = middle + 1;
+                    } else if (middlePadding > offset) {
+                        high = middle - 1;
+                    }
+                }
+
+                return low > 0 ? --low : 0;
+            },
+
+            // get the index ahead padding when variable height.
+            getVarPadding: function getVarPadding(index) {
+                var delta = this.delta;
+                if (index in delta.varPadding) {
+                    return delta.varPadding[index];
+                }
+
+                var i = index;
+                var padding = 0;
+                while (i--) {
+                    padding += this.getVarHeight(i);
+                }
+
+                delta.varPadding[index] = padding;
+                return padding;
+            },
+
+            // return a variable height from a given index.
+            getVarHeight: function getVarHeight(index) {
+                var delta = this.delta;
+                if (index in delta.varHeight) {
+                    return delta.varHeight[index];
+                }
+
+                var height = 0;
+                if (typeof this.variable === 'function') {
+                    height = this.variable(index);
+                } else if (this.variable instanceof Array) {
+                    height = this.variable[index];
+                }
+
+                delta.varHeight[index] = height;
+                return height;
+            },
+
             // Avoid overflow range.
             isOverflow: function isOverflow(start) {
                 var delta = this.delta;
@@ -10312,24 +10400,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // Fire a props event to parent.
             fireEvent: function fireEvent(event) {
                 var now = +new Date();
-                if (this[event] && now - this.delta.timeStamp > 30) {
-                    this[event]();
-                    this.delta.timeStamp = now;
+                var delta = this.delta;
+                if (this[event] && now - delta.fireTime > 30) {
+                    delta.fireTime = now;
+                    this[event](delta.start, delta.end);
                 }
             },
 
             // Check if given start is valid.
             validStart: function validStart(start) {
-                var valid = 1;
-                if (start !== parseInt(start, 10)) {
-                    valid = 0;
-                    console.warn(innerns + ': start ' + start + ' is not an integer.');
-                }
-                if (start < 0 || start > this.delta.total - 1) {
-                    valid = 0;
-                    console.warn(innerns + ': start ' + start + ' is an overflow index.');
-                }
-                return !!valid;
+                return start === parseInt(start, 10) && start >= 0 && start < this.delta.total;
             },
 
             // If overflow range return the last zone.
@@ -10354,10 +10434,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     delta.start = 0;
                 }
 
-                var hasPadding = slots.length > delta.keeps;
                 delta.total = slots.length;
-                delta.paddingTop = this.size * (hasPadding ? delta.start : 0);
-                delta.allPadding = this.size * (hasPadding ? slots.length - delta.keeps : 0);
+
+                var paddingTop, paddingBottom;
+                var hasPadding = slots.length > delta.keeps;
+
+                if (this.variable) {
+                    paddingTop = hasPadding ? this.getVarPadding(delta.start) : 0;
+                    paddingBottom = hasPadding ? this.getVarPadding(delta.total) - this.getVarPadding(delta.end) : 0;
+                } else {
+                    paddingTop = this.size * (hasPadding ? delta.start : 0);
+                    paddingBottom = this.size * (hasPadding ? slots.length - delta.keeps : 0) - paddingTop;
+                }
+
+                delta.paddingTop = paddingTop;
+                delta.paddingBottom = paddingBottom;
 
                 return slots.filter(function (slot, index) {
                     return index >= delta.start && index <= delta.end;
@@ -10365,27 +10456,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         },
 
-        beforeMount: function beforeMount() {
-            var delta = this.delta;
-            delta.bench = this.bench || this.remain;
-            delta.keeps = this.remain + delta.bench;
-            delta.viewHeight = this.size * this.remain;
-            delta.start = this.start >= this.remain ? this.start : 0;
-            delta.end = this.start + this.remain + delta.bench;
-        },
-
-        mounted: function mounted() {
-            if (this.validStart(this.start)) {
-                this.setScrollTop(this.start * this.size);
-            }
-        },
-
-        render: function render(createElement) {
+        render: function render(h) {
             var showList = this.filter(this.$slots.default);
             var delta = this.delta;
             var dbc = this.debounce;
 
-            return createElement(this.rtag, {
+            return h(this.rtag, {
                 'ref': 'container',
                 'style': {
                     'display': 'block',
@@ -10394,13 +10470,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 },
                 'on': {
                     'scroll': dbc ? _debounce(this.handleScroll.bind(this), dbc) : this.handleScroll
-                },
-                'class': this.rclass
-            }, [createElement(this.wtag, {
+                }
+            }, [h(this.wtag, {
                 'style': {
                     'display': 'block',
                     'padding-top': delta.paddingTop + 'px',
-                    'padding-bottom': delta.allPadding - delta.paddingTop + 'px'
+                    'padding-bottom': delta.paddingBottom + 'px'
                 },
                 'class': this.wclass
             }, showList)]);
@@ -12495,13 +12570,13 @@ module.exports = function(module) {
 
 
 /* styles */
-__webpack_require__(34)
+__webpack_require__(45)
 
 var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(14),
+  __webpack_require__(15),
   /* template */
-  __webpack_require__(29),
+  __webpack_require__(38),
   /* scopeId */
   "data-v-2b4206de",
   /* cssModules */
@@ -12529,12 +12604,13 @@ module.exports = Component.exports
 
 /***/ }),
 /* 13 */,
-/* 14 */
+/* 14 */,
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__item_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list__);
@@ -12574,7 +12650,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12593,10 +12669,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 16 */,
 /* 17 */,
 /* 18 */,
-/* 19 */
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12622,8 +12700,11 @@ new _vue2.default({
 });
 
 /***/ }),
-/* 20 */,
-/* 21 */
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12637,8 +12718,9 @@ exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom
 
 
 /***/ }),
-/* 22 */,
-/* 23 */
+/* 28 */,
+/* 29 */,
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12652,20 +12734,20 @@ exports.push([module.i, "\n.item[data-v-6bd9c375] {\n    height: 50px;\n    line
 
 
 /***/ }),
-/* 24 */,
-/* 25 */,
-/* 26 */
+/* 31 */,
+/* 32 */,
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(36)
+__webpack_require__(48)
 
 var Component = __webpack_require__(2)(
   /* script */
-  __webpack_require__(15),
+  __webpack_require__(16),
   /* template */
-  __webpack_require__(31),
+  __webpack_require__(41),
   /* scopeId */
   "data-v-6bd9c375",
   /* cssModules */
@@ -12692,9 +12774,11 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 27 */,
-/* 28 */,
-/* 29 */
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12759,8 +12843,9 @@ if (false) {
 }
 
 /***/ }),
-/* 30 */,
-/* 31 */
+/* 39 */,
+/* 40 */,
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12777,15 +12862,16 @@ if (false) {
 }
 
 /***/ }),
-/* 32 */,
-/* 33 */,
-/* 34 */
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(21);
+var content = __webpack_require__(27);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -12805,14 +12891,15 @@ if(false) {
 }
 
 /***/ }),
-/* 35 */,
-/* 36 */
+/* 46 */,
+/* 47 */,
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(23);
+var content = __webpack_require__(30);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
