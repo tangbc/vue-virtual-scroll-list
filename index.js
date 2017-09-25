@@ -42,7 +42,7 @@
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
-            variable: [Array, Function],
+            variable: Function,
             bench: Number,
             debounce: Number,
             totop: Function,
@@ -51,37 +51,26 @@
         },
 
         created: function () {
-            var slots = this.$slots.default
+            var start = this.start >= this.remain ? this.start : 0
+            var height = this.size * this.remain
             var bench = this.bench || this.remain
+            var keeps = this.remain + bench
+            var slots = this.$slots.default
+            var total = slots && slots.length || 0
 
-            // An object helping to calculate.
             this.delta = {
-                // Start index.
-                start: this.start >= this.remain ? this.start : 0,
-                // End index.
-                end: this.start + this.remain + bench,
-                // All items count.
-                total: slots && slots.length || 0,
-                // Nums keeping in real dom.
-                keeps: this.remain + bench,
-                // Nums scroll pass should force update.
-                bench: bench,
-                // Store scrollTop.
-                scrollTop: 0,
-                // Store scroll direction.
-                scrollDirect: 'd',
-                // Container wrapper viewport height.
-                viewHeight: this.size * this.remain,
-                // Container wrapper real padding-top.
-                paddingTop: 0,
-                // Container wrapper real padding-bottom.
-                paddingBottom: 0,
-                // Last event fire timestamp avoid compact fire.
-                fireTime: 0,
-                // Data to store variable index height.
-                varHeight: {},
-                // Data to store variable index ahead padding.
-                varPadding: {}
+                start: start,        // start index.
+                end: start + keeps,  // end index.
+                total: total,        // all items count.
+                keeps: keeps,        // nums keeping in real dom.
+                bench: bench,        // nums scroll pass should force update.
+                offset: 0,           // cache scrollTop offset.
+                direct: 'd',         // cache scroll direction.
+                height: height,      // container wrapper viewport height.
+                fireTime: 0,         // cache last event fire time avoid compact.
+                paddingTop: 0,       // container wrapper real padding-top.
+                paddingBottom: 0,    // container wrapper real padding-bottom.
+                variableData: {}     // cache variable index height and padding offset.
             }
         },
 
@@ -120,8 +109,8 @@
         },
 
         methods: {
-            handleScroll: function (e) {
-                var scrollTop = this.$refs.container.scrollTop
+            onScroll: function (e) {
+                var scrollTop = this.$refs.vsl.scrollTop
 
                 this.updateZone(scrollTop)
 
@@ -137,8 +126,8 @@
                     this.fireEvent('totop')
                 }
 
-                delta.scrollDirect = delta.scrollTop > offset ? 'u' : 'd'
-                delta.scrollTop = offset
+                delta.direct = delta.offset > offset ? 'u' : 'd'
+                delta.offset = offset
 
                 var overs
                 if (this.variable) {
@@ -147,7 +136,7 @@
                     overs = Math.floor(offset / this.size)
                 }
 
-                // Calculate the start and end by moving items.
+                // calculate the start and end by moving items.
                 var start = overs || 0
                 var end = overs ? (overs + delta.keeps) : delta.keeps
 
@@ -158,7 +147,7 @@
                     start = zone.start
                 }
 
-                // For better performance, if scroll pass items within now bench, do not update.
+                // for better performance, if scroll pass items within now bench, do not update.
                 if (!isOver && (overs > delta.start) && (overs - delta.start <= delta.bench)) {
                     return
                 }
@@ -166,27 +155,26 @@
                 delta.end = end
                 delta.start = start
 
-                // Call component to update shown items.
+                // call component to update shown items.
                 this.$forceUpdate()
             },
 
             // return the scroll passed items count in variable height.
             getVarOvers: function (offset) {
-                var delta = this.delta
                 var low = 0
-                var high = delta.total
+                var high = this.delta.total
 
                 var middle = 0
-                var middlePadding = 0
+                var middleOffset = 0
                 while (low <= high) {
                     middle = low + Math.floor((high - low) / 2)
-                    middlePadding = this.getVarPadding(middle)
+                    middleOffset = this.getVarOffset(middle)
 
-                    if (middlePadding === offset) {
+                    if (middleOffset === offset) {
                         return middle
-                    } else if (middlePadding < offset) {
+                    } else if (middleOffset < offset) {
                         low = middle + 1
-                    } else if (middlePadding > offset) {
+                    } else if (middleOffset > offset) {
                         high = middle - 1
                     }
                 }
@@ -194,52 +182,41 @@
                 return low > 0 ? --low : 0
             },
 
-            // get the index ahead padding when variable height.
-            getVarPadding: function (index) {
-                var delta = this.delta
-                if (index in delta.varPadding) {
-                    return delta.varPadding[index]
-                }
-
+            // get the variable height index scroll offset.
+            getVarOffset: function (index) {
                 var i = index
-                var padding = 0
+                var offset = 0
                 while (i--) {
-                    padding += this.getVarHeight(i)
+                    offset += this.getVarSize(i)
                 }
 
-                delta.varPadding[index] = padding
-                return padding
+                return offset
             },
 
-            // return a variable height from a given index.
-            getVarHeight: function (index) {
-                var delta = this.delta
-                if (index in delta.varHeight) {
-                    return delta.varHeight[index]
-                }
-
-                var height = 0
-                if (typeof this.variable === 'function') {
-                    height = this.variable(index)
-                } else if (this.variable instanceof Array) {
-                    height = this.variable[index]
-                }
-
-                delta.varHeight[index] = height
-                return height
+            // return a variable size (height) from a given index.
+            getVarSize: function (index) {
+                return this.variable(index) || 0
             },
 
-            // Avoid overflow range.
+            // avoid overflow range.
             isOverflow: function (start) {
                 var delta = this.delta
                 var overflow = (delta.total - delta.keeps > 0) && (start + this.remain >= delta.total)
-                if (overflow && delta.scrollDirect === 'd') {
+                if (overflow && delta.direct === 'd') {
                     this.fireEvent('tobottom')
                 }
                 return overflow
             },
 
-            // Fire a props event to parent.
+            // if overflow range return the last zone.
+            getLastZone: function () {
+                return {
+                    end: this.delta.total,
+                    start: this.delta.total - this.delta.keeps
+                }
+            },
+
+            // fire a props event to parent.
             fireEvent: function (event) {
                 var now = +new Date()
                 var delta = this.delta
@@ -249,27 +226,20 @@
                 }
             },
 
-            // Check if given start is valid.
+            // check if given start is valid.
             validStart: function (start) {
                 return start === parseInt(start, 10) && (start >= 0 && start < this.delta.total)
             },
 
-            // If overflow range return the last zone.
-            getLastZone: function () {
-                return {
-                    end: this.delta.total,
-                    start: this.delta.total - this.delta.keeps
-                }
-            },
-
-            // Set manual scrollTop
+            // set manual scrollTop
             setScrollTop: function (scrollTop) {
-                this.$refs.container.scrollTop = scrollTop
+                this.$refs.vsl.scrollTop = scrollTop
             },
 
-            // Filter the shown items base on start and end.
-            filter: function (slots) {
+            // filter the shown items base on start and end.
+            filter: function () {
                 var delta = this.delta
+                var slots = this.$slots.default
 
                 if (!slots) {
                     slots = []
@@ -282,8 +252,8 @@
                 var hasPadding = slots.length > delta.keeps
 
                 if (this.variable) {
-                    paddingTop = hasPadding ? this.getVarPadding(delta.start) : 0
-                    paddingBottom = hasPadding ? this.getVarPadding(delta.total) - this.getVarPadding(delta.end) : 0
+                    paddingTop = hasPadding ? this.getVarOffset(delta.start) : 0
+                    paddingBottom = hasPadding ? this.getVarOffset(delta.total) - this.getVarOffset(delta.end) : 0
                 } else {
                     paddingTop = this.size * (hasPadding ? delta.start : 0)
                     paddingBottom = this.size * (hasPadding ? slots.length - delta.keeps : 0) - paddingTop
@@ -299,19 +269,19 @@
         },
 
         render: function (h) {
-            var showList = this.filter(this.$slots.default)
+            var list = this.filter()
             var delta = this.delta
             var dbc = this.debounce
 
             return h(this.rtag, {
-                'ref': 'container',
+                'ref': 'vsl',
                 'style': {
                     'display': 'block',
                     'overflow-y': 'auto',
-                    'height': delta.viewHeight + 'px'
+                    'height': delta.height + 'px'
                 },
                 'on': {
-                    'scroll': dbc ? _debounce(this.handleScroll.bind(this), dbc) : this.handleScroll
+                    'scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
                 }
             }, [
                 h(this.wtag, {
@@ -321,7 +291,7 @@
                         'padding-bottom': delta.paddingBottom + 'px'
                     },
                     'class': this.wclass
-                }, showList)
+                }, list)
             ])
         }
     })
