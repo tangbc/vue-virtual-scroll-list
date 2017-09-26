@@ -212,6 +212,7 @@
                 }
 
                 delta.lastCalcIndex = Math.max(delta.lastCalcIndex, index)
+                delta.lastCalcIndex = Math.min(delta.lastCalcIndex, delta.total - 1)
 
                 return offset
             },
@@ -219,19 +220,18 @@
             // return a variable size (height) from a given index.
             getVarSize: function (index) {
                 var cache = this.delta.varCache[index]
-                return (cache && cache.size) || this.variable(index) || 0
+                return (cache && cache.size) || this.variable(index) || this.size
             },
 
             // return the paddingBottom when variable height base current zone.
             getVarPaddingBottom () {
                 var delta = this.delta
-                var rest = delta.total - delta.lastCalcIndex
-                if (rest <= delta.keeps || delta.lastCalcIndex >= delta.total) {
+                if (delta.total - delta.end <= delta.keeps || delta.lastCalcIndex === delta.total - 1) {
                     return this.getVarOffset(delta.total) - this.getVarOffset(delta.end)
                 } else {
                     // if unreached last zone or uncalculate real behind offset
                     // continue return the estimate paddingBottom avoid max calculate.
-                    return (delta.total - delta.lastCalcIndex) * (delta.averageSize || this.size)
+                    return (delta.total - delta.end) * (delta.averageSize || this.size)
                 }
             },
 
