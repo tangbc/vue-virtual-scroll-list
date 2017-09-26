@@ -1,4 +1,4 @@
-(function (root, factory) {
+;(function (root, factory) {
     var namespace = 'VirtualScrollList'
     if (typeof exports === 'object' && typeof module === 'object') {
         module.exports = factory(namespace, require('vue'))
@@ -90,8 +90,8 @@
 
                 var delta = this.delta
                 var start, end, scrollTop
-
-                if (this.isOverflow(index)) {
+                var isOver = this.isOverflow(index)
+                if (isOver) {
                     var zone = this.getLastZone()
                     end = zone.end
                     start = zone.start
@@ -100,6 +100,10 @@
                     start = index
                     end = start + delta.keeps
                     scrollTop = start * this.size
+                }
+
+                if (this.variable) {
+                    scrollTop = this.getVarOffset(isOver ? delta.total : start)
                 }
 
                 delta.end = end
