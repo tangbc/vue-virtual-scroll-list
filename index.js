@@ -78,7 +78,7 @@
 
         mounted: function () {
             if (this.start && this.validStart(this.start)) {
-                this.setScrollTop(this.start * this.size)
+                this.setScrollTop(this.variable ? this.getVarOffset(this.start) : this.start * this.size)
             }
         },
 
@@ -268,7 +268,7 @@
                 return start === parseInt(start, 10) && (start >= 0 && start < this.delta.total)
             },
 
-            // set manual scrollTop
+            // set manual scrollTop.
             setScrollTop: function (scrollTop) {
                 this.$refs.vsl.scrollTop = scrollTop
             },
