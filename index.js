@@ -56,21 +56,23 @@
             var bench = this.bench || this.remain
             var keeps = this.remain + bench
             var slots = this.$slots.default
-            var total = slots && slots.length || 0
+            var total = (slots && slots.length) || 0
 
             this.delta = {
-                start: start,        // start index.
-                end: start + keeps,  // end index.
-                total: total,        // all items count.
-                keeps: keeps,        // nums keeping in real dom.
-                bench: bench,        // nums scroll pass should force update.
-                offset: 0,           // cache scrollTop offset.
-                direct: 'd',         // cache scroll direction.
-                height: height,      // container wrapper viewport height.
-                fireTime: 0,         // cache last event fire time avoid compact.
-                paddingTop: 0,       // container wrapper real padding-top.
-                paddingBottom: 0,    // container wrapper real padding-bottom.
-                variableData: {}     // cache variable index height and padding offset.
+                start: start, // start index.
+                end: start + keeps, // end index.
+                total: total, // all items count.
+                keeps: keeps, // nums keeping in real dom.
+                bench: bench, // nums scroll pass should force update.
+                offset: 0, // cache scrollTop offset.
+                direct: 'd', // cache scroll direction.
+                height: height, // container wrapper viewport height.
+                fireTime: 0, // cache last event fire time avoid compact.
+                paddingTop: 0, // container wrapper real padding-top.
+                paddingBottom: 0, // container wrapper real padding-bottom.
+                varCache: {}, // cache variable index height and padding offset.
+                averageSize: 0, // average/estimate item height before variable be calculated.
+                lastCalcIndex: 0 // last calculated variable height/offset index, always increase.
             }
         },
 
@@ -154,21 +156,25 @@
 
                 delta.end = end
                 delta.start = start
-
-                // call component to update shown items.
                 this.$forceUpdate()
             },
 
             // return the scroll passed items count in variable height.
             getVarOvers: function (offset) {
+                var delta = this.delta
                 var low = 0
-                var high = this.delta.total
-
                 var middle = 0
                 var middleOffset = 0
+                var high = delta.total
+
                 while (low <= high) {
                     middle = low + Math.floor((high - low) / 2)
                     middleOffset = this.getVarOffset(middle)
+
+                    // calculate the averageSize at first binary search.
+                    if (!delta.averageSize) {
+                        delta.averageSize = Math.floor(middleOffset / middle)
+                    }
 
                     if (middleOffset === offset) {
                         return middle
@@ -184,18 +190,45 @@
 
             // get the variable height index scroll offset.
             getVarOffset: function (index) {
-                var i = index
-                var offset = 0
-                while (i--) {
-                    offset += this.getVarSize(i)
+                var delta = this.delta
+                var cache = delta.varCache[index]
+
+                if (cache) {
+                    return cache.offset
                 }
+
+                var offset = 0
+                for (var i = 0; i < index; i++) {
+                    var size = this.getVarSize(i)
+                    delta.varCache[i] = {
+                        size: size,
+                        offset: offset
+                    }
+                    offset += size
+                }
+
+                delta.lastCalcIndex = Math.max(delta.lastCalcIndex, index)
 
                 return offset
             },
 
             // return a variable size (height) from a given index.
             getVarSize: function (index) {
-                return this.variable(index) || 0
+                var cache = this.delta.varCache[index]
+                return (cache && cache.size) || this.variable(index) || 0
+            },
+
+            // return the paddingBottom when variable height base current zone.
+            getVarPaddingBottom () {
+                var delta = this.delta
+                var rest = delta.total - delta.lastCalcIndex
+                if (rest <= delta.keeps || delta.lastCalcIndex >= delta.total) {
+                    return this.getVarOffset(delta.total) - this.getVarOffset(delta.end)
+                } else {
+                    // if unreached last zone or uncalculate real behind offset
+                    // continue return the estimate paddingBottom avoid max calculate.
+                    return (delta.total - delta.lastCalcIndex) * (delta.averageSize || this.size)
+                }
             },
 
             // avoid overflow range.
@@ -253,7 +286,7 @@
 
                 if (this.variable) {
                     paddingTop = hasPadding ? this.getVarOffset(delta.start) : 0
-                    paddingBottom = hasPadding ? this.getVarOffset(delta.total) - this.getVarOffset(delta.end) : 0
+                    paddingBottom = hasPadding ? this.getVarPaddingBottom() : 0
                 } else {
                     paddingTop = this.size * (hasPadding ? delta.start : 0)
                     paddingBottom = this.size * (hasPadding ? slots.length - delta.keeps : 0) - paddingTop
