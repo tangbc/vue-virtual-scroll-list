@@ -220,7 +220,7 @@
             // return a variable size (height) from a given index.
             getVarSize: function (index) {
                 var cache = this.delta.varCache[index]
-                return (cache && cache.size) || this.variable(index) || this.size
+                return (cache && cache.size) || this.variable(index) || 0
             },
 
             // return the paddingBottom when variable height base current zone.
@@ -230,7 +230,7 @@
                     return this.getVarOffset(delta.total) - this.getVarOffset(delta.end)
                 } else {
                     // if unreached last zone or uncalculate real behind offset
-                    // continue return the estimate paddingBottom avoid max calculate.
+                    // return the estimate paddingBottom avoid too much calculate.
                     return (delta.total - delta.end) * (delta.averageSize || this.size)
                 }
             },
