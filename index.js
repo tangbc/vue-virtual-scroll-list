@@ -55,15 +55,13 @@
             var height = this.size * this.remain
             var bench = this.bench || this.remain
             var keeps = this.remain + bench
-            var slots = this.$slots.default
-            var total = (slots && slots.length) || 0
 
             this.delta = {
                 start: start, // start index.
                 end: start + keeps, // end index.
-                total: total, // all items count.
                 keeps: keeps, // nums keeping in real dom.
                 bench: bench, // nums scroll pass should force update.
+                total: 0, // all items count, update in render filter.
                 offset: 0, // cache scrollTop offset.
                 direct: 'd', // cache scroll direction.
                 height: height, // container wrapper viewport height.
@@ -71,43 +69,29 @@
                 paddingTop: 0, // container wrapper real padding-top.
                 paddingBottom: 0, // container wrapper real padding-bottom.
                 varCache: {}, // cache variable index height and padding offset.
-                averageSize: 0, // average/estimate item height before variable be calculated.
-                lastCalcIndex: 0 // last calculated variable height/offset index, always increase.
+                varAverSize: 0, // average/estimate item height before variable be calculated.
+                varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
             }
         },
 
         mounted: function () {
-            if (this.start && this.validStart(this.start)) {
-                this.setScrollTop(this.variable ? this.getVarOffset(this.start) : this.start * this.size)
+            if (this.start) {
+                var start = this.getZone(this.start).start
+                this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size)
             }
         },
 
         watch: {
             start: function (index) {
-                if (!this.validStart(index)) {
-                    return
-                }
-
                 var delta = this.delta
-                var start, end, scrollTop
-                var isOver = this.isOverflow(index)
-                if (isOver) {
-                    var zone = this.getLastZone()
-                    end = zone.end
-                    start = zone.start
-                    scrollTop = delta.total * this.size
-                } else {
-                    start = index
-                    end = start + delta.keeps
-                    scrollTop = start * this.size
-                }
+                var zone = this.getZone(index)
 
-                if (this.variable) {
-                    scrollTop = this.getVarOffset(isOver ? delta.total : start)
-                }
+                var scrollTop = this.variable
+                    ? this.getVarOffset(zone.overflow ? delta.total : zone.start)
+                    : zone.overflow ? delta.total * this.size : zone.start * this.size
 
-                delta.end = end
-                delta.start = start >= this.remain ? start : 0
+                delta.end = zone.end
+                delta.start = zone.start >= this.remain ? zone.start : 0
 
                 this.$forceUpdate()
                 Vue2.nextTick(this.setScrollTop.bind(this, scrollTop))
@@ -116,25 +100,29 @@
 
         methods: {
             onScroll: function (e) {
-                var scrollTop = this.$refs.vsl.scrollTop
-
-                this.updateZone(scrollTop)
-
-                if (this.onscroll) {
-                    this.onscroll(e, scrollTop)
-                }
-            },
-
-            updateZone: function (offset) {
                 var delta = this.delta
-
-                if (!offset && delta.total) {
-                    this.fireEvent('totop')
-                }
+                var offset = this.$refs.vsl.scrollTop
 
                 delta.direct = delta.offset > offset ? 'u' : 'd'
                 delta.offset = offset
 
+                if (!offset && delta.total) {
+                    this.triggerEvent('totop')
+                }
+
+                this.updateZone(offset)
+
+                if (this.onscroll) {
+                    this.onscroll(e, {
+                        end: delta.end,
+                        start: delta.start,
+                        offset: offset
+                    })
+                }
+            },
+
+            // update render zone by moving offset.
+            updateZone: function (offset) {
                 var overs
                 if (this.variable) {
                     overs = this.getVarOvers(offset)
@@ -142,24 +130,16 @@
                     overs = Math.floor(offset / this.size)
                 }
 
-                // calculate the start and end by moving items.
-                var start = overs || 0
-                var end = overs ? (overs + delta.keeps) : delta.keeps
-
-                var isOver = this.isOverflow(start)
-                if (isOver) {
-                    var zone = this.getLastZone()
-                    end = zone.end
-                    start = zone.start
-                }
+                var delta = this.delta
+                var zone = this.getZone(overs)
 
                 // for better performance, if scroll pass items within now bench, do not update.
-                if (!isOver && (overs > delta.start) && (overs - delta.start <= delta.bench)) {
+                if (!zone.overflow && (overs > delta.start) && (overs - delta.start <= delta.bench)) {
                     return
                 }
 
-                delta.end = end
-                delta.start = start
+                delta.end = zone.end
+                delta.start = zone.start
                 this.$forceUpdate()
             },
 
@@ -175,9 +155,9 @@
                     middle = low + Math.floor((high - low) / 2)
                     middleOffset = this.getVarOffset(middle)
 
-                    // calculate the averageSize at first binary search.
-                    if (!delta.averageSize) {
-                        delta.averageSize = Math.floor(middleOffset / middle)
+                    // calculate the variable average size at first binary search.
+                    if (!delta.varAverSize) {
+                        delta.varAverSize = Math.floor(middleOffset / middle)
                     }
 
                     if (middleOffset === offset) {
@@ -211,8 +191,8 @@
                     offset += size
                 }
 
-                delta.lastCalcIndex = Math.max(delta.lastCalcIndex, index)
-                delta.lastCalcIndex = Math.min(delta.lastCalcIndex, delta.total - 1)
+                delta.varLastCalcIndex = Math.max(delta.varLastCalcIndex, index)
+                delta.varLastCalcIndex = Math.min(delta.varLastCalcIndex, delta.total - 1)
 
                 return offset
             },
@@ -223,15 +203,15 @@
                 return (cache && cache.size) || this.variable(index) || 0
             },
 
-            // return the paddingBottom when variable height base current zone.
+            // return the variable paddingBottom base current zone.
             getVarPaddingBottom () {
                 var delta = this.delta
-                if (delta.total - delta.end <= delta.keeps || delta.lastCalcIndex === delta.total - 1) {
+                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
                     return this.getVarOffset(delta.total) - this.getVarOffset(delta.end)
                 } else {
                     // if unreached last zone or uncalculate real behind offset
                     // return the estimate paddingBottom avoid too much calculate.
-                    return (delta.total - delta.end) * (delta.averageSize || this.size)
+                    return (delta.total - delta.end) * (delta.varAverSize || this.size)
                 }
             },
 
@@ -240,32 +220,44 @@
                 var delta = this.delta
                 var overflow = (delta.total - delta.keeps > 0) && (start + this.remain >= delta.total)
                 if (overflow && delta.direct === 'd') {
-                    this.fireEvent('tobottom')
+                    this.triggerEvent('tobottom')
                 }
                 return overflow
             },
 
-            // if overflow range return the last zone.
-            getLastZone: function () {
-                return {
-                    end: this.delta.total,
-                    start: this.delta.total - this.delta.keeps
-                }
-            },
-
-            // fire a props event to parent.
-            fireEvent: function (event) {
+            // trigger a props event on parent.
+            triggerEvent: function (event) {
                 var now = +new Date()
                 var delta = this.delta
                 if (this[event] && now - delta.fireTime > 30) {
+                    this[event]()
                     delta.fireTime = now
-                    this[event](delta.start, delta.end)
                 }
             },
 
-            // check if given start is valid.
-            validStart: function (start) {
-                return start === parseInt(start, 10) && (start >= 0 && start < this.delta.total)
+            // return the right zone info base on start/index.
+            getZone (index) {
+                var start, end
+                var delta = this.delta
+
+                index = parseInt(index, 10) || 0
+                index = index >= delta.total ? (delta.total - 1) : (index < 0 ? 0 : index)
+
+                var overflow = this.isOverflow(index)
+                // if overflow range return the last zone.
+                if (overflow) {
+                    end = delta.total
+                    start = delta.total - delta.keeps
+                } else {
+                    start = index
+                    end = start + delta.keeps
+                }
+
+                return {
+                    end: end,
+                    start: start,
+                    overflow: overflow
+                }
             },
 
             // set manual scrollTop.
