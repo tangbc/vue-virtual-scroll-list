@@ -244,7 +244,7 @@
             },
 
             // return the right zone info base on `start/index`.
-            getZone (index) {
+            getZone: function (index) {
                 var start, end
                 var delta = this.delta
 
