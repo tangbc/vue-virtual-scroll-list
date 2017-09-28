@@ -203,8 +203,16 @@
                 return (cache && cache.size) || this.variable(index) || 0
             },
 
+            // return the variable paddingTop base current zone.
+            // @todo: if set a large `start` before variable was calculated,
+            // here will also case too much offset calculate when list is very large,
+            // consider use estimate paddingTop in this case just like `getVarPaddingBottom`.
+            getVarPaddingTop: function () {
+                return this.getVarOffset(this.delta.start)
+            },
+
             // return the variable paddingBottom base current zone.
-            getVarPaddingBottom () {
+            getVarPaddingBottom: function () {
                 var delta = this.delta
                 if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
                     return this.getVarOffset(delta.total) - this.getVarOffset(delta.end)
@@ -235,7 +243,7 @@
                 }
             },
 
-            // return the right zone info base on start/index.
+            // return the right zone info base on `start/index`.
             getZone (index) {
                 var start, end
                 var delta = this.delta
@@ -265,7 +273,7 @@
                 this.$refs.vsl.scrollTop = scrollTop
             },
 
-            // filter the shown items base on start and end.
+            // filter the shown items base on `start` and `end`.
             filter: function () {
                 var delta = this.delta
                 var slots = this.$slots.default
@@ -281,7 +289,7 @@
                 var hasPadding = slots.length > delta.keeps
 
                 if (this.variable) {
-                    paddingTop = hasPadding ? this.getVarOffset(delta.start) : 0
+                    paddingTop = hasPadding ? this.getVarPaddingTop() : 0
                     paddingBottom = hasPadding ? this.getVarPaddingBottom() : 0
                 } else {
                     paddingTop = this.size * (hasPadding ? delta.start : 0)
