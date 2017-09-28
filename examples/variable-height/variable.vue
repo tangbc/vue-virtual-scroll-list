@@ -16,7 +16,7 @@
         </VirtualList>
 
         <div class="source">
-            <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable-height/variable-height.vue#L1">
+            <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable-height/variable.vue#L1">
                 View this demo source code
             </a>
         </div>
