@@ -15,7 +15,9 @@
 
 * Tiny and very easy to use.
 
-* Big data list and infinite loading with high performance.
+* Big data list with high performance.
+
+* Support fixed height and variable height.
 
 * Support set the initial scroll index or change any.
 
@@ -26,7 +28,9 @@
 
 * [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
 
-* [vue-virtual-scroll-list infinite data by request 20 each time](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
+* [vue-virtual-scroll-list with requesting infinite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
+
+* [vue-virtual-scroll-list with variable height](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable-height/).
 
 
 ## How it works
@@ -42,7 +46,7 @@
 npm install vue-virtual-scroll-list --save
 ```
 
-```javascript
+```vue
 <template>
     <div>
         <virtualList :size="40" :remain="8">
@@ -76,8 +80,8 @@ The `<Item>` component is included inside but defined outside the `<virtualList>
 <script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script>
 
 <div id="app">
-    <virtual-list :size="40" :remain="8">
-        <div class="item" v-for="(item, index) of items" :key="index">Item: # {{ index }}</div>
+    <virtual-list :size="40" :remain="8" wtag="ul">
+        <li class="item" v-for="(item, index) of items" :key="index">Item: # {{ index }}</li>
     </virtual-list>
 </div>
 ```
@@ -114,12 +118,12 @@ new Vue({
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, throws a warning if index does not exist.  |
 | debounce | Number | * | **It's disabled by default**, milliseconds of using `debounce` function to ensure scroll event doesn't fire so often that it bricks browser performance. |
 | rtag | String | * | Default value is `div`, the virtual-list root HTMLElement tag name, in all case it's style is set to `display: block;` |
-| rclass | String | * | Default value is an empty string, the virtual-list root HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
 | wtag | String | * | Default value is `div`, the virtual-list item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
-| wclass | String | * | Default value is an empty string, the virtual-list item wrapper HTMLElement tag's classes. Has the same API has [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
+| wclass | String | * | Default value is an empty string, the virtual-list item wrapper HTMLElement tag's classes. Has the same API with [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
 | onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, scrollTop)`. |
 | totop | Function | * | Called when the virtual-list is scrolled to top. |
 | tobottom | Function | * | Called when the virtual-list is scrolled to bottom. |
+| variable | Function | * | For using virtual-list with variable height, this props is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. |
 
 
 ## Contributions
