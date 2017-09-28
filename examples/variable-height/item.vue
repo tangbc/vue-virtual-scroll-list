@@ -1,6 +1,7 @@
 <template>
     <div class="item" :style="style">
         <span>{{ title }}</span>
+        <i class="px">{{ height }}px</i>
     </div>
 </template>
 
@@ -24,10 +25,15 @@
 
 <style>
     .item {
-        /* height: 50px; */
-        /* line-height: 50px; */
+        position: relative;
         padding-left: 20px;
         box-sizing: border-box;
         border-bottom: 1px solid #eee;
+    }
+    .px {
+        position: absolute;
+        right: 20px;
+        font-size: 12px;
+        color: #ccc;
     }
 </style>

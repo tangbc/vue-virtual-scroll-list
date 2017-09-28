@@ -10153,7 +10153,7 @@ module.exports = g;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-(function (root, factory) {
+;(function (root, factory) {
     var namespace = 'VirtualScrollList';
     if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') {
         module.exports = factory(namespace, __webpack_require__(0));
@@ -10200,7 +10200,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
-            variable: [Array, Function],
+            variable: Function,
             bench: Number,
             debounce: Number,
             totop: Function,
@@ -10209,68 +10209,45 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
 
         created: function created() {
-            var slots = this.$slots.default;
+            var start = this.start >= this.remain ? this.start : 0;
+            var height = this.size * this.remain;
             var bench = this.bench || this.remain;
+            var keeps = this.remain + bench;
 
-            // An object helping to calculate.
             this.delta = {
-                // Start index.
-                start: this.start >= this.remain ? this.start : 0,
-                // End index.
-                end: this.start + this.remain + bench,
-                // All items count.
-                total: slots && slots.length || 0,
-                // Nums keeping in real dom.
-                keeps: this.remain + bench,
-                // Nums scroll pass should force update.
-                bench: bench,
-                // Store scrollTop.
-                scrollTop: 0,
-                // Store scroll direction.
-                scrollDirect: 'd',
-                // Container wrapper viewport height.
-                viewHeight: this.size * this.remain,
-                // Container wrapper real padding-top.
-                paddingTop: 0,
-                // Container wrapper real padding-bottom.
-                paddingBottom: 0,
-                // Last event fire timestamp avoid compact fire.
-                fireTime: 0,
-                // Data to store variable index height.
-                varHeight: {},
-                // Data to store variable index ahead padding.
-                varPadding: {}
+                start: start, // start index.
+                end: start + keeps, // end index.
+                keeps: keeps, // nums keeping in real dom.
+                bench: bench, // nums scroll pass should force update.
+                total: 0, // all items count, update in render filter.
+                offset: 0, // cache scrollTop offset.
+                direct: 'd', // cache scroll direction.
+                height: height, // container wrapper viewport height.
+                fireTime: 0, // cache last event fire time avoid compact.
+                paddingTop: 0, // container wrapper real padding-top.
+                paddingBottom: 0, // container wrapper real padding-bottom.
+                varCache: {}, // cache variable index height and padding offset.
+                varAverSize: 0, // average/estimate item height before variable be calculated.
+                varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
             };
         },
 
         mounted: function mounted() {
-            if (this.start && this.validStart(this.start)) {
-                this.setScrollTop(this.start * this.size);
+            if (this.start) {
+                var start = this.getZone(this.start).start;
+                this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size);
             }
         },
 
         watch: {
             start: function start(index) {
-                if (!this.validStart(index)) {
-                    return;
-                }
-
                 var delta = this.delta;
-                var start, end, scrollTop;
+                var zone = this.getZone(index);
 
-                if (this.isOverflow(index)) {
-                    var zone = this.getLastZone();
-                    end = zone.end;
-                    start = zone.start;
-                    scrollTop = delta.total * this.size;
-                } else {
-                    start = index;
-                    end = start + delta.keeps;
-                    scrollTop = start * this.size;
-                }
+                var scrollTop = this.variable ? this.getVarOffset(zone.overflow ? delta.total : zone.start) : zone.overflow ? delta.total * this.size : zone.start * this.size;
 
-                delta.end = end;
-                delta.start = start >= this.remain ? start : 0;
+                delta.end = zone.end;
+                delta.start = zone.start >= this.remain ? zone.start : 0;
 
                 this.$forceUpdate();
                 Vue2.nextTick(this.setScrollTop.bind(this, scrollTop));
@@ -10278,26 +10255,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
 
         methods: {
-            handleScroll: function handleScroll(e) {
-                var scrollTop = this.$refs.container.scrollTop;
+            onScroll: function onScroll(e) {
+                var delta = this.delta;
+                var offset = this.$refs.vsl.scrollTop;
 
-                this.updateZone(scrollTop);
+                delta.direct = delta.offset > offset ? 'u' : 'd';
+                delta.offset = offset;
+
+                if (!offset && delta.total) {
+                    this.triggerEvent('totop');
+                }
+
+                this.updateZone(offset);
 
                 if (this.onscroll) {
-                    this.onscroll(e, scrollTop);
+                    this.onscroll(e, {
+                        end: delta.end,
+                        start: delta.start,
+                        offset: offset
+                    });
                 }
             },
 
+            // update render zone by moving offset.
             updateZone: function updateZone(offset) {
-                var delta = this.delta;
-
-                if (!offset && delta.total) {
-                    this.fireEvent('totop');
-                }
-
-                delta.scrollDirect = delta.scrollTop > offset ? 'u' : 'd';
-                delta.scrollTop = offset;
-
                 var overs;
                 if (this.variable) {
                     overs = this.getVarOvers(offset);
@@ -10305,26 +10286,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     overs = Math.floor(offset / this.size);
                 }
 
-                // Calculate the start and end by moving items.
-                var start = overs || 0;
-                var end = overs ? overs + delta.keeps : delta.keeps;
+                var delta = this.delta;
+                var zone = this.getZone(overs);
 
-                var isOver = this.isOverflow(start);
-                if (isOver) {
-                    var zone = this.getLastZone();
-                    end = zone.end;
-                    start = zone.start;
-                }
-
-                // For better performance, if scroll pass items within now bench, do not update.
-                if (!isOver && overs > delta.start && overs - delta.start <= delta.bench) {
+                // for better performance, if scroll pass items within now bench, do not update.
+                if (!zone.overflow && overs > delta.start && overs - delta.start <= delta.bench) {
                     return;
                 }
 
-                delta.end = end;
-                delta.start = start;
-
-                // Call component to update shown items.
+                delta.end = zone.end;
+                delta.start = zone.start;
                 this.$forceUpdate();
             },
 
@@ -10332,19 +10303,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             getVarOvers: function getVarOvers(offset) {
                 var delta = this.delta;
                 var low = 0;
+                var middle = 0;
+                var middleOffset = 0;
                 var high = delta.total;
 
-                var middle = 0;
-                var middlePadding = 0;
                 while (low <= high) {
                     middle = low + Math.floor((high - low) / 2);
-                    middlePadding = this.getVarPadding(middle);
+                    middleOffset = this.getVarOffset(middle);
 
-                    if (middlePadding === offset) {
+                    // calculate the variable average size at first binary search.
+                    if (!delta.varAverSize) {
+                        delta.varAverSize = Math.floor(middleOffset / middle);
+                    }
+
+                    if (middleOffset === offset) {
                         return middle;
-                    } else if (middlePadding < offset) {
+                    } else if (middleOffset < offset) {
                         low = middle + 1;
-                    } else if (middlePadding > offset) {
+                    } else if (middleOffset > offset) {
                         high = middle - 1;
                     }
                 }
@@ -10352,82 +10328,112 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return low > 0 ? --low : 0;
             },
 
-            // get the index ahead padding when variable height.
-            getVarPadding: function getVarPadding(index) {
+            // get the variable height index scroll offset.
+            getVarOffset: function getVarOffset(index) {
                 var delta = this.delta;
-                if (index in delta.varPadding) {
-                    return delta.varPadding[index];
+                var cache = delta.varCache[index];
+
+                if (cache) {
+                    return cache.offset;
                 }
 
-                var i = index;
-                var padding = 0;
-                while (i--) {
-                    padding += this.getVarHeight(i);
+                var offset = 0;
+                for (var i = 0; i < index; i++) {
+                    var size = this.getVarSize(i);
+                    delta.varCache[i] = {
+                        size: size,
+                        offset: offset
+                    };
+                    offset += size;
                 }
 
-                delta.varPadding[index] = padding;
-                return padding;
+                delta.varLastCalcIndex = Math.max(delta.varLastCalcIndex, index);
+                delta.varLastCalcIndex = Math.min(delta.varLastCalcIndex, delta.total - 1);
+
+                return offset;
             },
 
-            // return a variable height from a given index.
-            getVarHeight: function getVarHeight(index) {
-                var delta = this.delta;
-                if (index in delta.varHeight) {
-                    return delta.varHeight[index];
-                }
-
-                var height = 0;
-                if (typeof this.variable === 'function') {
-                    height = this.variable(index);
-                } else if (this.variable instanceof Array) {
-                    height = this.variable[index];
-                }
-
-                delta.varHeight[index] = height;
-                return height;
+            // return a variable size (height) from a given index.
+            getVarSize: function getVarSize(index) {
+                var cache = this.delta.varCache[index];
+                return cache && cache.size || this.variable(index) || 0;
             },
 
-            // Avoid overflow range.
+            // return the variable paddingTop base current zone.
+            // @todo: if set a large `start` before variable was calculated,
+            // here will also case too much offset calculate when list is very large,
+            // consider use estimate paddingTop in this case just like `getVarPaddingBottom`.
+            getVarPaddingTop: function getVarPaddingTop() {
+                return this.getVarOffset(this.delta.start);
+            },
+
+            // return the variable paddingBottom base current zone.
+            getVarPaddingBottom: function getVarPaddingBottom() {
+                var delta = this.delta;
+                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
+                    return this.getVarOffset(delta.total) - this.getVarOffset(delta.end);
+                } else {
+                    // if unreached last zone or uncalculate real behind offset
+                    // return the estimate paddingBottom avoid too much calculate.
+                    return (delta.total - delta.end) * (delta.varAverSize || this.size);
+                }
+            },
+
+            // avoid overflow range.
             isOverflow: function isOverflow(start) {
                 var delta = this.delta;
                 var overflow = delta.total - delta.keeps > 0 && start + this.remain >= delta.total;
-                if (overflow && delta.scrollDirect === 'd') {
-                    this.fireEvent('tobottom');
+                if (overflow && delta.direct === 'd') {
+                    this.triggerEvent('tobottom');
                 }
                 return overflow;
             },
 
-            // Fire a props event to parent.
-            fireEvent: function fireEvent(event) {
+            // trigger a props event on parent.
+            triggerEvent: function triggerEvent(event) {
                 var now = +new Date();
                 var delta = this.delta;
                 if (this[event] && now - delta.fireTime > 30) {
+                    this[event]();
                     delta.fireTime = now;
-                    this[event](delta.start, delta.end);
                 }
             },
 
-            // Check if given start is valid.
-            validStart: function validStart(start) {
-                return start === parseInt(start, 10) && start >= 0 && start < this.delta.total;
-            },
+            // return the right zone info base on `start/index`.
+            getZone: function getZone(index) {
+                var start, end;
+                var delta = this.delta;
 
-            // If overflow range return the last zone.
-            getLastZone: function getLastZone() {
+                index = parseInt(index, 10) || 0;
+                index = index >= delta.total ? delta.total - 1 : index < 0 ? 0 : index;
+
+                var overflow = this.isOverflow(index);
+                // if overflow range return the last zone.
+                if (overflow) {
+                    end = delta.total;
+                    start = delta.total - delta.keeps;
+                } else {
+                    start = index;
+                    end = start + delta.keeps;
+                }
+
                 return {
-                    end: this.delta.total,
-                    start: this.delta.total - this.delta.keeps
+                    end: end,
+                    start: start,
+                    overflow: overflow
                 };
             },
 
-            // Set manual scrollTop
+
+            // set manual scrollTop.
             setScrollTop: function setScrollTop(scrollTop) {
-                this.$refs.container.scrollTop = scrollTop;
+                this.$refs.vsl.scrollTop = scrollTop;
             },
 
-            // Filter the shown items base on start and end.
-            filter: function filter(slots) {
+            // filter the shown items base on `start` and `end`.
+            filter: function filter() {
                 var delta = this.delta;
+                var slots = this.$slots.default;
 
                 if (!slots) {
                     slots = [];
@@ -10440,8 +10446,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var hasPadding = slots.length > delta.keeps;
 
                 if (this.variable) {
-                    paddingTop = hasPadding ? this.getVarPadding(delta.start) : 0;
-                    paddingBottom = hasPadding ? this.getVarPadding(delta.total) - this.getVarPadding(delta.end) : 0;
+                    paddingTop = hasPadding ? this.getVarPaddingTop() : 0;
+                    paddingBottom = hasPadding ? this.getVarPaddingBottom() : 0;
                 } else {
                     paddingTop = this.size * (hasPadding ? delta.start : 0);
                     paddingBottom = this.size * (hasPadding ? slots.length - delta.keeps : 0) - paddingTop;
@@ -10457,19 +10463,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
 
         render: function render(h) {
-            var showList = this.filter(this.$slots.default);
+            var list = this.filter();
             var delta = this.delta;
             var dbc = this.debounce;
 
             return h(this.rtag, {
-                'ref': 'container',
+                'ref': 'vsl',
                 'style': {
                     'display': 'block',
                     'overflow-y': 'auto',
-                    'height': delta.viewHeight + 'px'
+                    'height': delta.height + 'px'
                 },
                 'on': {
-                    'scroll': dbc ? _debounce(this.handleScroll.bind(this), dbc) : this.handleScroll
+                    'scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
                 }
             }, [h(this.wtag, {
                 'style': {
@@ -10478,7 +10484,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     'padding-bottom': delta.paddingBottom + 'px'
                 },
                 'class': this.wclass
-            }, showList)]);
+            }, list)]);
         }
     });
 });
@@ -12712,7 +12718,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    margin: 0 .8em;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-2b4206de] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-2b4206de] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall[data-v-2b4206de] {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?72869be9"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,eAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index</span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"15\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        margin: 0 .8em;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-2b4206de] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-2b4206de] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall[data-v-2b4206de] {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?11752cda"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index: </span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"15\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12784,7 +12790,7 @@ module.exports = Component.exports
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('div', {
     staticClass: "scrollToIndex"
-  }, [_c('span', [_vm._v("Scroll to index")]), _vm._v(" "), _c('input', {
+  }, [_c('span', [_vm._v("Scroll to index: ")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model.number.lazy",

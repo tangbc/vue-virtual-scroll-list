@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="scrollToIndex">
-            <span>Scroll to index</span>
+            <span>Scroll to index: </span>
             <input type="text" v-model.number.lazy="startIndex">
             <small>Change and blur to set start index.</small>
         </div>
@@ -42,7 +42,7 @@
         outline: none;
         padding: .4em .5em;
         width: 55px;
-        margin: 0 .8em;
+        height: 16px;
         border-radius: 3px;
         border: 1px solid;
         border-color: #dddddd;
