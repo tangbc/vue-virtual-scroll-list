@@ -1,6 +1,6 @@
 <template>
     <div class="item" :style="style">
-        <span>{{ title }}</span>
+        <span>Item # {{ index }}</span>
         <i class="px">{{ height }}px</i>
     </div>
 </template>
@@ -8,7 +8,7 @@
 <script>
     export default {
         props: {
-            title: String,
+            index: Number,
             height: Number
         },
 

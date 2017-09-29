@@ -2,5 +2,5 @@
 module.exports = [
     'finite',
     'infinite',
-    'variable-height',
+    'variable',
 ]

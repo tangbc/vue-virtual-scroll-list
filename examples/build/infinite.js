@@ -10266,7 +10266,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     this.triggerEvent('totop');
                 }
 
-                this.updateZone(offset);
+                if (delta.total > delta.keeps) {
+                    this.updateZone(offset);
+                }
 
                 if (this.onscroll) {
                     this.onscroll(e, {
@@ -10329,17 +10331,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
 
             // get the variable height index scroll offset.
-            getVarOffset: function getVarOffset(index) {
+            getVarOffset: function getVarOffset(index, nocache) {
                 var delta = this.delta;
                 var cache = delta.varCache[index];
 
-                if (cache) {
+                if (cache && !nocache) {
                     return cache.offset;
                 }
 
                 var offset = 0;
                 for (var i = 0; i < index; i++) {
-                    var size = this.getVarSize(i);
+                    var size = this.getVarSize(i, nocache);
                     delta.varCache[i] = {
                         size: size,
                         offset: offset
@@ -10347,16 +10349,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     offset += size;
                 }
 
-                delta.varLastCalcIndex = Math.max(delta.varLastCalcIndex, index);
+                delta.varLastCalcIndex = Math.max(delta.varLastCalcIndex, index - 1);
                 delta.varLastCalcIndex = Math.min(delta.varLastCalcIndex, delta.total - 1);
 
                 return offset;
             },
 
             // return a variable size (height) from a given index.
-            getVarSize: function getVarSize(index) {
+            getVarSize: function getVarSize(index, nocache) {
                 var cache = this.delta.varCache[index];
-                return cache && cache.size || this.variable(index) || 0;
+                return !nocache && cache && cache.size || this.variable(index) || 0;
             },
 
             // return the variable paddingTop base current zone.
@@ -10379,10 +10381,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
 
+            // the ONLY ONE public method, let the parent to update variable by index.
+            updateVariable: function updateVariable(index) {
+                // update all the offfsets ahead of index.
+                this.getVarOffset(index, true);
+            },
+
             // avoid overflow range.
             isOverflow: function isOverflow(start) {
                 var delta = this.delta;
-                var overflow = delta.total - delta.keeps > 0 && start + this.remain >= delta.total;
+                var overflow = delta.total > delta.keeps && start + this.remain >= delta.total;
                 if (overflow && delta.direct === 'd') {
                     this.triggerEvent('tobottom');
                 }
@@ -10404,8 +10412,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var start, end;
                 var delta = this.delta;
 
-                index = parseInt(index, 10) || 0;
-                index = index >= delta.total ? delta.total - 1 : index < 0 ? 0 : index;
+                index = parseInt(index, 10);
+                index = index < 0 ? 0 : index;
 
                 var overflow = this.isOverflow(index);
                 // if overflow range return the last zone.
@@ -10423,7 +10431,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     overflow: overflow
                 };
             },
-
 
             // set manual scrollTop.
             setScrollTop: function setScrollTop(scrollTop) {
@@ -12577,13 +12584,13 @@ module.exports = function(module) {
 
 
 /* styles */
-__webpack_require__(50)
+__webpack_require__(48)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(17),
   /* template */
-  __webpack_require__(43),
+  __webpack_require__(41),
   /* scopeId */
   "data-v-c3ee5d9e",
   /* cssModules */
@@ -12785,8 +12792,7 @@ new _vue2.default({
 /* 24 */,
 /* 25 */,
 /* 26 */,
-/* 27 */,
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12800,9 +12806,8 @@ exports.push([module.i, "\n.spinner[data-v-35e952af] {\n    text-align: center;\
 
 
 /***/ }),
-/* 29 */,
-/* 30 */,
-/* 31 */
+/* 28 */,
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12816,7 +12821,7 @@ exports.push([module.i, "\n.item[data-v-8f8155a0] {\n    height: 50px;\n    line
 
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(true);
@@ -12830,19 +12835,21 @@ exports.push([module.i, "\n.counter[data-v-c3ee5d9e] {\n    position: relative;\
 
 
 /***/ }),
+/* 31 */,
+/* 32 */,
 /* 33 */,
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(49)
+__webpack_require__(47)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(18),
   /* template */
-  __webpack_require__(42),
+  __webpack_require__(40),
   /* scopeId */
   "data-v-8f8155a0",
   /* cssModules */
@@ -12874,13 +12881,13 @@ module.exports = Component.exports
 
 
 /* styles */
-__webpack_require__(46)
+__webpack_require__(45)
 
 var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(19),
   /* template */
-  __webpack_require__(39),
+  __webpack_require__(38),
   /* scopeId */
   "data-v-35e952af",
   /* cssModules */
@@ -12909,8 +12916,7 @@ module.exports = Component.exports
 /***/ }),
 /* 36 */,
 /* 37 */,
-/* 38 */,
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12941,9 +12947,8 @@ if (false) {
 }
 
 /***/ }),
-/* 40 */,
-/* 41 */,
-/* 42 */
+/* 39 */,
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12960,7 +12965,7 @@ if (false) {
 }
 
 /***/ }),
-/* 43 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -13010,15 +13015,16 @@ if (false) {
 }
 
 /***/ }),
+/* 42 */,
+/* 43 */,
 /* 44 */,
-/* 45 */,
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(28);
+var content = __webpack_require__(27);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -13038,15 +13044,14 @@ if(false) {
 }
 
 /***/ }),
-/* 47 */,
-/* 48 */,
-/* 49 */
+/* 46 */,
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(31);
+var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -13066,13 +13071,13 @@ if(false) {
 }
 
 /***/ }),
-/* 50 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(32);
+var content = __webpack_require__(30);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM

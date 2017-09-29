@@ -5,14 +5,12 @@ function getRandomInt (min, max) {
 
 export default function (count, heights = [30, 40, 50, 80, 100, 140, 180]) {
     let items = []
-    let ri = count
-    let hl = heights.length
 
-    while (ri--) {
-        let index = getRandomInt(0, hl - 1)
+    count = parseInt(count, 10)
+
+    while (count--) {
         items.push({
-            height: heights[index],
-            title: `Item # ${count - ri - 1}`
+            height: heights[getRandomInt(0, heights.length - 1)]
         })
     }
 
