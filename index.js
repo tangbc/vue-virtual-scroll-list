@@ -110,7 +110,9 @@
                     this.triggerEvent('totop')
                 }
 
-                this.updateZone(offset)
+                if (delta.total > delta.keeps) {
+                    this.updateZone(offset)
+                }
 
                 if (this.onscroll) {
                     this.onscroll(e, {
@@ -173,17 +175,17 @@
             },
 
             // get the variable height index scroll offset.
-            getVarOffset: function (index) {
+            getVarOffset: function (index, nocache) {
                 var delta = this.delta
                 var cache = delta.varCache[index]
 
-                if (cache) {
+                if (cache && !nocache) {
                     return cache.offset
                 }
 
                 var offset = 0
                 for (var i = 0; i < index; i++) {
-                    var size = this.getVarSize(i)
+                    var size = this.getVarSize(i, nocache)
                     delta.varCache[i] = {
                         size: size,
                         offset: offset
@@ -191,16 +193,16 @@
                     offset += size
                 }
 
-                delta.varLastCalcIndex = Math.max(delta.varLastCalcIndex, index)
+                delta.varLastCalcIndex = Math.max(delta.varLastCalcIndex, index - 1)
                 delta.varLastCalcIndex = Math.min(delta.varLastCalcIndex, delta.total - 1)
 
                 return offset
             },
 
             // return a variable size (height) from a given index.
-            getVarSize: function (index) {
+            getVarSize: function (index, nocache) {
                 var cache = this.delta.varCache[index]
-                return (cache && cache.size) || this.variable(index) || 0
+                return (!nocache && cache && cache.size) || this.variable(index) || 0
             },
 
             // return the variable paddingTop base current zone.
@@ -223,10 +225,16 @@
                 }
             },
 
+            // the ONLY ONE public method, let the parent to update variable by index.
+            updateVariable: function (index) {
+                // update all the offfsets ahead of index.
+                this.getVarOffset(index, true)
+            },
+
             // avoid overflow range.
             isOverflow: function (start) {
                 var delta = this.delta
-                var overflow = (delta.total - delta.keeps > 0) && (start + this.remain >= delta.total)
+                var overflow = (delta.total > delta.keeps) && (start + this.remain >= delta.total)
                 if (overflow && delta.direct === 'd') {
                     this.triggerEvent('tobottom')
                 }
@@ -248,8 +256,8 @@
                 var start, end
                 var delta = this.delta
 
-                index = parseInt(index, 10) || 0
-                index = index >= delta.total ? (delta.total - 1) : (index < 0 ? 0 : index)
+                index = parseInt(index, 10)
+                index = index < 0 ? 0 : index
 
                 var overflow = this.isOverflow(index)
                 // if overflow range return the last zone.
