@@ -112,7 +112,7 @@ new Vue({
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
-| size | Number | ✓ | Each list item height, whether fixed height or variable height, this props is required. |
+| size | Number | ✓ | Each list item height, in variable height mode, this props just use to calculate the virtual-list viewport height. |
 | remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` will determine the virtual-list outside container height (size × remian). |
 | bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, throws a warning if index does not exist.  |
