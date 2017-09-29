@@ -30,7 +30,7 @@
 
 * [vue-virtual-scroll-list with requesting infinite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
 
-* [vue-virtual-scroll-list with variable height](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable-height/).
+* [vue-virtual-scroll-list with variable height](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable/).
 
 
 ## How it works
@@ -120,10 +120,14 @@ new Vue({
 | rtag | String | * | Default value is `div`, the virtual-list root HTMLElement tag name, in all case it's style is set to `display: block;` |
 | wtag | String | * | Default value is `div`, the virtual-list item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
 | wclass | String | * | Default value is an empty string, the virtual-list item wrapper HTMLElement tag's classes. Has the same API with [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
-| onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, scrollTop)`. |
+| onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, { start, end, offset })`. |
 | totop | Function | * | Called when the virtual-list is scrolled to top. |
 | tobottom | Function | * | Called when the virtual-list is scrolled to bottom. |
 | variable | Function | * | For using virtual-list with variable height, this props is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. |
+
+### About variable height
+
+In variable height mode, `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change any `<Item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cached, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for more detail.
 
 
 ## Contributions
