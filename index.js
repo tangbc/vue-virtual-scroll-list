@@ -52,19 +52,15 @@
 
         created: function () {
             var start = this.start >= this.remain ? this.start : 0
-            var height = this.size * this.remain
-            var bench = this.bench || this.remain
-            var keeps = this.remain + bench
+            var keeps = this.remain + (this.bench || this.remain)
 
             this.delta = {
                 start: start, // start index.
                 end: start + keeps, // end index.
                 keeps: keeps, // nums keeping in real dom.
-                bench: bench, // nums scroll pass should force update.
                 total: 0, // all items count, update in render filter.
                 offset: 0, // cache scrollTop offset.
                 direct: 'd', // cache scroll direction.
-                height: height, // container wrapper viewport height.
                 fireTime: 0, // cache last event fire time avoid compact.
                 paddingTop: 0, // container wrapper real padding-top.
                 paddingBottom: 0, // container wrapper real padding-bottom.
@@ -82,19 +78,14 @@
         },
 
         watch: {
-            start: function (index) {
-                var delta = this.delta
-                var zone = this.getZone(index)
-
-                var scrollTop = this.variable
-                    ? this.getVarOffset(zone.overflow ? delta.total : zone.start)
-                    : zone.overflow ? delta.total * this.size : zone.start * this.size
-
-                delta.end = zone.end
-                delta.start = zone.start >= this.remain ? zone.start : 0
-
-                this.$forceUpdate()
-                Vue2.nextTick(this.setScrollTop.bind(this, scrollTop))
+            start: function () {
+                this.alter = 'start'
+            },
+            remain: function () {
+                this.alter = 'remain'
+            },
+            bench: function () {
+                this.alter = 'bench'
             }
         },
 
@@ -134,9 +125,10 @@
 
                 var delta = this.delta
                 var zone = this.getZone(overs)
+                var bench = this.bench || this.remain
 
                 // for better performance, if scroll pass items within now bench, do not update.
-                if (!zone.overflow && (overs > delta.start) && (overs - delta.start <= delta.bench)) {
+                if (!zone.overflow && (overs > delta.start) && (overs - delta.start <= bench)) {
                     return
                 }
 
@@ -234,7 +226,7 @@
             // avoid overflow range.
             isOverflow: function (start) {
                 var delta = this.delta
-                var overflow = (delta.total > delta.keeps) && (start + this.remain >= delta.total)
+                var overflow = (delta.total > delta.keeps && start + this.remain >= delta.total) || (start >= delta.total)
                 if (overflow && delta.direct === 'd') {
                     this.triggerEvent('tobottom')
                 }
@@ -263,7 +255,7 @@
                 // if overflow range return the last zone.
                 if (overflow) {
                     end = delta.total
-                    start = delta.total - delta.keeps
+                    start = Math.max(0, delta.total - delta.keeps)
                 } else {
                     start = index
                     end = start + delta.keeps
@@ -313,6 +305,32 @@
             }
         },
 
+        // update delta and zone when prorps change.
+        beforeUpdate: function () {
+            var delta = this.delta
+            delta.keeps = this.remain + (this.bench || this.remain)
+
+            var alterStart = this.alter === 'start'
+            var oldStart = alterStart ? this.start : delta.start
+            var zone = this.getZone(oldStart)
+
+            // if changing start, update scroll position after update.
+            if (alterStart) {
+                this.$nextTick(this.setScrollTop.bind(this, this.variable
+                    ? this.getVarOffset(zone.overflow ? delta.total : zone.start)
+                    : zone.overflow ? delta.total * this.size : zone.start * this.size)
+                )
+            }
+
+            // if points out difference, force update once again.
+            if (oldStart !== zone.start || this.alter) {
+                this.alter = ''
+                delta.end = zone.end
+                delta.start = zone.start
+                this.$forceUpdate()
+            }
+        },
+
         render: function (h) {
             var list = this.filter()
             var delta = this.delta
@@ -323,7 +341,7 @@
                 'style': {
                     'display': 'block',
                     'overflow-y': 'auto',
-                    'height': delta.height + 'px'
+                    'height': this.size * this.remain + 'px'
                 },
                 'on': {
                     'scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
