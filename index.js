@@ -58,24 +58,22 @@
                 start: start, // start index.
                 end: start + keeps, // end index.
                 keeps: keeps, // nums keeping in real dom.
-                total: 0, // all items count, update in render filter.
-                offset: 0, // cache current scroll offset.
-                offsetAll: 0, // cache all the scroll offset.
-                direct: 'd', // cache scroll direction.
+                total: 0, // all items count, update in filter.
+                offsetAll: 0, // cache all the scrollable offset.
                 paddingTop: 0, // container wrapper real padding-top.
                 paddingBottom: 0, // container wrapper real padding-bottom.
-                varCache: {}, // cache variable index height and padding offset.
+                varCache: {}, // object to cache variable index height and scroll offset.
                 varAverSize: 0, // average/estimate item height before variable be calculated.
                 varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
             }
         },
 
         watch: {
-            remain: function () {
-                this.alter = 'remain'
-            },
             size: function () {
                 this.alter = 'size'
+            },
+            remain: function () {
+                this.alter = 'remain'
             },
             bench: function () {
                 this.alter = 'bench'
@@ -90,9 +88,6 @@
                 var delta = this.delta
                 var offset = this.$refs.vsl.scrollTop
 
-                delta.direct = delta.offset > offset ? 'u' : 'd'
-                delta.offset = offset
-
                 if (!offset && delta.total) {
                     this.triggerEvent('totop')
                 }
@@ -106,15 +101,11 @@
                 }
 
                 if (this.onscroll) {
-                    this.onscroll(e, {
-                        end: delta.end,
-                        start: delta.start,
-                        offset: offset
-                    })
+                    this.onscroll(e, offset)
                 }
             },
 
-            // update render zone by moving offset.
+            // update render zone by scroll offset.
             updateZone: function (offset) {
                 var overs
                 if (this.variable) {
@@ -137,7 +128,7 @@
                 this.$forceUpdate()
             },
 
-            // return the scroll passed items count in variable height.
+            // return the scroll passed items count in variable.
             getVarOvers: function (offset) {
                 var low = 0
                 var middle = 0
@@ -149,7 +140,7 @@
                     middle = low + Math.floor((high - low) / 2)
                     middleOffset = this.getVarOffset(middle)
 
-                    // calculate the average variable size at first binary search.
+                    // calculate the average variable height at first binary search.
                     if (!delta.varAverSize) {
                         delta.varAverSize = Math.floor(middleOffset / middle)
                     }
@@ -166,7 +157,7 @@
                 return low > 0 ? --low : 0
             },
 
-            // get the variable height index scroll offset.
+            // return a variable scroll offset from given index.
             getVarOffset: function (index, nocache) {
                 var delta = this.delta
                 var cache = delta.varCache[index]
@@ -191,7 +182,7 @@
                 return offset
             },
 
-            // return a variable size (height) from a given index.
+            // return a variable size (height) from given index.
             getVarSize: function (index, nocache) {
                 var cache = this.delta.varCache[index]
                 return (!nocache && cache && cache.size) || this.variable(index) || 0
@@ -217,7 +208,7 @@
                 }
             },
 
-            // retun the variable all heights use to judge reach to bottom.
+            // retun the variable all heights use to judge reach bottom.
             getVarAllHeight: function () {
                 var delta = this.delta
                 if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
@@ -227,9 +218,9 @@
                 }
             },
 
-            // the ONLY ONE public method, let the parent to update variable by index.
+            // the ONLY ONE public method, allow the parent update variable by index.
             updateVariable: function (index) {
-                // update all the offfsets ahead of index.
+                // clear/update all the offfsets and heights ahead of index.
                 this.getVarOffset(index, true)
             },
 
@@ -265,7 +256,7 @@
                 }
             },
 
-            // set manual scrollTop.
+            // set manual scroll top.
             setScrollTop: function (scrollTop) {
                 this.$refs.vsl.scrollTop = scrollTop
             },
@@ -318,11 +309,11 @@
             delta.keeps = this.remain + (this.bench || this.remain)
 
             var alterStart = this.alter === 'start'
-            var oldStart = alterStart ? this.start : delta.start
-            var zone = this.getZone(oldStart)
+            var calcStart = alterStart ? this.start : delta.start
+            var zone = this.getZone(calcStart)
 
-            // if start change, update scroll position.
-            if (alterStart) {
+            // if start or size change, update scroll position.
+            if (alterStart || this.alter === 'size') {
                 this.$nextTick(this.setScrollTop.bind(this, this.variable
                     ? this.getVarOffset(zone.isLast ? delta.total : zone.start)
                     : zone.isLast ? delta.total * this.size : zone.start * this.size)
@@ -330,7 +321,7 @@
             }
 
             // if points out difference, force update once again.
-            if (oldStart !== zone.start || this.alter) {
+            if (calcStart !== zone.start || this.alter) {
                 this.alter = ''
                 delta.end = zone.end
                 delta.start = zone.start
