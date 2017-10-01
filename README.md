@@ -1,6 +1,12 @@
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
     <img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg?style=flat" alt="NPM version"/>
 </a>
+<a href="https://npmjs.com/package/vue-virtual-scroll-list">
+    <img src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
+</a>
+<a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
+    <img src="http://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
+</a>
 <a href="https://vuejs.org/">
     <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="Vue version"/>
 </a>
@@ -13,7 +19,7 @@
 
 > A vue (2.x) component that supports big data and infinite loading by using virtual scroll list.
 
-* Tiny and very easy to use.
+* Tiny and very very easy to use.
 
 * Big data list with high performance.
 
@@ -71,9 +77,9 @@ npm install vue-virtual-scroll-list --save
 </script>
 ```
 
-The `<Item>` component is included inside but defined outside the `<virtualList>` component. We see that `<virtualList>` does **not** rely on the `<Item>` component. So you can use virtual-list with any list item component freely.
+The `<Item>` component is included inside but defined outside the `<virtualList>` component. We see that `<virtualList>` does **not** rely on the `<Item>` component. So you can use virtual-list with any component freely.
 
-#### Using by script tag:
+#### Using by script include:
 
 ```html
 <script src="https://unpkg.com/vue@2.0.0/dist/vue.js"></script>
@@ -81,7 +87,7 @@ The `<Item>` component is included inside but defined outside the `<virtualList>
 
 <div id="app">
     <virtual-list :size="40" :remain="8" wtag="ul">
-        <li class="item" v-for="(item, index) of items" :key="index">Item: # {{ index }}</li>
+        <li class="item" v-for="(udf, index) of items" :key="index">Item: # {{ index }}</li>
     </virtual-list>
 </div>
 ```
@@ -112,22 +118,22 @@ new Vue({
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
-| size | Number | ✓ | Each list item height, in variable height mode, this props just use to calculate the virtual-list viewport height. |
-| remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` will determine the virtual-list outside container height (size × remian). |
+| size | Number | ✓ | Each list item height, in variable height mode, this prop just use to calculate the virtual-list viewport height. |
+| remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` determine the outside container viewport height (size × remian). |
 | bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
-| start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, throws a warning if index does not exist.  |
+| start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, if out of range it will be turned to `0` or the last one.  |
 | debounce | Number | * | **It's disabled by default**, milliseconds of using `debounce` function to ensure scroll event doesn't fire so often that it bricks browser performance. |
-| rtag | String | * | Default value is `div`, the virtual-list root HTMLElement tag name, in all case it's style is set to `display: block;` |
-| wtag | String | * | Default value is `div`, the virtual-list item wrapper HTMLElement tag name, in all case it's style is set to `display: block;` |
-| wclass | String | * | Default value is an empty string, the virtual-list item wrapper HTMLElement tag's classes. Has the same API with [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
-| onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, { start, end, offset })`. |
-| totop | Function | * | Called when the virtual-list is scrolled to top. |
-| tobottom | Function | * | Called when the virtual-list is scrolled to bottom. |
-| variable | Function | * | For using virtual-list with variable height, this props is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. |
+| rtag | String | * | Default value is `div`, the virtual-list root element tag name, in all cases it's style is set to `display: block;` |
+| wtag | String | * | Default value is `div`, the virtual-list item wrapper element tag name, in all cases it's style is set to `display: block;` |
+| wclass | String | * | Default value is an empty string, the virtual-list item wrapper element class, has the same API with [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
+| onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, offset)`. |
+| totop | Function | * | Called when virtual-list is scrolled to top, no param. |
+| tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
+| variable | Function | * | For using virtual-list with variable height mode, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. |
 
 ### About variable height
 
-In variable height mode, `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change any `<Item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cached, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for more detail.
+In variable height mode, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<Item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cached, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
 
 
 ## Contributions
