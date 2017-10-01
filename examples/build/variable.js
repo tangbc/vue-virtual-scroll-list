@@ -10210,47 +10210,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         created: function created() {
             var start = this.start >= this.remain ? this.start : 0;
-            var height = this.size * this.remain;
-            var bench = this.bench || this.remain;
-            var keeps = this.remain + bench;
+            var keeps = this.remain + (this.bench || this.remain);
 
             this.delta = {
                 start: start, // start index.
                 end: start + keeps, // end index.
                 keeps: keeps, // nums keeping in real dom.
-                bench: bench, // nums scroll pass should force update.
-                total: 0, // all items count, update in render filter.
-                offset: 0, // cache scrollTop offset.
-                direct: 'd', // cache scroll direction.
-                height: height, // container wrapper viewport height.
-                fireTime: 0, // cache last event fire time avoid compact.
+                total: 0, // all items count, update in filter.
+                offsetAll: 0, // cache all the scrollable offset.
                 paddingTop: 0, // container wrapper real padding-top.
                 paddingBottom: 0, // container wrapper real padding-bottom.
-                varCache: {}, // cache variable index height and padding offset.
+                varCache: {}, // object to cache variable index height and scroll offset.
                 varAverSize: 0, // average/estimate item height before variable be calculated.
                 varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
             };
         },
 
-        mounted: function mounted() {
-            if (this.start) {
-                var start = this.getZone(this.start).start;
-                this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size);
-            }
-        },
-
         watch: {
-            start: function start(index) {
-                var delta = this.delta;
-                var zone = this.getZone(index);
-
-                var scrollTop = this.variable ? this.getVarOffset(zone.overflow ? delta.total : zone.start) : zone.overflow ? delta.total * this.size : zone.start * this.size;
-
-                delta.end = zone.end;
-                delta.start = zone.start >= this.remain ? zone.start : 0;
-
-                this.$forceUpdate();
-                Vue2.nextTick(this.setScrollTop.bind(this, scrollTop));
+            size: function size() {
+                this.alter = 'size';
+            },
+            remain: function remain() {
+                this.alter = 'remain';
+            },
+            bench: function bench() {
+                this.alter = 'bench';
+            },
+            start: function start() {
+                this.alter = 'start';
             }
         },
 
@@ -10258,9 +10245,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             onScroll: function onScroll(e) {
                 var delta = this.delta;
                 var offset = this.$refs.vsl.scrollTop;
-
-                delta.direct = delta.offset > offset ? 'u' : 'd';
-                delta.offset = offset;
 
                 if (!offset && delta.total) {
                     this.triggerEvent('totop');
@@ -10270,16 +10254,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     this.updateZone(offset);
                 }
 
+                if (offset >= delta.offsetAll) {
+                    this.triggerEvent('tobottom');
+                }
+
                 if (this.onscroll) {
-                    this.onscroll(e, {
-                        end: delta.end,
-                        start: delta.start,
-                        offset: offset
-                    });
+                    this.onscroll(e, offset);
                 }
             },
 
-            // update render zone by moving offset.
+            // update render zone by scroll offset.
             updateZone: function updateZone(offset) {
                 var overs;
                 if (this.variable) {
@@ -10290,9 +10274,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 var delta = this.delta;
                 var zone = this.getZone(overs);
+                var bench = this.bench || this.remain;
 
                 // for better performance, if scroll pass items within now bench, do not update.
-                if (!zone.overflow && overs > delta.start && overs - delta.start <= delta.bench) {
+                if (!zone.isLast && overs > delta.start && overs - delta.start <= bench) {
                     return;
                 }
 
@@ -10301,19 +10286,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.$forceUpdate();
             },
 
-            // return the scroll passed items count in variable height.
+            // return the scroll passed items count in variable.
             getVarOvers: function getVarOvers(offset) {
-                var delta = this.delta;
                 var low = 0;
                 var middle = 0;
                 var middleOffset = 0;
+                var delta = this.delta;
                 var high = delta.total;
 
                 while (low <= high) {
                     middle = low + Math.floor((high - low) / 2);
                     middleOffset = this.getVarOffset(middle);
 
-                    // calculate the variable average size at first binary search.
+                    // calculate the average variable height at first binary search.
                     if (!delta.varAverSize) {
                         delta.varAverSize = Math.floor(middleOffset / middle);
                     }
@@ -10330,12 +10315,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return low > 0 ? --low : 0;
             },
 
-            // get the variable height index scroll offset.
+            // return a variable scroll offset from given index.
             getVarOffset: function getVarOffset(index, nocache) {
                 var delta = this.delta;
                 var cache = delta.varCache[index];
 
-                if (cache && !nocache) {
+                if (!nocache && cache) {
                     return cache.offset;
                 }
 
@@ -10355,7 +10340,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return offset;
             },
 
-            // return a variable size (height) from a given index.
+            // return a variable size (height) from given index.
             getVarSize: function getVarSize(index, nocache) {
                 var cache = this.delta.varCache[index];
                 return !nocache && cache && cache.size || this.variable(index) || 0;
@@ -10381,30 +10366,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
 
-            // the ONLY ONE public method, let the parent to update variable by index.
+            // retun the variable all heights use to judge reach bottom.
+            getVarAllHeight: function getVarAllHeight() {
+                var delta = this.delta;
+                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
+                    return this.getVarOffset(delta.total);
+                } else {
+                    return this.getVarOffset(delta.start) + (delta.total - delta.end) * (delta.varAverSize || this.size);
+                }
+            },
+
+            // the ONLY ONE public method, allow the parent update variable by index.
             updateVariable: function updateVariable(index) {
-                // update all the offfsets ahead of index.
+                // clear/update all the offfsets and heights ahead of index.
                 this.getVarOffset(index, true);
-            },
-
-            // avoid overflow range.
-            isOverflow: function isOverflow(start) {
-                var delta = this.delta;
-                var overflow = delta.total > delta.keeps && start + this.remain >= delta.total;
-                if (overflow && delta.direct === 'd') {
-                    this.triggerEvent('tobottom');
-                }
-                return overflow;
-            },
-
-            // trigger a props event on parent.
-            triggerEvent: function triggerEvent(event) {
-                var now = +new Date();
-                var delta = this.delta;
-                if (this[event] && now - delta.fireTime > 30) {
-                    this[event]();
-                    delta.fireTime = now;
-                }
             },
 
             // return the right zone info base on `start/index`.
@@ -10415,11 +10390,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 index = parseInt(index, 10);
                 index = index < 0 ? 0 : index;
 
-                var overflow = this.isOverflow(index);
-                // if overflow range return the last zone.
-                if (overflow) {
+                var lastStart = delta.total - delta.keeps;
+                var isLast = index <= delta.total && index >= lastStart || index > delta.total;
+                if (isLast) {
                     end = delta.total;
-                    start = delta.total - delta.keeps;
+                    start = Math.max(0, lastStart);
                 } else {
                     start = index;
                     end = start + delta.keeps;
@@ -10428,11 +10403,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return {
                     end: end,
                     start: start,
-                    overflow: overflow
+                    isLast: isLast
                 };
             },
 
-            // set manual scrollTop.
+            // trigger a props event on parent.
+            triggerEvent: function triggerEvent(event) {
+                if (this[event]) {
+                    this[event]();
+                }
+            },
+
+            // set manual scroll top.
             setScrollTop: function setScrollTop(scrollTop) {
                 this.$refs.vsl.scrollTop = scrollTop;
             },
@@ -10449,23 +10431,56 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 delta.total = slots.length;
 
-                var paddingTop, paddingBottom;
-                var hasPadding = slots.length > delta.keeps;
+                var paddingTop, paddingBottom, allHeight;
+                var hasPadding = delta.total > delta.keeps;
 
                 if (this.variable) {
+                    allHeight = this.getVarAllHeight();
                     paddingTop = hasPadding ? this.getVarPaddingTop() : 0;
                     paddingBottom = hasPadding ? this.getVarPaddingBottom() : 0;
                 } else {
+                    allHeight = this.size * delta.total;
                     paddingTop = this.size * (hasPadding ? delta.start : 0);
-                    paddingBottom = this.size * (hasPadding ? slots.length - delta.keeps : 0) - paddingTop;
+                    paddingBottom = this.size * (hasPadding ? delta.total - delta.keeps : 0) - paddingTop;
                 }
 
                 delta.paddingTop = paddingTop;
                 delta.paddingBottom = paddingBottom;
+                delta.offsetAll = allHeight - this.size * this.remain;
 
                 return slots.filter(function (slot, index) {
                     return index >= delta.start && index <= delta.end;
                 });
+            }
+        },
+
+        mounted: function mounted() {
+            if (this.start) {
+                var start = this.getZone(this.start).start;
+                this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size);
+            }
+        },
+
+        // check if delta should update when prorps change.
+        beforeUpdate: function beforeUpdate() {
+            var delta = this.delta;
+            delta.keeps = this.remain + (this.bench || this.remain);
+
+            var alterStart = this.alter === 'start';
+            var calcStart = alterStart ? this.start : delta.start;
+            var zone = this.getZone(calcStart);
+
+            // if start or size change, update scroll position.
+            if (alterStart || this.alter === 'size') {
+                this.$nextTick(this.setScrollTop.bind(this, this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast ? delta.total * this.size : zone.start * this.size));
+            }
+
+            // if points out difference, force update once again.
+            if (calcStart !== zone.start || this.alter) {
+                this.alter = '';
+                delta.end = zone.end;
+                delta.start = zone.start;
+                this.$forceUpdate();
             }
         },
 
@@ -10479,7 +10494,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 'style': {
                     'display': 'block',
                     'overflow-y': 'auto',
-                    'height': delta.height + 'px'
+                    'height': this.size * this.remain + 'px'
                 },
                 'on': {
                     'scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
@@ -12710,6 +12725,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -12732,32 +12748,30 @@ const INIT_COUNT = 100;
         };
     },
 
-    watch: {
-        count(val) {
-            this.items = __WEBPACK_IMPORTED_MODULE_2__getItems___default()(val);
-        }
-    },
-
     methods: {
-        toBottom() {
-            console.log('toBottom');
-        },
-
         getVariableHeight(index) {
             let target = this.items[index];
             return target && target.height;
         },
 
-        eventSetStartIndex() {
-            //
+        eventChangeCount() {
+            let items = __WEBPACK_IMPORTED_MODULE_2__getItems___default()(this.count);
+            this.items = items;
+            this.startIndex = Math.min(this.startIndex, items.length - 1);
+            this.startIndex = Math.max(this.startIndex, 0);
         },
 
         eventChangeHeight() {
             let index = this.changeIndex;
             let height = this.changeHeight;
+            let length = this.items.length;
 
-            if (index < 0 || index !== parseInt(index, 10) || index >= this.items.length) {
-                return alert(`please select a right index: 0 ~ ${this.items.length - 1} && int number.`);
+            if (!length) {
+                return alert('empty list now.');
+            }
+
+            if (index < 0 || index !== parseInt(index, 10) || index >= length) {
+                return alert(`please select a right index: 0 ~ ${length - 1} && int number.`);
             }
 
             if (height <= 0 || height !== parseInt(height, 10)) {
@@ -12876,7 +12890,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n.scrollToIndex, .changeHeight, .changeData {\n    padding: 1em 0;\n    position: relative;\n}\n.changeHeight {\n    border-top: 1px dashed #ccc;\n    border-bottom: 1px dashed #ccc;\n}\n@media (max-width: 640px) {\n.changeHeight, .changeData {\n        display: none;\n}\n.indexSpan {\n        display: block;\n        padding: .5em 0;\n}\n}\n.ceil {\n    margin-right: 1em;\n}\n.smallCeil {\n    margin-right: .5em;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nselect {\n    height: 28px;\n    margin-right: .8em;\n    outline: none;\n    background: #f8f8f8;\n}\nbutton {\n    position: relative;\n    padding: .4em .8em;\n    height: 30px;\n    vertical-align: top;\n    border-radius: 3px;\n    background: #f8f8f8;\n    cursor: pointer;\n    outline: none;\n    border: 1px solid #ccc;\n}\nbutton:active {\n    background: #f3f3f3;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable/variable.vue?e02798ec"],"names":[],"mappings":";AA+HA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,4BAAA;IACA,+BAAA;CACA;AACA;AACA;QACA,cAAA;CACA;AACA;QACA,eAAA;QACA,gBAAA;CACA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,aAAA;IACA,mBAAA;IACA,cAAA;IACA,oBAAA;CACA;AACA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,oBAAA;IACA,gBAAA;IACA,cAAA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;CACA","file":"variable.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span class=\"indexSpan ceil\">\n                List count:\n                <input type=\"text\" v-model.number.lazy=\"count\">\n            </span>\n            <span class=\"indexSpan ceil\">\n                Start index:\n                <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            </span>\n        </div>\n        <div class=\"changeHeight\">\n            <span>Index: </span>\n            <select v-model=\"changeIndex\">\n                <option value=\"-1\" disabled selected>-select-</option>\n                <option v-for=\"i of items.length\" :value=\"i - 1\" :key=\"i\">{{ i - 1 }}</option>\n            </select>\n            <span>Height: </span>\n            <input type=\"text\" v-model.number=\"changeHeight\" class=\"ceil\">\n            <button @click=\"eventChangeHeight\">Apply</button>\n        </div>\n        <div class=\"changeData\">\n            <button class=\"ceil\" @click=\"eventChangeItems('push')\">Array push</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('pop')\">Array pop</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('shift')\">Array shift</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('unshift')\">Array unshift</button>\n        </div>\n\n        <VirtualList ref=\"vsl\" :variable=\"getVariableHeight\" :size=\"50\" :remain=\"6\" :tobottom=\"toBottom\" :start=\"startIndex\" class=\"list\">\n            <Item\n                v-for=\"(item, index) of items\"\n                :key=\"index\"\n                :index=\"index\"\n                :height=\"item.height\"\n            ></Item>\n        </VirtualList>\n\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n    import getItems from './getItems'\n\n    const INIT_COUNT = 100\n\n    export default {\n        name: 'variable-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                changeIndex: -1,\n                changeHeight: 0,\n                count: INIT_COUNT,\n                items: getItems(INIT_COUNT)\n            }\n        },\n\n        watch: {\n            count (val) {\n                this.items = getItems(val)\n            }\n        },\n\n        methods: {\n            toBottom () {\n                console.log('toBottom')\n            },\n\n            getVariableHeight (index) {\n                let target = this.items[index]\n                return target && target.height\n            },\n\n            eventSetStartIndex () {\n                //\n            },\n\n            eventChangeHeight () {\n                let index = this.changeIndex\n                let height = this.changeHeight\n\n                if (index < 0 || index !== parseInt(index, 10) || index >= this.items.length) {\n                    return alert(`please select a right index: 0 ~ ${this.items.length - 1} && int number.`)\n                }\n\n                if (height <= 0 || height !== parseInt(height, 10)) {\n                    return alert('please set a right height: greater than 0 && int number.')\n                }\n\n                this.items[index].height = height\n                this.$refs.vsl.updateVariable(index)\n            },\n\n            eventChangeItems (type) {\n                let [item] = getItems(1)\n\n                switch (type) {\n                    case 'push':\n                        this.items.push(item)\n                        break\n                    case 'pop':\n                        this.items.pop()\n                        break\n                    case 'shift':\n                        this.items.shift()\n                        break\n                    case 'unshift':\n                        this.items.unshift(item)\n                        break\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    .scrollToIndex, .changeHeight, .changeData {\n        padding: 1em 0;\n        position: relative;\n    }\n    .changeHeight {\n        border-top: 1px dashed #ccc;\n        border-bottom: 1px dashed #ccc;\n    }\n    @media (max-width: 640px) {\n        .changeHeight, .changeData {\n            display: none;\n        }\n        .indexSpan {\n            display: block;\n            padding: .5em 0;\n        }\n    }\n    .ceil {\n        margin-right: 1em;\n    }\n    .smallCeil {\n        margin-right: .5em;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    select {\n        height: 28px;\n        margin-right: .8em;\n        outline: none;\n        background: #f8f8f8;\n    }\n    button {\n        position: relative;\n        padding: .4em .8em;\n        height: 30px;\n        vertical-align: top;\n        border-radius: 3px;\n        background: #f8f8f8;\n        cursor: pointer;\n        outline: none;\n        border: 1px solid #ccc;\n    }\n    button:active {\n        background: #f3f3f3;\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n.scrollToIndex, .changeHeight, .changeData {\n    padding: 1em 0;\n    position: relative;\n}\n.changeHeight {\n    border-top: 1px dashed #ccc;\n    border-bottom: 1px dashed #ccc;\n}\n@media (max-width: 640px) {\n.changeHeight, .changeData {\n        display: none;\n}\n.indexSpan {\n        display: block;\n        padding: .5em 0;\n}\n}\n.ceil {\n    margin-right: 1em;\n}\n.smallCeil {\n    margin-right: .5em;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nselect {\n    height: 28px;\n    margin-right: .8em;\n    outline: none;\n    background: #f8f8f8;\n}\nbutton {\n    position: relative;\n    padding: .4em .8em;\n    height: 30px;\n    vertical-align: top;\n    border-radius: 3px;\n    background: #f8f8f8;\n    cursor: pointer;\n    outline: none;\n    border: 1px solid #ccc;\n}\nbutton:active {\n    background: #f3f3f3;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable/variable.vue?a597f796"],"names":[],"mappings":";AA8HA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,4BAAA;IACA,+BAAA;CACA;AACA;AACA;QACA,cAAA;CACA;AACA;QACA,eAAA;QACA,gBAAA;CACA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,aAAA;IACA,mBAAA;IACA,cAAA;IACA,oBAAA;CACA;AACA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,oBAAA;IACA,gBAAA;IACA,cAAA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;CACA","file":"variable.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span class=\"indexSpan ceil\">\n                Start index:\n                <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            </span>\n            <span class=\"indexSpan ceil\">\n                List count:\n                <input type=\"text\" v-model.number=\"count\">\n            </span>\n            <button @click=\"eventChangeCount\">Apply</button>\n        </div>\n        <div class=\"changeHeight\">\n            <span>Index: </span>\n            <select v-model=\"changeIndex\">\n                <option value=\"-1\" disabled selected>-select-</option>\n                <option v-for=\"i of items.length\" :value=\"i - 1\" :key=\"i\">{{ i - 1 }}</option>\n            </select>\n            <span>Height: </span>\n            <input type=\"text\" v-model.number=\"changeHeight\" class=\"ceil\">\n            <button @click=\"eventChangeHeight\">Apply</button>\n        </div>\n        <div class=\"changeData\">\n            <button class=\"ceil\" @click=\"eventChangeItems('push')\">Array push</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('pop')\">Array pop</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('shift')\">Array shift</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('unshift')\">Array unshift</button>\n        </div>\n\n        <VirtualList ref=\"vsl\" :variable=\"getVariableHeight\" :size=\"50\" :remain=\"6\" :start=\"startIndex\" class=\"list\">\n            <Item\n                v-for=\"(item, index) of items\"\n                :key=\"index\"\n                :index=\"index\"\n                :height=\"item.height\"\n            ></Item>\n        </VirtualList>\n\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n    import getItems from './getItems'\n\n    const INIT_COUNT = 100\n\n    export default {\n        name: 'variable-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                changeIndex: -1,\n                changeHeight: 0,\n                count: INIT_COUNT,\n                items: getItems(INIT_COUNT)\n            }\n        },\n\n        methods: {\n            getVariableHeight (index) {\n                let target = this.items[index]\n                return target && target.height\n            },\n\n            eventChangeCount () {\n                let items = getItems(this.count)\n                this.items = items\n                this.startIndex = Math.min(this.startIndex, items.length - 1)\n                this.startIndex = Math.max(this.startIndex, 0)\n            },\n\n            eventChangeHeight () {\n                let index = this.changeIndex\n                let height = this.changeHeight\n                let length = this.items.length\n\n                if (!length) {\n                    return alert('empty list now.')\n                }\n\n                if (index < 0 || index !== parseInt(index, 10) || index >= length) {\n                    return alert(`please select a right index: 0 ~ ${length - 1} && int number.`)\n                }\n\n                if (height <= 0 || height !== parseInt(height, 10)) {\n                    return alert('please set a right height: greater than 0 && int number.')\n                }\n\n                this.items[index].height = height\n                this.$refs.vsl.updateVariable(index)\n            },\n\n            eventChangeItems (type) {\n                let [item] = getItems(1)\n\n                switch (type) {\n                    case 'push':\n                        this.items.push(item)\n                        break\n                    case 'pop':\n                        this.items.pop()\n                        break\n                    case 'shift':\n                        this.items.shift()\n                        break\n                    case 'unshift':\n                        this.items.unshift(item)\n                        break\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    .scrollToIndex, .changeHeight, .changeData {\n        padding: 1em 0;\n        position: relative;\n    }\n    .changeHeight {\n        border-top: 1px dashed #ccc;\n        border-bottom: 1px dashed #ccc;\n    }\n    @media (max-width: 640px) {\n        .changeHeight, .changeData {\n            display: none;\n        }\n        .indexSpan {\n            display: block;\n            padding: .5em 0;\n        }\n    }\n    .ceil {\n        margin-right: 1em;\n    }\n    .smallCeil {\n        margin-right: .5em;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    select {\n        height: 28px;\n        margin-right: .8em;\n        outline: none;\n        background: #f8f8f8;\n    }\n    button {\n        position: relative;\n        padding: .4em .8em;\n        height: 30px;\n        vertical-align: top;\n        border-radius: 3px;\n        background: #f8f8f8;\n        cursor: pointer;\n        outline: none;\n        border: 1px solid #ccc;\n    }\n    button:active {\n        background: #f3f3f3;\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12956,33 +12970,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "scrollToIndex"
   }, [_c('span', {
     staticClass: "indexSpan ceil"
-  }, [_vm._v("\n            List count:\n            "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model.number.lazy",
-      value: (_vm.count),
-      expression: "count",
-      modifiers: {
-        "number": true,
-        "lazy": true
-      }
-    }],
-    attrs: {
-      "type": "text"
-    },
-    domProps: {
-      "value": (_vm.count)
-    },
-    on: {
-      "change": function($event) {
-        _vm.count = _vm._n($event.target.value)
-      },
-      "blur": function($event) {
-        _vm.$forceUpdate()
-      }
-    }
-  })]), _vm._v(" "), _c('span', {
-    staticClass: "indexSpan ceil"
   }, [_vm._v("\n            Start index:\n            "), _c('input', {
     directives: [{
       name: "model",
@@ -13008,7 +12995,38 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.$forceUpdate()
       }
     }
-  })])]), _vm._v(" "), _c('div', {
+  })]), _vm._v(" "), _c('span', {
+    staticClass: "indexSpan ceil"
+  }, [_vm._v("\n            List count:\n            "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.number",
+      value: (_vm.count),
+      expression: "count",
+      modifiers: {
+        "number": true
+      }
+    }],
+    attrs: {
+      "type": "text"
+    },
+    domProps: {
+      "value": (_vm.count)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.count = _vm._n($event.target.value)
+      },
+      "blur": function($event) {
+        _vm.$forceUpdate()
+      }
+    }
+  })]), _vm._v(" "), _c('button', {
+    on: {
+      "click": _vm.eventChangeCount
+    }
+  }, [_vm._v("Apply")])]), _vm._v(" "), _c('div', {
     staticClass: "changeHeight"
   }, [_c('span', [_vm._v("Index: ")]), _vm._v(" "), _c('select', {
     directives: [{
@@ -13108,7 +13126,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "variable": _vm.getVariableHeight,
       "size": 50,
       "remain": 6,
-      "tobottom": _vm.toBottom,
       "start": _vm.startIndex
     }
   }, _vm._l((_vm.items), function(item, index) {

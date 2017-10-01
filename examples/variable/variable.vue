@@ -2,13 +2,14 @@
     <div>
         <div class="scrollToIndex">
             <span class="indexSpan ceil">
-                List count:
-                <input type="text" v-model.number.lazy="count">
-            </span>
-            <span class="indexSpan ceil">
                 Start index:
                 <input type="text" v-model.number.lazy="startIndex">
             </span>
+            <span class="indexSpan ceil">
+                List count:
+                <input type="text" v-model.number="count">
+            </span>
+            <button @click="eventChangeCount">Apply</button>
         </div>
         <div class="changeHeight">
             <span>Index: </span>
@@ -27,7 +28,7 @@
             <button class="ceil" @click="eventChangeItems('unshift')">Array unshift</button>
         </div>
 
-        <VirtualList ref="vsl" :variable="getVariableHeight" :size="50" :remain="6" :tobottom="toBottom" :start="startIndex" class="list">
+        <VirtualList ref="vsl" :variable="getVariableHeight" :size="50" :remain="6" :start="startIndex" class="list">
             <Item
                 v-for="(item, index) of items"
                 :key="index"
@@ -66,32 +67,30 @@
             }
         },
 
-        watch: {
-            count (val) {
-                this.items = getItems(val)
-            }
-        },
-
         methods: {
-            toBottom () {
-                console.log('toBottom')
-            },
-
             getVariableHeight (index) {
                 let target = this.items[index]
                 return target && target.height
             },
 
-            eventSetStartIndex () {
-                //
+            eventChangeCount () {
+                let items = getItems(this.count)
+                this.items = items
+                this.startIndex = Math.min(this.startIndex, items.length - 1)
+                this.startIndex = Math.max(this.startIndex, 0)
             },
 
             eventChangeHeight () {
                 let index = this.changeIndex
                 let height = this.changeHeight
+                let length = this.items.length
 
-                if (index < 0 || index !== parseInt(index, 10) || index >= this.items.length) {
-                    return alert(`please select a right index: 0 ~ ${this.items.length - 1} && int number.`)
+                if (!length) {
+                    return alert('empty list now.')
+                }
+
+                if (index < 0 || index !== parseInt(index, 10) || index >= length) {
+                    return alert(`please select a right index: 0 ~ ${length - 1} && int number.`)
                 }
 
                 if (height <= 0 || height !== parseInt(height, 10)) {

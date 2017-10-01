@@ -10210,47 +10210,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         created: function created() {
             var start = this.start >= this.remain ? this.start : 0;
-            var height = this.size * this.remain;
-            var bench = this.bench || this.remain;
-            var keeps = this.remain + bench;
+            var keeps = this.remain + (this.bench || this.remain);
 
             this.delta = {
                 start: start, // start index.
                 end: start + keeps, // end index.
                 keeps: keeps, // nums keeping in real dom.
-                bench: bench, // nums scroll pass should force update.
-                total: 0, // all items count, update in render filter.
-                offset: 0, // cache scrollTop offset.
-                direct: 'd', // cache scroll direction.
-                height: height, // container wrapper viewport height.
-                fireTime: 0, // cache last event fire time avoid compact.
+                total: 0, // all items count, update in filter.
+                offsetAll: 0, // cache all the scrollable offset.
                 paddingTop: 0, // container wrapper real padding-top.
                 paddingBottom: 0, // container wrapper real padding-bottom.
-                varCache: {}, // cache variable index height and padding offset.
+                varCache: {}, // object to cache variable index height and scroll offset.
                 varAverSize: 0, // average/estimate item height before variable be calculated.
                 varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
             };
         },
 
-        mounted: function mounted() {
-            if (this.start) {
-                var start = this.getZone(this.start).start;
-                this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size);
-            }
-        },
-
         watch: {
-            start: function start(index) {
-                var delta = this.delta;
-                var zone = this.getZone(index);
-
-                var scrollTop = this.variable ? this.getVarOffset(zone.overflow ? delta.total : zone.start) : zone.overflow ? delta.total * this.size : zone.start * this.size;
-
-                delta.end = zone.end;
-                delta.start = zone.start >= this.remain ? zone.start : 0;
-
-                this.$forceUpdate();
-                Vue2.nextTick(this.setScrollTop.bind(this, scrollTop));
+            size: function size() {
+                this.alter = 'size';
+            },
+            remain: function remain() {
+                this.alter = 'remain';
+            },
+            bench: function bench() {
+                this.alter = 'bench';
+            },
+            start: function start() {
+                this.alter = 'start';
             }
         },
 
@@ -10258,9 +10245,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             onScroll: function onScroll(e) {
                 var delta = this.delta;
                 var offset = this.$refs.vsl.scrollTop;
-
-                delta.direct = delta.offset > offset ? 'u' : 'd';
-                delta.offset = offset;
 
                 if (!offset && delta.total) {
                     this.triggerEvent('totop');
@@ -10270,16 +10254,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     this.updateZone(offset);
                 }
 
+                if (offset >= delta.offsetAll) {
+                    this.triggerEvent('tobottom');
+                }
+
                 if (this.onscroll) {
-                    this.onscroll(e, {
-                        end: delta.end,
-                        start: delta.start,
-                        offset: offset
-                    });
+                    this.onscroll(e, offset);
                 }
             },
 
-            // update render zone by moving offset.
+            // update render zone by scroll offset.
             updateZone: function updateZone(offset) {
                 var overs;
                 if (this.variable) {
@@ -10290,9 +10274,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 var delta = this.delta;
                 var zone = this.getZone(overs);
+                var bench = this.bench || this.remain;
 
                 // for better performance, if scroll pass items within now bench, do not update.
-                if (!zone.overflow && overs > delta.start && overs - delta.start <= delta.bench) {
+                if (!zone.isLast && overs > delta.start && overs - delta.start <= bench) {
                     return;
                 }
 
@@ -10301,19 +10286,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.$forceUpdate();
             },
 
-            // return the scroll passed items count in variable height.
+            // return the scroll passed items count in variable.
             getVarOvers: function getVarOvers(offset) {
-                var delta = this.delta;
                 var low = 0;
                 var middle = 0;
                 var middleOffset = 0;
+                var delta = this.delta;
                 var high = delta.total;
 
                 while (low <= high) {
                     middle = low + Math.floor((high - low) / 2);
                     middleOffset = this.getVarOffset(middle);
 
-                    // calculate the variable average size at first binary search.
+                    // calculate the average variable height at first binary search.
                     if (!delta.varAverSize) {
                         delta.varAverSize = Math.floor(middleOffset / middle);
                     }
@@ -10330,12 +10315,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return low > 0 ? --low : 0;
             },
 
-            // get the variable height index scroll offset.
+            // return a variable scroll offset from given index.
             getVarOffset: function getVarOffset(index, nocache) {
                 var delta = this.delta;
                 var cache = delta.varCache[index];
 
-                if (cache && !nocache) {
+                if (!nocache && cache) {
                     return cache.offset;
                 }
 
@@ -10355,7 +10340,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return offset;
             },
 
-            // return a variable size (height) from a given index.
+            // return a variable size (height) from given index.
             getVarSize: function getVarSize(index, nocache) {
                 var cache = this.delta.varCache[index];
                 return !nocache && cache && cache.size || this.variable(index) || 0;
@@ -10381,30 +10366,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
 
-            // the ONLY ONE public method, let the parent to update variable by index.
+            // retun the variable all heights use to judge reach bottom.
+            getVarAllHeight: function getVarAllHeight() {
+                var delta = this.delta;
+                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
+                    return this.getVarOffset(delta.total);
+                } else {
+                    return this.getVarOffset(delta.start) + (delta.total - delta.end) * (delta.varAverSize || this.size);
+                }
+            },
+
+            // the ONLY ONE public method, allow the parent update variable by index.
             updateVariable: function updateVariable(index) {
-                // update all the offfsets ahead of index.
+                // clear/update all the offfsets and heights ahead of index.
                 this.getVarOffset(index, true);
-            },
-
-            // avoid overflow range.
-            isOverflow: function isOverflow(start) {
-                var delta = this.delta;
-                var overflow = delta.total > delta.keeps && start + this.remain >= delta.total;
-                if (overflow && delta.direct === 'd') {
-                    this.triggerEvent('tobottom');
-                }
-                return overflow;
-            },
-
-            // trigger a props event on parent.
-            triggerEvent: function triggerEvent(event) {
-                var now = +new Date();
-                var delta = this.delta;
-                if (this[event] && now - delta.fireTime > 30) {
-                    this[event]();
-                    delta.fireTime = now;
-                }
             },
 
             // return the right zone info base on `start/index`.
@@ -10415,11 +10390,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 index = parseInt(index, 10);
                 index = index < 0 ? 0 : index;
 
-                var overflow = this.isOverflow(index);
-                // if overflow range return the last zone.
-                if (overflow) {
+                var lastStart = delta.total - delta.keeps;
+                var isLast = index <= delta.total && index >= lastStart || index > delta.total;
+                if (isLast) {
                     end = delta.total;
-                    start = delta.total - delta.keeps;
+                    start = Math.max(0, lastStart);
                 } else {
                     start = index;
                     end = start + delta.keeps;
@@ -10428,11 +10403,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return {
                     end: end,
                     start: start,
-                    overflow: overflow
+                    isLast: isLast
                 };
             },
 
-            // set manual scrollTop.
+            // trigger a props event on parent.
+            triggerEvent: function triggerEvent(event) {
+                if (this[event]) {
+                    this[event]();
+                }
+            },
+
+            // set manual scroll top.
             setScrollTop: function setScrollTop(scrollTop) {
                 this.$refs.vsl.scrollTop = scrollTop;
             },
@@ -10449,23 +10431,56 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 delta.total = slots.length;
 
-                var paddingTop, paddingBottom;
-                var hasPadding = slots.length > delta.keeps;
+                var paddingTop, paddingBottom, allHeight;
+                var hasPadding = delta.total > delta.keeps;
 
                 if (this.variable) {
+                    allHeight = this.getVarAllHeight();
                     paddingTop = hasPadding ? this.getVarPaddingTop() : 0;
                     paddingBottom = hasPadding ? this.getVarPaddingBottom() : 0;
                 } else {
+                    allHeight = this.size * delta.total;
                     paddingTop = this.size * (hasPadding ? delta.start : 0);
-                    paddingBottom = this.size * (hasPadding ? slots.length - delta.keeps : 0) - paddingTop;
+                    paddingBottom = this.size * (hasPadding ? delta.total - delta.keeps : 0) - paddingTop;
                 }
 
                 delta.paddingTop = paddingTop;
                 delta.paddingBottom = paddingBottom;
+                delta.offsetAll = allHeight - this.size * this.remain;
 
                 return slots.filter(function (slot, index) {
                     return index >= delta.start && index <= delta.end;
                 });
+            }
+        },
+
+        mounted: function mounted() {
+            if (this.start) {
+                var start = this.getZone(this.start).start;
+                this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size);
+            }
+        },
+
+        // check if delta should update when prorps change.
+        beforeUpdate: function beforeUpdate() {
+            var delta = this.delta;
+            delta.keeps = this.remain + (this.bench || this.remain);
+
+            var alterStart = this.alter === 'start';
+            var calcStart = alterStart ? this.start : delta.start;
+            var zone = this.getZone(calcStart);
+
+            // if start or size change, update scroll position.
+            if (alterStart || this.alter === 'size') {
+                this.$nextTick(this.setScrollTop.bind(this, this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast ? delta.total * this.size : zone.start * this.size));
+            }
+
+            // if points out difference, force update once again.
+            if (calcStart !== zone.start || this.alter) {
+                this.alter = '';
+                delta.end = zone.end;
+                delta.start = zone.start;
+                this.$forceUpdate();
             }
         },
 
@@ -10479,7 +10494,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 'style': {
                     'display': 'block',
                     'overflow-y': 'auto',
-                    'height': delta.height + 'px'
+                    'height': this.size * this.remain + 'px'
                 },
                 'on': {
                     'scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
