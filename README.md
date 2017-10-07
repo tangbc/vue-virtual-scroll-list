@@ -77,7 +77,7 @@ npm install vue-virtual-scroll-list --save
 </script>
 ```
 
-The `<Item>` component is included inside but defined outside the `<virtualList>` component. We see that `<virtualList>` does **not** rely on the `<Item>` component. So you can use virtual-list with any component freely.
+The `<Item>` component is included inside but defined outside the `<virtualList>` component, we see that `<virtualList>` does **not** rely on the `<Item>` component, so you can use virtual-list with any component freely.
 
 #### Using by script include:
 
@@ -120,15 +120,15 @@ new Vue({
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, in variable height mode, this prop just use to calculate the virtual-list viewport height. |
 | remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` determine the outside container viewport height (size × remian). |
-| bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, if out of range it will be turned to `0` or the last one.  |
+| bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
 | debounce | Number | * | **It's disabled by default**, milliseconds of using `debounce` function to ensure scroll event doesn't fire so often that it bricks browser performance. |
 | rtag | String | * | Default value is `div`, the virtual-list root element tag name, in all cases it's style is set to `display: block;` |
 | wtag | String | * | Default value is `div`, the virtual-list item wrapper element tag name, in all cases it's style is set to `display: block;` |
 | wclass | String | * | Default value is an empty string, the virtual-list item wrapper element class, has the same API with [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
-| onscroll | Function | * | Called when virtual-list scroll event handling, param: `(e, offset)`. |
 | totop | Function | * | Called when virtual-list is scrolled to top, no param. |
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
+| onscroll | Function | * | Called when virtual-list is scrolling, param: `(e, { offset, offsetAll, start, end })`. |
 | variable | Function | * | For using virtual-list with variable height mode, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. |
 
 ### About variable height
@@ -138,7 +138,7 @@ In variable height mode, prop `size` is still required. All the index variable h
 
 ## Contributions
 
-Welcome to improve vue-virtual-scroll-list by any pull request or issue.
+Welcome to improve vue-virtual-scroll-list with any issue, pull request or code review.
 
 
 ## Changelogs
