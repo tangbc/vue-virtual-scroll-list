@@ -10246,31 +10246,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var delta = this.delta;
                 var offset = this.$refs.vsl.scrollTop;
 
-                if (!offset && delta.total) {
-                    this.triggerEvent('totop');
-                }
-
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset);
                 }
 
-                if (offset >= delta.offsetAll) {
-                    this.triggerEvent('tobottom');
+                var offsetAll = delta.offsetAll;
+                if (this.onscroll) {
+                    this.onscroll(e, {
+                        offset: offset,
+                        offsetAll: offsetAll,
+                        start: delta.start,
+                        end: delta.end
+                    });
                 }
 
-                if (this.onscroll) {
-                    this.onscroll(e, offset);
+                if (!offset && delta.total) {
+                    this.triggerEvent('totop');
+                }
+
+                if (offset >= offsetAll) {
+                    this.triggerEvent('tobottom');
                 }
             },
 
             // update render zone by scroll offset.
             updateZone: function updateZone(offset) {
-                var overs;
-                if (this.variable) {
-                    overs = this.getVarOvers(offset);
-                } else {
-                    overs = Math.floor(offset / this.size);
-                }
+                var overs = this.variable ? this.getVarOvers(offset) : Math.floor(offset / this.size);
 
                 var delta = this.delta;
                 var zone = this.getZone(overs);
@@ -10388,7 +10389,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var delta = this.delta;
 
                 index = parseInt(index, 10);
-                index = index < 0 ? 0 : index;
+                index = Math.max(0, index);
 
                 var lastStart = delta.total - delta.keeps;
                 var isLast = index <= delta.total && index >= lastStart || index > delta.total;
