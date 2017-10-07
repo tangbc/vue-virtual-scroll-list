@@ -42,6 +42,7 @@
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
+          increaseToBottomLimit: { type: Number, default: 0 },
             variable: Function,
             bench: Number,
             debounce: Number,
@@ -96,7 +97,7 @@
                     this.updateZone(offset)
                 }
 
-                if (offset >= delta.offsetAll) {
+                if (offset >= delta.offsetAll - this.increaseToBottomLimit) {
                     this.triggerEvent('tobottom')
                 }
 
