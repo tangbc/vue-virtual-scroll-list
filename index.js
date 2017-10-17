@@ -324,7 +324,7 @@
             }
 
             // if points out difference, force update once again.
-            if (calcStart !== zone.start || this.alter) {
+            if (calcStart !== zone.start || delta.end !== zone.end || this.alter) {
                 this.alter = ''
                 delta.end = zone.end
                 delta.start = zone.start
