@@ -10477,7 +10477,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
 
             // if points out difference, force update once again.
-            if (calcStart !== zone.start || this.alter) {
+            if (calcStart !== zone.start || delta.end !== zone.end || this.alter) {
                 this.alter = '';
                 delta.end = zone.end;
                 delta.start = zone.start;

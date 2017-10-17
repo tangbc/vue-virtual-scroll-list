@@ -5,11 +5,6 @@
                 Start index:
                 <input type="text" v-model.number.lazy="startIndex">
             </span>
-            <span class="indexSpan ceil">
-                List count:
-                <input type="text" v-model.number="count">
-            </span>
-            <button @click="eventChangeCount">Apply</button>
         </div>
         <div class="changeHeight">
             <span>Index: </span>
@@ -50,7 +45,7 @@
     import VirtualList from 'vue-virtual-scroll-list'
     import getItems from './getItems'
 
-    const INIT_COUNT = 100
+    const INIT_COUNT = 10000
 
     export default {
         name: 'variable-test',
@@ -71,13 +66,6 @@
             getVariableHeight (index) {
                 let target = this.items[index]
                 return target && target.height
-            },
-
-            eventChangeCount () {
-                let items = getItems(this.count)
-                this.items = items
-                this.startIndex = Math.min(this.startIndex, items.length - 1)
-                this.startIndex = Math.max(this.startIndex, 0)
             },
 
             eventChangeHeight () {
