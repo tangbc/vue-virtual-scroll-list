@@ -129,11 +129,22 @@ new Vue({
 | totop | Function | * | Called when virtual-list is scrolled to top, no param. |
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
 | onscroll | Function | * | Called when virtual-list is scrolling, param: `(e, { offset, offsetAll, start, end })`. |
-| variable | Function | * | For using virtual-list with variable height mode, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. |
+| variable | Function or Boolean | * | For using virtual-list with variable height mode. If assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. If assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
 
 ### About variable height
 
 In variable height mode, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<Item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cached, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
+
+If you are using `variable` assign by `Boolean`, **do not** set inline style height inside `<item/>` component, you must set inline style height on `<item/>` component outside directly, such as:
+```vue
+<template>
+    <div>
+        <virtualList :size="40" :remain="8" :variable="true">
+            <Item v-for="item of items" :key="item.id" :style="{ height: item.height + 'px' }" />
+        </virtualList>
+    </div>
+</template>
+```
 
 
 ## Contributions

@@ -42,7 +42,7 @@
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
-            variable: Function,
+            variable: [Function, Boolean],
             bench: Number,
             debounce: Number,
             totop: Function,
@@ -188,7 +188,22 @@
             // return a variable size (height) from given index.
             getVarSize: function (index, nocache) {
                 var cache = this.delta.varCache[index]
-                return (!nocache && cache && cache.size) || this.variable(index) || 0
+                if (!nocache && cache) {
+                    return cache.size
+                }
+
+                if (typeof this.variable === 'function') {
+                    return this.variable(index) || 0
+                } else if (typeof this.variable === 'boolean') {
+                    var slot = this.$slots.default[index]
+                    var calcStyle = slot && slot.data && slot.data.style
+                    if (calcStyle && calcStyle.height) {
+                        var mc = calcStyle.height.match(/^(.*)px$/)
+                        return (mc && +mc[1]) || 0
+                    }
+                }
+
+                return 0
             },
 
             // return the variable paddingTop base current zone.
