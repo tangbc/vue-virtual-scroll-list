@@ -10200,7 +10200,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
-            variable: Function,
+            variable: [Function, Boolean],
             bench: Number,
             debounce: Number,
             totop: Function,
@@ -10344,7 +10344,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // return a variable size (height) from given index.
             getVarSize: function getVarSize(index, nocache) {
                 var cache = this.delta.varCache[index];
-                return !nocache && cache && cache.size || this.variable(index) || 0;
+                if (!nocache && cache) {
+                    return cache.size;
+                }
+
+                if (typeof this.variable === 'function') {
+                    return this.variable(index) || 0;
+                } else if (typeof this.variable === 'boolean') {
+                    var slot = this.$slots.default[index];
+                    var calcStyle = slot && slot.data && slot.data.style;
+                    if (calcStyle && calcStyle.height) {
+                        var mc = calcStyle.height.match(/^(.*)px$/);
+                        return mc && +mc[1] || 0;
+                    }
+                }
+
+                return 0;
             },
 
             // return the variable paddingTop base current zone.
@@ -12713,15 +12728,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -12737,8 +12743,8 @@ const INIT_COUNT = 10000;
     data() {
         return {
             startIndex: 0,
-            changeIndex: -1,
             changeHeight: 0,
+            changeHeightIndex: 0,
             count: INIT_COUNT,
             items: __WEBPACK_IMPORTED_MODULE_2__getItems___default()(INIT_COUNT)
         };
@@ -12751,8 +12757,8 @@ const INIT_COUNT = 10000;
         },
 
         eventChangeHeight() {
-            let index = this.changeIndex;
             let height = this.changeHeight;
+            let index = this.changeHeightIndex;
             let length = this.items.length;
 
             if (!length) {
@@ -12760,7 +12766,7 @@ const INIT_COUNT = 10000;
             }
 
             if (index < 0 || index !== parseInt(index, 10) || index >= length) {
-                return alert(`please select a right index: 0 ~ ${length - 1} && int number.`);
+                return alert(`please set a right index: 0 ~ ${length - 1} && int number.`);
             }
 
             if (height <= 0 || height !== parseInt(height, 10)) {
@@ -12769,25 +12775,6 @@ const INIT_COUNT = 10000;
 
             this.items[index].height = height;
             this.$refs.vsl.updateVariable(index);
-        },
-
-        eventChangeItems(type) {
-            let [item] = __WEBPACK_IMPORTED_MODULE_2__getItems___default()(1);
-
-            switch (type) {
-                case 'push':
-                    this.items.push(item);
-                    break;
-                case 'pop':
-                    this.items.pop();
-                    break;
-                case 'shift':
-                    this.items.shift();
-                    break;
-                case 'unshift':
-                    this.items.unshift(item);
-                    break;
-            }
         }
     }
 });
@@ -12879,7 +12866,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n.scrollToIndex, .changeHeight, .changeData {\n    padding: 1em 0;\n    position: relative;\n}\n.changeHeight {\n    border-top: 1px dashed #ccc;\n    border-bottom: 1px dashed #ccc;\n}\n@media (max-width: 640px) {\n.changeHeight, .changeData {\n        display: none;\n}\n.indexSpan {\n        display: block;\n        padding: .5em 0;\n}\n}\n.ceil {\n    margin-right: 1em;\n}\n.smallCeil {\n    margin-right: .5em;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nselect {\n    height: 28px;\n    margin-right: .8em;\n    outline: none;\n    background: #f8f8f8;\n}\nbutton {\n    position: relative;\n    padding: .4em .8em;\n    height: 30px;\n    vertical-align: top;\n    border-radius: 3px;\n    background: #f8f8f8;\n    cursor: pointer;\n    outline: none;\n    border: 1px solid #ccc;\n}\nbutton:active {\n    background: #f3f3f3;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable/variable.vue?55448f8a"],"names":[],"mappings":";AAkHA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,4BAAA;IACA,+BAAA;CACA;AACA;AACA;QACA,cAAA;CACA;AACA;QACA,eAAA;QACA,gBAAA;CACA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,aAAA;IACA,mBAAA;IACA,cAAA;IACA,oBAAA;CACA;AACA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,oBAAA;IACA,gBAAA;IACA,cAAA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;CACA","file":"variable.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span class=\"indexSpan ceil\">\n                Start index:\n                <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            </span>\n        </div>\n        <div class=\"changeHeight\">\n            <span>Index: </span>\n            <select v-model=\"changeIndex\">\n                <option value=\"-1\" disabled selected>-select-</option>\n                <option v-for=\"i of items.length\" :value=\"i - 1\" :key=\"i\">{{ i - 1 }}</option>\n            </select>\n            <span>Height: </span>\n            <input type=\"text\" v-model.number=\"changeHeight\" class=\"ceil\">\n            <button @click=\"eventChangeHeight\">Apply</button>\n        </div>\n        <div class=\"changeData\">\n            <button class=\"ceil\" @click=\"eventChangeItems('push')\">Array push</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('pop')\">Array pop</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('shift')\">Array shift</button>\n            <button class=\"ceil\" @click=\"eventChangeItems('unshift')\">Array unshift</button>\n        </div>\n\n        <VirtualList ref=\"vsl\" :variable=\"getVariableHeight\" :size=\"50\" :remain=\"6\" :start=\"startIndex\" class=\"list\">\n            <Item\n                v-for=\"(item, index) of items\"\n                :key=\"index\"\n                :index=\"index\"\n                :height=\"item.height\"\n            ></Item>\n        </VirtualList>\n\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n    import getItems from './getItems'\n\n    const INIT_COUNT = 10000\n\n    export default {\n        name: 'variable-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                changeIndex: -1,\n                changeHeight: 0,\n                count: INIT_COUNT,\n                items: getItems(INIT_COUNT)\n            }\n        },\n\n        methods: {\n            getVariableHeight (index) {\n                let target = this.items[index]\n                return target && target.height\n            },\n\n            eventChangeHeight () {\n                let index = this.changeIndex\n                let height = this.changeHeight\n                let length = this.items.length\n\n                if (!length) {\n                    return alert('empty list now.')\n                }\n\n                if (index < 0 || index !== parseInt(index, 10) || index >= length) {\n                    return alert(`please select a right index: 0 ~ ${length - 1} && int number.`)\n                }\n\n                if (height <= 0 || height !== parseInt(height, 10)) {\n                    return alert('please set a right height: greater than 0 && int number.')\n                }\n\n                this.items[index].height = height\n                this.$refs.vsl.updateVariable(index)\n            },\n\n            eventChangeItems (type) {\n                let [item] = getItems(1)\n\n                switch (type) {\n                    case 'push':\n                        this.items.push(item)\n                        break\n                    case 'pop':\n                        this.items.pop()\n                        break\n                    case 'shift':\n                        this.items.shift()\n                        break\n                    case 'unshift':\n                        this.items.unshift(item)\n                        break\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    .scrollToIndex, .changeHeight, .changeData {\n        padding: 1em 0;\n        position: relative;\n    }\n    .changeHeight {\n        border-top: 1px dashed #ccc;\n        border-bottom: 1px dashed #ccc;\n    }\n    @media (max-width: 640px) {\n        .changeHeight, .changeData {\n            display: none;\n        }\n        .indexSpan {\n            display: block;\n            padding: .5em 0;\n        }\n    }\n    .ceil {\n        margin-right: 1em;\n    }\n    .smallCeil {\n        margin-right: .5em;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    select {\n        height: 28px;\n        margin-right: .8em;\n        outline: none;\n        background: #f8f8f8;\n    }\n    button {\n        position: relative;\n        padding: .4em .8em;\n        height: 30px;\n        vertical-align: top;\n        border-radius: 3px;\n        background: #f8f8f8;\n        cursor: pointer;\n        outline: none;\n        border: 1px solid #ccc;\n    }\n    button:active {\n        background: #f3f3f3;\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n.scrollToIndex, .changeHeight {\n    padding: 1em 0;\n    position: relative;\n}\n.changeHeight {\n    border-top: 1px dashed #ccc;\n}\n@media (max-width: 640px) {\n.changeHeight {\n        display: none;\n}\n.indexSpan {\n        display: block;\n        padding: .5em 0;\n}\n}\n.ceil {\n    margin-right: 1em;\n}\n.smallCeil {\n    margin-right: .5em;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nbutton {\n    position: relative;\n    padding: .4em .8em;\n    height: 30px;\n    vertical-align: top;\n    border-radius: 3px;\n    background: #f8f8f8;\n    cursor: pointer;\n    outline: none;\n    border: 1px solid #ccc;\n}\nbutton:active {\n    background: #f3f3f3;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/variable/variable.vue?30e2828d"],"names":[],"mappings":";AAsFA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,4BAAA;CACA;AACA;AACA;QACA,cAAA;CACA;AACA;QACA,eAAA;QACA,gBAAA;CACA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,oBAAA;IACA,gBAAA;IACA,cAAA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;CACA","file":"variable.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span class=\"indexSpan ceil\">\n                Start index:\n                <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            </span>\n        </div>\n        <div class=\"changeHeight\">\n            <span>Index: </span>\n            <input type=\"text\" v-model.number=\"changeHeightIndex\" class=\"ceil\">\n            <span>Height: </span>\n            <input type=\"text\" v-model.number=\"changeHeight\" class=\"ceil\">\n            <button @click=\"eventChangeHeight\">Apply</button>\n        </div>\n\n        <VirtualList ref=\"vsl\" :variable=\"getVariableHeight\" :size=\"50\" :remain=\"6\" :start=\"startIndex\" class=\"list\">\n            <Item\n                v-for=\"(item, index) of items\"\n                :key=\"index\"\n                :index=\"index\"\n                :height=\"item.height\"\n            ></Item>\n        </VirtualList>\n\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n    import getItems from './getItems'\n\n    const INIT_COUNT = 10000\n\n    export default {\n        name: 'variable-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                changeHeight: 0,\n                changeHeightIndex: 0,\n                count: INIT_COUNT,\n                items: getItems(INIT_COUNT)\n            }\n        },\n\n        methods: {\n            getVariableHeight (index) {\n                let target = this.items[index]\n                return target && target.height\n            },\n\n            eventChangeHeight () {\n                let height = this.changeHeight\n                let index = this.changeHeightIndex\n                let length = this.items.length\n\n                if (!length) {\n                    return alert('empty list now.')\n                }\n\n                if (index < 0 || index !== parseInt(index, 10) || index >= length) {\n                    return alert(`please set a right index: 0 ~ ${length - 1} && int number.`)\n                }\n\n                if (height <= 0 || height !== parseInt(height, 10)) {\n                    return alert('please set a right height: greater than 0 && int number.')\n                }\n\n                this.items[index].height = height\n                this.$refs.vsl.updateVariable(index)\n            }\n        }\n    }\n</script>\n\n<style>\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    .scrollToIndex, .changeHeight {\n        padding: 1em 0;\n        position: relative;\n    }\n    .changeHeight {\n        border-top: 1px dashed #ccc;\n    }\n    @media (max-width: 640px) {\n        .changeHeight {\n            display: none;\n        }\n        .indexSpan {\n            display: block;\n            padding: .5em 0;\n        }\n    }\n    .ceil {\n        margin-right: 1em;\n    }\n    .smallCeil {\n        margin-right: .5em;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    button {\n        position: relative;\n        padding: .4em .8em;\n        height: 30px;\n        vertical-align: top;\n        border-radius: 3px;\n        background: #f8f8f8;\n        cursor: pointer;\n        outline: none;\n        border: 1px solid #ccc;\n    }\n    button:active {\n        background: #f3f3f3;\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12986,38 +12973,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })])]), _vm._v(" "), _c('div', {
     staticClass: "changeHeight"
-  }, [_c('span', [_vm._v("Index: ")]), _vm._v(" "), _c('select', {
+  }, [_c('span', [_vm._v("Index: ")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
-      rawName: "v-model",
-      value: (_vm.changeIndex),
-      expression: "changeIndex"
+      rawName: "v-model.number",
+      value: (_vm.changeHeightIndex),
+      expression: "changeHeightIndex",
+      modifiers: {
+        "number": true
+      }
     }],
-    on: {
-      "change": function($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        });
-        _vm.changeIndex = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
-    }
-  }, [_c('option', {
+    staticClass: "ceil",
     attrs: {
-      "value": "-1",
-      "disabled": "",
-      "selected": ""
-    }
-  }, [_vm._v("-select-")]), _vm._v(" "), _vm._l((_vm.items.length), function(i) {
-    return _c('option', {
-      key: i,
-      domProps: {
-        "value": i - 1
+      "type": "text"
+    },
+    domProps: {
+      "value": (_vm.changeHeightIndex)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.changeHeightIndex = _vm._n($event.target.value)
+      },
+      "blur": function($event) {
+        _vm.$forceUpdate()
       }
-    }, [_vm._v(_vm._s(i - 1))])
-  })], 2), _vm._v(" "), _c('span', [_vm._v("Height: ")]), _vm._v(" "), _c('input', {
+    }
+  }), _vm._v(" "), _c('span', [_vm._v("Height: ")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model.number",
@@ -13047,37 +13029,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.eventChangeHeight
     }
-  }, [_vm._v("Apply")])]), _vm._v(" "), _c('div', {
-    staticClass: "changeData"
-  }, [_c('button', {
-    staticClass: "ceil",
-    on: {
-      "click": function($event) {
-        _vm.eventChangeItems('push')
-      }
-    }
-  }, [_vm._v("Array push")]), _vm._v(" "), _c('button', {
-    staticClass: "ceil",
-    on: {
-      "click": function($event) {
-        _vm.eventChangeItems('pop')
-      }
-    }
-  }, [_vm._v("Array pop")]), _vm._v(" "), _c('button', {
-    staticClass: "ceil",
-    on: {
-      "click": function($event) {
-        _vm.eventChangeItems('shift')
-      }
-    }
-  }, [_vm._v("Array shift")]), _vm._v(" "), _c('button', {
-    staticClass: "ceil",
-    on: {
-      "click": function($event) {
-        _vm.eventChangeItems('unshift')
-      }
-    }
-  }, [_vm._v("Array unshift")])]), _vm._v(" "), _c('VirtualList', {
+  }, [_vm._v("Apply")])]), _vm._v(" "), _c('VirtualList', {
     ref: "vsl",
     staticClass: "list",
     attrs: {
