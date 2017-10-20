@@ -194,15 +194,14 @@
 
                 if (typeof this.variable === 'function') {
                     return this.variable(index) || 0
-                } else if (typeof this.variable === 'boolean') {
+                } else {
                     var slot = this.$slots.default[index]
-                    var calcStyle = slot && slot.data && slot.data.style
-                    if (calcStyle && calcStyle.height) {
-                        var mc = calcStyle.height.match(/^(.*)px$/)
+                    var style = slot && slot.data && slot.data.style
+                    if (style && style.height) {
+                        var mc = style.height.match(/^(.*)px$/)
                         return (mc && +mc[1]) || 0
                     }
                 }
-
                 return 0
             },
 
