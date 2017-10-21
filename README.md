@@ -1,3 +1,6 @@
+<a href="https://vuejs.org/">
+    <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="Vue version"/>
+</a>
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
     <img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg?style=flat" alt="NPM version"/>
 </a>
@@ -7,9 +10,6 @@
 <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
     <img src="http://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
 </a>
-<a href="https://vuejs.org/">
-    <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg" alt="Vue version"/>
-</a>
 <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/tangbc/vue-virtual-scroll-list.svg" alt="MIT License"/>
 </a>
@@ -17,7 +17,7 @@
 
 ## vue-virtual-scroll-list
 
-> A vue (2.x) component that supports big data and infinite loading by using virtual scroll list.
+> If you are looking for a vue component which support big data list and high scroll performance, you are in the right place.
 
 * Tiny and very very easy to use.
 
@@ -55,29 +55,27 @@ npm install vue-virtual-scroll-list --save
 ```vue
 <template>
     <div>
-        <virtualList :size="40" :remain="8">
-            <Item v-for="(item, index) of items" :item="item" :key="item.id" />
-        </virtualList>
+        <virtual-list :size="40" :remain="8">
+            <item v-for="(item, index) of items" :key="item.id" />
+        </virtual-list>
     </div>
 </template>
 
 <script>
-    import Item from '../item.vue'
+    import item from '../item.vue'
     import virtualList from 'vue-virtual-scroll-list'
 
     export default {
-        name: 'demo',
         data () {
             return {
                 items: [...]
             }
         },
-        components: { Item, virtualList }
+        components: { item, 'virtual-list': virtualList }
     }
 </script>
 ```
 
-The `<Item>` component is included inside but defined outside the `<virtualList>` component, we see that `<virtualList>` does **not** rely on the `<Item>` component, so you can use virtual-list with any component freely.
 
 #### Using by script include:
 
@@ -107,9 +105,9 @@ new Vue({
 
 ## Notice
 
-* List `<Item/>` component or DOM frag using `v-for` must designate the `:key` property.
+* Must assign the `:key` property on `<item>` component or DOM frag with `v-for` directive.
 
-* Consider use `box-sizing: border-box;` on `<Item/>` if you want absolutely correct scroll height.
+* Consider use `box-sizing: border-box` on `<item>` if you want absolutely correct scroll height.
 
 
 ## Props type
@@ -118,14 +116,14 @@ new Vue({
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
-| size | Number | ✓ | Each list item height, in variable height mode, this prop just use to calculate the virtual-list viewport height. |
+| size | Number | ✓ | Each list item height, in variable height mode, this prop just use to calculate the virtual-list outside container viewport height. |
 | remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` determine the outside container viewport height (size × remian). |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, if out of range it will be turned to `0` or the last one.  |
 | bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
 | debounce | Number | * | **It's disabled by default**, milliseconds of using `debounce` function to ensure scroll event doesn't fire so often that it bricks browser performance. |
 | rtag | String | * | Default value is `div`, the virtual-list root element tag name, in all cases it's style is set to `display: block;` |
 | wtag | String | * | Default value is `div`, the virtual-list item wrapper element tag name, in all cases it's style is set to `display: block;` |
-| wclass | String | * | Default value is an empty string, the virtual-list item wrapper element class, has the same API with [`v-bind:class`](https://vuejs.org/v2/guide/class-and-style.html) |
+| wclass | String | * | Default value is an empty string, the virtual-list item wrapper element class, if assign this prop, you better **not** to change it's [CSS box model](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model). |
 | totop | Function | * | Called when virtual-list is scrolled to top, no param. |
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
 | onscroll | Function | * | Called when virtual-list is scrolling, param: `(e, { offset, offsetAll, start, end })`. |
@@ -133,15 +131,15 @@ new Vue({
 
 ### About variable height
 
-In variable height mode, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<Item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cached, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
+In variable height mode, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<Item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cache, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
 
 If you are using `variable` assign by `Boolean`, **do not** set inline style height inside `<item/>` component, you must set inline style height on `<item/>` component outside directly, such as:
 ```vue
 <template>
     <div>
-        <virtualList :size="40" :remain="8" :variable="true">
-            <Item v-for="item of items" :key="item.id" :style="{ height: item.height + 'px' }" />
-        </virtualList>
+        <virtual-list :size="40" :remain="8" :variable="true">
+            <item v-for="item of items" :key="item.id" :style="{ height: item.height + 'px' }" />
+        </virtual-list>
     </div>
 </template>
 ```
