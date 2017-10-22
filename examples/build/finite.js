@@ -10200,6 +10200,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
+            offset: { type: Number, default: 0 },
             variable: [Function, Boolean],
             bench: Number,
             debounce: Number,
@@ -10238,6 +10239,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
             start: function start() {
                 this.alter = 'start';
+            },
+            offset: function offset() {
+                this.alter = 'offset';
             }
         },
 
@@ -10350,15 +10354,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 if (typeof this.variable === 'function') {
                     return this.variable(index) || 0;
-                } else if (typeof this.variable === 'boolean') {
+                } else {
                     var slot = this.$slots.default[index];
-                    var calcStyle = slot && slot.data && slot.data.style;
-                    if (calcStyle && calcStyle.height) {
-                        var mc = calcStyle.height.match(/^(.*)px$/);
-                        return mc && +mc[1] || 0;
+                    var style = slot && slot.data && slot.data.style;
+                    if (style && style.height) {
+                        var shm = style.height.match(/^(.*)px$/);
+                        return shm && +shm[1] || 0;
                     }
                 }
-
                 return 0;
             },
 
@@ -10474,6 +10477,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (this.start) {
                 var start = this.getZone(this.start).start;
                 this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size);
+            } else if (this.offset) {
+                this.setScrollTop(this.offset);
             }
         },
 
@@ -10482,17 +10487,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var delta = this.delta;
             delta.keeps = this.remain + (this.bench || this.remain);
 
-            var alterStart = this.alter === 'start';
-            var calcStart = alterStart ? this.start : delta.start;
-            var zone = this.getZone(calcStart);
+            var calcstart = this.alter === 'start' ? this.start : delta.start;
+            var zone = this.getZone(calcstart);
 
-            // if start or size change, update scroll position.
-            if (alterStart || this.alter === 'size') {
-                this.$nextTick(this.setScrollTop.bind(this, this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast ? delta.total * this.size : zone.start * this.size));
+            // if start, size or offset change, update scroll position.
+            if (~['start', 'size', 'offset'].indexOf(this.alter)) {
+                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast ? delta.total * this.size : zone.start * this.size));
             }
 
             // if points out difference, force update once again.
-            if (calcStart !== zone.start || delta.end !== zone.end || this.alter) {
+            if (calcstart !== zone.start || delta.end !== zone.end || this.alter) {
                 this.alter = '';
                 delta.end = zone.end;
                 delta.start = zone.start;
