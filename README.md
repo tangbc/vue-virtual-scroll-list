@@ -10,9 +10,6 @@
 <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
     <img src="http://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
 </a>
-<a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/tangbc/vue-virtual-scroll-list.svg" alt="MIT License"/>
-</a>
 
 
 ## vue-virtual-scroll-list
@@ -25,18 +22,18 @@
 
 * Support fixed height and variable height.
 
-* Support set the initial scroll index or change any.
+* Support set the initial scroll index or offset.
 
-* Event scrolling, reach top and bottom can be detected.
+* Event scroll, reach top and bottom can be detected.
 
 
 ## Live demos
 
 * [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
 
-* [vue-virtual-scroll-list with requesting infinite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
+* [vue-virtual-scroll-list with request infinite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
 
-* [vue-virtual-scroll-list with variable height](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable/).
+* [vue-virtual-scroll-list with variable height mode](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable/).
 
 
 ## How it works
@@ -118,7 +115,8 @@ new Vue({
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, in variable height mode, this prop just use to calculate the virtual-list outside container viewport height. |
 | remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` determine the outside container viewport height (size × remian). |
-| start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, if out of range it will be turned to `0` or the last one.  |
+| start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, if invalid there will be effected as `0` or the last one.  |
+| offset | Number | * | Default value is `0`, the initial scroll offset. If both `start` and `offset` are assigned at initialization, `start` is preferred. |
 | bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
 | debounce | Number | * | **It's disabled by default**, milliseconds of using `debounce` function to ensure scroll event doesn't fire so often that it bricks browser performance. |
 | rtag | String | * | Default value is `div`, the virtual-list root element tag name, in all cases it's style is set to `display: block;` |
@@ -126,7 +124,7 @@ new Vue({
 | wclass | String | * | Default value is an empty string, the virtual-list item wrapper element class, if assign this prop, you better **not** to change it's [CSS box model](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model). |
 | totop | Function | * | Called when virtual-list is scrolled to top, no param. |
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
-| onscroll | Function | * | Called when virtual-list is scrolling, param: `(e, { offset, offsetAll, start, end })`. |
+| onscroll | Function | * | Called when virtual-list is scrolling, with param: [`(event, data)`](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v1.1.7). |
 | variable | Function or Boolean | * | For using virtual-list with variable height mode. If assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. If assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
 
 ### About variable height
