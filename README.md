@@ -22,7 +22,7 @@
 
 * Support fixed height and variable height.
 
-* Support set the initial scroll index or offset.
+* Support set the scroll index or offset to any.
 
 * Event scroll, reach top and bottom can be detected.
 
@@ -53,7 +53,7 @@ npm install vue-virtual-scroll-list --save
 <template>
     <div>
         <virtual-list :size="40" :remain="8">
-            <item v-for="(item, index) of items" :key="item.id" />
+            <item v-for="item of items" :key="item.id" />
         </virtual-list>
     </div>
 </template>
@@ -65,7 +65,7 @@ npm install vue-virtual-scroll-list --save
     export default {
         data () {
             return {
-                items: [...]
+                items: [ {id: 1} ... ]
             }
         },
         components: { item, 'virtual-list': virtualList }
@@ -129,9 +129,9 @@ new Vue({
 
 ### About variable height
 
-In variable height mode, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<Item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cache, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
+In variable height mode, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cache, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
 
-If you are using `variable` assign by `Boolean`, **do not** set inline style height inside `<item/>` component, you must set inline style height on `<item/>` component outside directly, such as:
+If you are using `variable` assign by `Boolean`, **do not** set inline style height inside `<item/>` component, you **must** set inline style height on `<item/>` component outside directly, such as:
 ```vue
 <template>
     <div>

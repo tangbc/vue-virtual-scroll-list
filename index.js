@@ -94,6 +94,8 @@
 
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset)
+                } else {
+                    delta.end = delta.total - 1
                 }
 
                 var offsetAll = delta.offsetAll
@@ -256,7 +258,7 @@
                 var lastStart = delta.total - delta.keeps
                 var isLast = (index <= delta.total && index >= lastStart) || (index > delta.total)
                 if (isLast) {
-                    end = delta.total
+                    end = delta.total - 1
                     start = Math.max(0, lastStart)
                 } else {
                     start = index
