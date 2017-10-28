@@ -1,7 +1,5 @@
 <template>
-    <div class="item">
-        <span>Item # {{ index }}</span>
-    </div>
+    <div class="item">Item # {{ index }}</div>
 </template>
 
 <script>

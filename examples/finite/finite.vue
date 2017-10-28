@@ -5,7 +5,7 @@
             <input type="text" v-model.number.lazy="startIndex">
             <small>Change and blur to set start index.</small>
         </div>
-        <VirtualList :size="50" :remain="6" :bench="15" class="list" :start="startIndex">
+        <VirtualList :size="50" :remain="6" :bench="44" class="list" :start="startIndex">
             <Item v-for="(udf, index) of items" :index="index" :key="index"></Item>
         </VirtualList>
         <div class="source">

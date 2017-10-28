@@ -10215,7 +10215,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             this.delta = {
                 start: start, // start index.
-                end: start + keeps, // end index.
+                end: start + keeps - 1, // end index.
                 keeps: keeps, // nums keeping in real dom.
                 total: 0, // all items count, update in filter.
                 offsetAll: 0, // cache all the scrollable offset.
@@ -10378,8 +10378,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // return the variable paddingBottom base current zone.
             getVarPaddingBottom: function getVarPaddingBottom() {
                 var delta = this.delta;
-                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
-                    return this.getVarOffset(delta.total) - this.getVarOffset(delta.end);
+                var last = delta.total - 1;
+                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === last) {
+                    return this.getVarOffset(last) - this.getVarOffset(delta.end);
                 } else {
                     // if unreached last zone or uncalculate real behind offset
                     // return the estimate paddingBottom avoid too much calculate.
@@ -10418,7 +10419,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     start = Math.max(0, lastStart);
                 } else {
                     start = index;
-                    end = start + delta.keeps;
+                    end = start + delta.keeps - 1;
                 }
 
                 return {
@@ -12709,8 +12710,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -12761,7 +12760,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-2b4206de] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-2b4206de] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall[data-v-2b4206de] {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?11752cda"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index: </span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"15\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-2b4206de] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-2b4206de] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall[data-v-2b4206de] {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?600202b7"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index: </span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"44\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12776,7 +12775,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.item[data-v-6bd9c375] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/item.vue?0de020f3"],"names":[],"mappings":";AAeA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">\n        <span>Item # {{ index }}</span>\n    </div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style scoped>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.item[data-v-6bd9c375] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/item.vue?c0bedda8"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style scoped>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12863,7 +12862,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "size": 50,
       "remain": 6,
-      "bench": 15,
+      "bench": 44,
       "start": _vm.startIndex
     }
   }, _vm._l((_vm.items), function(udf, index) {
@@ -12899,7 +12898,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "item"
-  }, [_c('span', [_vm._v("Item # " + _vm._s(_vm.index))])])
+  }, [_vm._v("Item # " + _vm._s(_vm.index))])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

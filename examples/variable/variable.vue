@@ -14,7 +14,13 @@
             <button @click="eventChangeHeight">Apply</button>
         </div>
 
-        <VirtualList ref="vsl" :variable="getVariableHeight" :size="50" :remain="6" :start="startIndex" class="list">
+        <VirtualList ref="vsl" :variable="getVariableHeight"
+            :size="50"
+            :remain="6"
+            :totop="toTop"
+            :tobottom="toBottom"
+            :start="startIndex" class="list"
+        >
             <Item
                 v-for="(item, index) of items"
                 :key="index"
@@ -78,6 +84,14 @@
 
                 this.items[index].height = height
                 this.$refs.vsl.updateVariable(index)
+            },
+
+            toTop () {
+                console.log('on the top')
+            },
+
+            toBottom () {
+                console.log('on the bottom')
             }
         }
     }

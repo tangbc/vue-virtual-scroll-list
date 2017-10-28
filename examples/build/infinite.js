@@ -10215,7 +10215,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             this.delta = {
                 start: start, // start index.
-                end: start + keeps, // end index.
+                end: start + keeps - 1, // end index.
                 keeps: keeps, // nums keeping in real dom.
                 total: 0, // all items count, update in filter.
                 offsetAll: 0, // cache all the scrollable offset.
@@ -10378,8 +10378,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // return the variable paddingBottom base current zone.
             getVarPaddingBottom: function getVarPaddingBottom() {
                 var delta = this.delta;
-                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
-                    return this.getVarOffset(delta.total) - this.getVarOffset(delta.end);
+                var last = delta.total - 1;
+                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === last) {
+                    return this.getVarOffset(last) - this.getVarOffset(delta.end);
                 } else {
                     // if unreached last zone or uncalculate real behind offset
                     // return the estimate paddingBottom avoid too much calculate.
@@ -10418,7 +10419,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     start = Math.max(0, lastStart);
                 } else {
                     start = index;
-                    end = start + delta.keeps;
+                    end = start + delta.keeps - 1;
                 }
 
                 return {
@@ -12739,8 +12740,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -12852,7 +12851,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.item[data-v-8f8155a0] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/item.vue?0de020f3"],"names":[],"mappings":";AAeA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">\n        <span>Item # {{ index }}</span>\n    </div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style scoped>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.item[data-v-8f8155a0] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/item.vue?c0bedda8"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style scoped>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12991,7 +12990,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "item"
-  }, [_c('span', [_vm._v("Item # " + _vm._s(_vm.index))])])
+  }, [_vm._v("Item # " + _vm._s(_vm.index))])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

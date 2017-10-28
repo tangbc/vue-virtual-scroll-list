@@ -57,7 +57,7 @@
 
             this.delta = {
                 start: start, // start index.
-                end: start + keeps, // end index.
+                end: start + keeps - 1, // end index.
                 keeps: keeps, // nums keeping in real dom.
                 total: 0, // all items count, update in filter.
                 offsetAll: 0, // cache all the scrollable offset.
@@ -222,8 +222,9 @@
             // return the variable paddingBottom base current zone.
             getVarPaddingBottom: function () {
                 var delta = this.delta
-                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
-                    return this.getVarOffset(delta.total) - this.getVarOffset(delta.end)
+                var last = delta.total - 1
+                if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === last) {
+                    return this.getVarOffset(last) - this.getVarOffset(delta.end)
                 } else {
                     // if unreached last zone or uncalculate real behind offset
                     // return the estimate paddingBottom avoid too much calculate.
@@ -262,7 +263,7 @@
                     start = Math.max(0, lastStart)
                 } else {
                     start = index
-                    end = start + delta.keeps
+                    end = start + delta.keeps - 1
                 }
 
                 return {
