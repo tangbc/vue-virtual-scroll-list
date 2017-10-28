@@ -38,7 +38,7 @@
 
 ## How it works
 
-<img src="https://tangbc.github.io/github-images/virtual-scroll-list-2.gif">
+<img src="https://tangbc.github.io/github-images/virtual-scroll-list-how-works.gif">
 
 
 ## Simple usage

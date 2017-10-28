@@ -12630,7 +12630,7 @@ var Component = __webpack_require__(2)(
   /* template */
   __webpack_require__(41),
   /* scopeId */
-  "data-v-c3ee5d9e",
+  null,
   /* cssModules */
   null
 )
@@ -12836,7 +12836,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.spinner[data-v-35e952af] {\n    text-align: center;\n}\n.spinner .clip[data-v-35e952af] {\n    display: inline-block;\n    animation: clipDelay 750ms 0s infinite linear;\n    animation-fill-mode: both;\n}\n@keyframes clipDelay {\n0% {\n        transform: rotate(0deg) scale(1);\n}\n50% {\n        transform: rotate(180deg) scale(0.8);\n}\n100% {\n        transform: rotate(360deg) scale(1);\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/loading.vue?17c57d96"],"names":[],"mappings":";AA4CA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,8CAAA;IACA,0BAAA;CACA;AACA;AACA;QACA,iCAAA;CACA;AACA;QACA,qCAAA;CACA;AACA;QACA,mCAAA;CACA;CACA","file":"loading.vue","sourcesContent":["<template>\n    <div class=\"spinner\" v-show=\"loading\">\n        <div class=\"clip\" :style=\"clipStyle\" style=\"background: transparent; border-style: solid; border-radius: 100%;\"></div>\n    </div>\n</template>\n\n<script>\n    export default {\n\n        name: 'Loader',\n\n        props: {\n            loading: {\n                type: Boolean,\n                default: true\n            },\n            color: {\n                type: String,\n                default: '#6495ed'\n            },\n            size: {\n                type: Number,\n                default: 20\n            },\n            borderWidth: {\n                type: Number,\n                default: 2\n            }\n        },\n\n        computed: {\n            clipStyle () {\n                return {\n                    width: this.size + 'px',\n                    height: this.size + 'px',\n                    borderWidth: this.borderWidth + 'px',\n                    borderColor: this.color + ' ' + this.color + ' transparent'\n                }\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .spinner {\n        text-align: center;\n    }\n    .spinner .clip {\n        display: inline-block;\n        animation: clipDelay 750ms 0s infinite linear;\n        animation-fill-mode: both;\n    }\n    @keyframes clipDelay {\n        0% {\n            transform: rotate(0deg) scale(1);\n        }\n        50% {\n            transform: rotate(180deg) scale(0.8);\n        }\n        100% {\n            transform: rotate(360deg) scale(1);\n        }\n    }\n</style>"],"sourceRoot":""}]);
+exports.push([module.i, "\n.spinner {\n    text-align: center;\n}\n.spinner .clip {\n    display: inline-block;\n    animation: clipDelay 750ms 0s infinite linear;\n    animation-fill-mode: both;\n}\n@keyframes clipDelay {\n0% {\n        transform: rotate(0deg) scale(1);\n}\n50% {\n        transform: rotate(180deg) scale(0.8);\n}\n100% {\n        transform: rotate(360deg) scale(1);\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/loading.vue?a72557ac"],"names":[],"mappings":";AA4CA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,8CAAA;IACA,0BAAA;CACA;AACA;AACA;QACA,iCAAA;CACA;AACA;QACA,qCAAA;CACA;AACA;QACA,mCAAA;CACA;CACA","file":"loading.vue","sourcesContent":["<template>\n    <div class=\"spinner\" v-show=\"loading\">\n        <div class=\"clip\" :style=\"clipStyle\" style=\"background: transparent; border-style: solid; border-radius: 100%;\"></div>\n    </div>\n</template>\n\n<script>\n    export default {\n\n        name: 'Loader',\n\n        props: {\n            loading: {\n                type: Boolean,\n                default: true\n            },\n            color: {\n                type: String,\n                default: '#6495ed'\n            },\n            size: {\n                type: Number,\n                default: 20\n            },\n            borderWidth: {\n                type: Number,\n                default: 2\n            }\n        },\n\n        computed: {\n            clipStyle () {\n                return {\n                    width: this.size + 'px',\n                    height: this.size + 'px',\n                    borderWidth: this.borderWidth + 'px',\n                    borderColor: this.color + ' ' + this.color + ' transparent'\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .spinner {\n        text-align: center;\n    }\n    .spinner .clip {\n        display: inline-block;\n        animation: clipDelay 750ms 0s infinite linear;\n        animation-fill-mode: both;\n    }\n    @keyframes clipDelay {\n        0% {\n            transform: rotate(0deg) scale(1);\n        }\n        50% {\n            transform: rotate(180deg) scale(0.8);\n        }\n        100% {\n            transform: rotate(360deg) scale(1);\n        }\n    }\n</style>"],"sourceRoot":""}]);
 
 // exports
 
@@ -12851,7 +12851,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.item[data-v-8f8155a0] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/item.vue?c0bedda8"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style scoped>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.item {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/item.vue?15dc730c"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12865,7 +12865,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.counter[data-v-c3ee5d9e] {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count[data-v-c3ee5d9e] {\n    position: absolute;\n    right: 0;\n}\n.listWrap[data-v-c3ee5d9e] {\n    position: relative;\n}\n.list-loading[data-v-c3ee5d9e] {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list[data-v-c3ee5d9e] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-c3ee5d9e] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-c3ee5d9e] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\n.times[data-v-c3ee5d9e], .count[data-v-c3ee5d9e] {\n        display: block;\n}\n.count[data-v-c3ee5d9e] {\n        position: relative;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue?2e030721"],"names":[],"mappings":";AA+DA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,eAAA;CACA;AACA;QACA,mBAAA;CACA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    const getList = (length) => {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toBottom () {\n                if (!this.loading) {\n                    this.loading = true\n                    // Mock for requesting delay.\n                    setTimeout(() => {\n                        this.times++\n                        this.loading = false\n                        this.items = this.items.concat(getList(20))\n                    }, 2017)\n                }\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        .times, .count {\n            display: block;\n        }\n        .count {\n            position: relative;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.counter {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count {\n    position: absolute;\n    right: 0;\n}\n.listWrap {\n    position: relative;\n}\n.list-loading {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\n.times, .count {\n        display: block;\n}\n.count {\n        position: relative;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/infinite/infinite.vue?991e1622"],"names":[],"mappings":";AA+DA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,eAAA;CACA;AACA;QACA,mBAAA;CACA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    const getList = (length) => {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toBottom () {\n                if (!this.loading) {\n                    this.loading = true\n                    // Mock for requesting delay.\n                    setTimeout(() => {\n                        this.times++\n                        this.loading = false\n                        this.items = this.items.concat(getList(20))\n                    }, 2017)\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        .times, .count {\n            display: block;\n        }\n        .count {\n            position: relative;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12887,7 +12887,7 @@ var Component = __webpack_require__(2)(
   /* template */
   __webpack_require__(40),
   /* scopeId */
-  "data-v-8f8155a0",
+  null,
   /* cssModules */
   null
 )
@@ -12925,7 +12925,7 @@ var Component = __webpack_require__(2)(
   /* template */
   __webpack_require__(38),
   /* scopeId */
-  "data-v-35e952af",
+  null,
   /* cssModules */
   null
 )
@@ -13064,13 +13064,13 @@ var content = __webpack_require__(27);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("87175d88", content, false);
+var update = __webpack_require__(3)("e1daf0ca", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue");
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-35e952af\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./loading.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -13091,13 +13091,13 @@ var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("01eae3ea", content, false);
+var update = __webpack_require__(3)("039bb8f0", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8f8155a0\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8f8155a0\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8f8155a0\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-8f8155a0\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -13117,13 +13117,13 @@ var content = __webpack_require__(30);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("ab682cd6", content, false);
+var update = __webpack_require__(3)("801e43c8", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-c3ee5d9e\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./infinite.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-c3ee5d9e\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./infinite.vue");
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-c3ee5d9e\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./infinite.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-c3ee5d9e\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./infinite.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });

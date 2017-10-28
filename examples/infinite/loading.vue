@@ -41,7 +41,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .spinner {
         text-align: center;
     }

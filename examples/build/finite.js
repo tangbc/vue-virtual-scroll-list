@@ -12629,7 +12629,7 @@ var Component = __webpack_require__(2)(
   /* template */
   __webpack_require__(37),
   /* scopeId */
-  "data-v-2b4206de",
+  null,
   /* cssModules */
   null
 )
@@ -12760,7 +12760,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.scrollToIndex[data-v-2b4206de] {\n    padding-bottom: 20px;\n}\ninput[data-v-2b4206de] {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput[data-v-2b4206de]:focus {\n    border-color: #6495ed;\n}\nsmall[data-v-2b4206de] {\n    color: #999;\n}\n.list[data-v-2b4206de] {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source[data-v-2b4206de] {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a[data-v-2b4206de] {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall[data-v-2b4206de] {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?600202b7"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index: </span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"44\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style scoped>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scrollToIndex {\n    padding-bottom: 20px;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nsmall {\n    color: #999;\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/finite.vue?2f88e495"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index: </span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"44\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12775,7 +12775,7 @@ exports = module.exports = __webpack_require__(1)(true);
 
 
 // module
-exports.push([module.i, "\n.item[data-v-6bd9c375] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/item.vue?c0bedda8"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style scoped>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.item {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Documents/GitHub/vue-virtual-scroll-list/examples/finite/item.vue?15dc730c"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -12798,7 +12798,7 @@ var Component = __webpack_require__(2)(
   /* template */
   __webpack_require__(39),
   /* scopeId */
-  "data-v-6bd9c375",
+  null,
   /* cssModules */
   null
 )
@@ -12923,13 +12923,13 @@ var content = __webpack_require__(26);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("94864fe0", content, false);
+var update = __webpack_require__(3)("491bb82b", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-2b4206de\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./finite.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-2b4206de\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./finite.vue");
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-2b4206de\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./finite.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-2b4206de\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./finite.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -12950,13 +12950,13 @@ var content = __webpack_require__(28);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("2ff00552", content, false);
+var update = __webpack_require__(3)("2c08d5be", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-6bd9c375\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-6bd9c375\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-6bd9c375\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-6bd9c375\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });

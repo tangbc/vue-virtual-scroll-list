@@ -10,7 +10,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .item {
         height: 50px;
         line-height: 50px;

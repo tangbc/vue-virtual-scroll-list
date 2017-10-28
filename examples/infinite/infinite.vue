@@ -60,7 +60,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .counter {
         position: relative;
         padding-bottom: 20px;

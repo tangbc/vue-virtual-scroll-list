@@ -34,7 +34,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .scrollToIndex {
         padding-bottom: 20px;
     }
