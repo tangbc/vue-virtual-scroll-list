@@ -109,7 +109,7 @@ new Vue({
 
 ## Props type
 
-<img height="256" src="https://tangbc.github.io/github-images/vitual-scroll-list-4.png">
+<img height="256" src="https://tangbc.github.io/github-images/vitual-scroll-list-prop-type.png">
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
