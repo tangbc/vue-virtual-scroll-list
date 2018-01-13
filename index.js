@@ -342,7 +342,8 @@
                 this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset'
                     ? this.offset : this.variable
                         ? this.getVarOffset(zone.isLast ? delta.total : zone.start)
-                        : zone.isLast ? delta.total * this.size : zone.start * this.size)
+                        : zone.isLast && (delta.total - calcstart <= this.remain)
+                            ? delta.total * this.size : calcstart * this.size)
                 )
             }
 
