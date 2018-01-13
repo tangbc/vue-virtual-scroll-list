@@ -10495,7 +10495,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast ? delta.total * this.size : zone.start * this.size));
+                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size));
             }
 
             // if points out difference, force update once again.
@@ -12692,7 +12692,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     components: { Item: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a, VirtualList: __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list___default.a },
 
-    data() {
+    data: function data() {
         return {
             startIndex: 0,
             items: new Array(100000)

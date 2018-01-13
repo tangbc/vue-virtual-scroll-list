@@ -10495,7 +10495,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast ? delta.total * this.size : zone.start * this.size));
+                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size));
             }
 
             // if points out difference, force update once again.
@@ -12681,7 +12681,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
-        style() {
+        style: function style() {
             return {
                 'height': this.height + 'px',
                 'line-height': this.height + 'px'
@@ -12746,14 +12746,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-const INIT_COUNT = 10000;
+var INIT_COUNT = 10000;
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'variable-test',
 
     components: { Item: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a, VirtualList: __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list___default.a },
 
-    data() {
+    data: function data() {
         return {
             startIndex: 0,
             changeHeight: 0,
@@ -12763,23 +12763,23 @@ const INIT_COUNT = 10000;
         };
     },
 
+
     methods: {
-        getVariableHeight(index) {
-            let target = this.items[index];
+        getVariableHeight: function getVariableHeight(index) {
+            var target = this.items[index];
             return target && target.height;
         },
-
-        eventChangeHeight() {
-            let height = this.changeHeight;
-            let index = this.changeHeightIndex;
-            let length = this.items.length;
+        eventChangeHeight: function eventChangeHeight() {
+            var height = this.changeHeight;
+            var index = this.changeHeightIndex;
+            var length = this.items.length;
 
             if (!length) {
                 return alert('empty list now.');
             }
 
             if (index < 0 || index !== parseInt(index, 10) || index >= length) {
-                return alert(`please set a right index: 0 ~ ${length - 1} && int number.`);
+                return alert('please set a right index: 0 ~ ' + (length - 1) + ' && int number.');
             }
 
             if (height <= 0 || height !== parseInt(height, 10)) {
@@ -12789,12 +12789,10 @@ const INIT_COUNT = 10000;
             this.items[index].height = height;
             this.$refs.vsl.updateVariable(index);
         },
-
-        toTop() {
+        toTop: function toTop() {
             console.log('on the top');
         },
-
-        toBottom() {
+        toBottom: function toBottom() {
             console.log('on the bottom');
         }
     }

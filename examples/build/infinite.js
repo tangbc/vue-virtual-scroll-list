@@ -10495,7 +10495,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast ? delta.total * this.size : zone.start * this.size));
+                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size));
             }
 
             // if points out difference, force update once again.
@@ -12698,7 +12698,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-const getList = length => {
+var getList = function getList(length) {
     return new Array(length);
 };
 
@@ -12707,7 +12707,7 @@ const getList = length => {
 
     components: { Item: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a, VirtualList: __WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list___default.a, Loading: __WEBPACK_IMPORTED_MODULE_1__loading_vue___default.a },
 
-    data() {
+    data: function data() {
         return {
             times: 0,
             loading: false,
@@ -12715,15 +12715,18 @@ const getList = length => {
         };
     },
 
+
     methods: {
-        toBottom() {
+        toBottom: function toBottom() {
+            var _this = this;
+
             if (!this.loading) {
                 this.loading = true;
                 // Mock for requesting delay.
-                setTimeout(() => {
-                    this.times++;
-                    this.loading = false;
-                    this.items = this.items.concat(getList(20));
+                setTimeout(function () {
+                    _this.times++;
+                    _this.loading = false;
+                    _this.items = _this.items.concat(getList(20));
                 }, 2017);
             }
         }
@@ -12784,7 +12787,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
-        clipStyle() {
+        clipStyle: function clipStyle() {
             return {
                 width: this.size + 'px',
                 height: this.size + 'px',
