@@ -369,7 +369,7 @@
                     'height': this.size * this.remain + 'px'
                 },
                 'on': {
-                    'scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
+                    '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
                 }
             }, [
                 h(this.wtag, {
