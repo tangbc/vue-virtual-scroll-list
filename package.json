@@ -1,6 +1,6 @@
 {
   "name": "vue-virtual-scroll-list",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A vue (2.x) component that support big data list with high scroll performance.",
   "main": "index.js",
   "files": [
@@ -36,9 +36,9 @@
     "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "vue": "^2.2.2",
+    "vue": "^2.3.0",
     "vue-loader": "^11.1.4",
-    "vue-template-compiler": "^2.2.2",
+    "vue-template-compiler": "^2.3.0",
     "webpack": "^2.2.1"
   }
 }
