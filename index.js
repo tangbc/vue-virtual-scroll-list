@@ -48,7 +48,8 @@
             debounce: Number,
             totop: Function,
             tobottom: Function,
-            onscroll: Function
+            onscroll: Function,
+            onlivescroll: Function
         },
 
         created: function () {
@@ -88,6 +89,10 @@
         },
 
         methods: {
+            onLiveScroll: function (e) {
+                this.onlivescroll(e, this.$refs.vsl.scrollTop)
+                this.debouncedScroll(e)
+            },
             onScroll: function (e) {
                 var delta = this.delta
                 var offset = this.$refs.vsl.scrollTop
@@ -361,6 +366,18 @@
             var delta = this.delta
             var dbc = this.debounce
 
+            var scrollCallback
+            if (dbc) {
+                if (this.onlivescroll) {
+                    this.debouncedScroll =_debounce(this.onScroll.bind(this), dbc)
+                    scrollCallback = this.onLiveScroll
+                } else {
+                    scrollCallback = _debounce(this.onScroll.bind(this), dbc)
+                }
+            } else {
+                scrollCallback = this.onScroll
+            }
+
             return h(this.rtag, {
                 'ref': 'vsl',
                 'style': {
@@ -369,7 +386,7 @@
                     'height': this.size * this.remain + 'px'
                 },
                 'on': {
-                    '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
+                    '&scroll': scrollCallback
                 }
             }, [
                 h(this.wtag, {
