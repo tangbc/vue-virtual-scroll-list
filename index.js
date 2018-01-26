@@ -48,7 +48,9 @@
             debounce: Number,
             totop: Function,
             tobottom: Function,
-            onscroll: Function
+            onscroll: Function,
+            onlivescrolly: Function,
+            onlivescrollx: Function
         },
 
         created: function () {
@@ -66,6 +68,13 @@
                 varCache: {}, // object to cache variable index height and scroll offset.
                 varAverSize: 0, // average/estimate item height before variable be calculated.
                 varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
+            }
+        },
+
+        data () {
+            return {
+                prevScrollY: 0,
+                prevScrollX: 0
             }
         },
 
@@ -88,6 +97,21 @@
         },
 
         methods: {
+            onLiveScroll: function (e) {
+                var scrollTop = e.target.scrollTop
+                if (this.prevScrollY !== scrollTop) {
+                    this.prevScrollY = scrollTop
+                    this.onlivescrolly(e, scrollTop)
+                    this.debouncedScroll(e)
+                }
+                if (this.onlivescrollx) {
+                    var scrollLeft = e.target.scrollLeft
+                    if (this.prevScrollX !== scrollLeft) {
+                        this.prevScrollX = scrollLeft
+                        this.onlivescrollx(e, scrollLeft)
+                    }
+                }
+            },
             onScroll: function (e) {
                 var delta = this.delta
                 var offset = this.$refs.vsl.scrollTop
@@ -361,6 +385,18 @@
             var delta = this.delta
             var dbc = this.debounce
 
+            var scrollCallback
+            if (dbc) {
+                if (this.onlivescrolly) {
+                    this.debouncedScroll =_debounce(this.onScroll.bind(this), dbc)
+                    scrollCallback = this.onLiveScroll
+                } else {
+                    scrollCallback = _debounce(this.onScroll.bind(this), dbc)
+                }
+            } else {
+                scrollCallback = this.onScroll
+            }
+
             return h(this.rtag, {
                 'ref': 'vsl',
                 'style': {
@@ -369,7 +405,7 @@
                     'height': this.size * this.remain + 'px'
                 },
                 'on': {
-                    '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
+                    '&scroll': scrollCallback
                 }
             }, [
                 h(this.wtag, {
