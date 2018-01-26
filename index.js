@@ -49,7 +49,8 @@
             totop: Function,
             tobottom: Function,
             onscroll: Function,
-            onlivescroll: Function
+            onlivescrolly: Function,
+            onlivescrollx: Function
         },
 
         created: function () {
@@ -67,6 +68,13 @@
                 varCache: {}, // object to cache variable index height and scroll offset.
                 varAverSize: 0, // average/estimate item height before variable be calculated.
                 varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
+            }
+        },
+
+        data () {
+            return {
+                prevScrollY: 0,
+                prevScrollX: 0
             }
         },
 
@@ -90,8 +98,19 @@
 
         methods: {
             onLiveScroll: function (e) {
-                this.onlivescroll(e, this.$refs.vsl.scrollTop)
-                this.debouncedScroll(e)
+                const scrollTop = e.target.scrollTop
+                if (this.prevScrollY !== scrollTop) {
+                    this.prevScrollY = scrollTop
+                    this.onlivescrolly(e, scrollTop)
+                    this.debouncedScroll(e)
+                }
+                if (this.onlivescrollx) {
+                    const scrollLeft = e.target.scrollLeft
+                    if (this.prevScrollX !== scrollLeft) {
+                        this.prevScrollX = scrollLeft
+                        this.onlivescrollx(e, scrollLeft)
+                    }
+                }
             },
             onScroll: function (e) {
                 var delta = this.delta
@@ -368,7 +387,7 @@
 
             var scrollCallback
             if (dbc) {
-                if (this.onlivescroll) {
+                if (this.onlivescrolly) {
                     this.debouncedScroll =_debounce(this.onScroll.bind(this), dbc)
                     scrollCallback = this.onLiveScroll
                 } else {
