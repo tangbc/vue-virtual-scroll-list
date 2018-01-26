@@ -98,14 +98,14 @@
 
         methods: {
             onLiveScroll: function (e) {
-                const scrollTop = e.target.scrollTop
+                var scrollTop = e.target.scrollTop
                 if (this.prevScrollY !== scrollTop) {
                     this.prevScrollY = scrollTop
                     this.onlivescrolly(e, scrollTop)
                     this.debouncedScroll(e)
                 }
                 if (this.onlivescrollx) {
-                    const scrollLeft = e.target.scrollLeft
+                    var scrollLeft = e.target.scrollLeft
                     if (this.prevScrollX !== scrollLeft) {
                         this.prevScrollX = scrollLeft
                         this.onlivescrollx(e, scrollLeft)
