@@ -126,8 +126,8 @@ new Vue({
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
 | onscroll | Function | * | Called when virtual-list is scrolling, with param: [`(event, data)`](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v1.1.7). |
 | variable | Function or Boolean | * | For using virtual-list with variable height mode. If assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. If assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
-| onlivescrolly | Function | * | Called when virtual-list is scrolling vertical, with param: [`(event, scrollTop)`]
-| onlivescrollx | Function | * | Called when virtual-list is scrolling horizontal, with param: [`(event, scrollLeft)`]
+| onlivescrolly | Function | * | Called when virtual-list is scrolling vertical, with param: [`(event, scrollTop)`]. Only in use when scroll event is debounced.
+| onlivescrollx | Function | * | Called when virtual-list is scrolling horizontal, with param: [`(event, scrollLeft)`]. Only in use when scroll event is debounced and using `onlivescrolly` event callback.
 
 ### About variable height
 
