@@ -65,7 +65,7 @@ npm install vue-virtual-scroll-list --save
     export default {
         data () {
             return {
-                items: [ {id: 1} ... ]
+                items: [ {id: 1}, {id: 2}, {id: 3}, ... ]
             }
         },
         components: { item, 'virtual-list': virtualList }
@@ -77,7 +77,7 @@ npm install vue-virtual-scroll-list --save
 #### Using by script include:
 
 ```html
-<script src="https://unpkg.com/vue@2.0.0/dist/vue.js"></script>
+<script src="https://unpkg.com/vue@2.3.0/dist/vue.js"></script>
 <script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script>
 
 <div id="app">
