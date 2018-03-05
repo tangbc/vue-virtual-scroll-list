@@ -40,6 +40,7 @@
             remain: { type: Number, required: true },
             rtag: { type: String, default: 'div' },
             wtag: { type: String, default: 'div' },
+            rclass: { type: String, default: '' },
             wclass: { type: String, default: '' },
             start: { type: Number, default: 0 },
             offset: { type: Number, default: 0 },
@@ -368,6 +369,7 @@
                     'overflow-y': 'auto',
                     'height': this.size * this.remain + 'px'
                 },
+                'class': this.rclass,
                 'on': {
                     '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
                 }
