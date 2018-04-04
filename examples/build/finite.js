@@ -10399,9 +10399,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 delta.paddingBottom = paddingBottom;
                 delta.offsetAll = allHeight - this.size * this.remain;
 
-                return slots.filter(function (slot, index) {
-                    return index >= delta.start && index <= delta.end;
-                });
+                var targets = [];
+                for (var i = delta.start; i <= delta.end; i++) {
+                    targets.push(slots[i]);
+                }
+                return targets;
             }
         },
 
