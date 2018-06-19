@@ -282,7 +282,10 @@
 
             // set manual scroll top.
             setScrollTop: function (scrollTop) {
-                this.$refs.vsl.scrollTop = scrollTop
+                var vsl = this.$refs.vsl
+                if (vsl) {
+                    vsl.scrollTop = scrollTop
+                }
             },
 
             // filter the shown items base on `start` and `end`.

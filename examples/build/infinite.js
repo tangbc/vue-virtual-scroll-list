@@ -10367,7 +10367,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // set manual scroll top.
             setScrollTop: function setScrollTop(scrollTop) {
-                this.$refs.vsl.scrollTop = scrollTop;
+                var vsl = this.$refs.vsl;
+                if (vsl) {
+                    vsl.scrollTop = scrollTop;
+                }
             },
 
             // filter the shown items base on `start` and `end`.
