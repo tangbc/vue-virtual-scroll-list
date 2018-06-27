@@ -90,7 +90,7 @@
         methods: {
             onScroll: function (e) {
                 var delta = this.delta
-                var offset = this.$refs.vsl.scrollTop
+                var offset = (this.$refs.vsl && this.$refs.vsl.scrollTop) || 0
 
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset)

@@ -10177,7 +10177,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         methods: {
             onScroll: function onScroll(e) {
                 var delta = this.delta;
-                var offset = this.$refs.vsl.scrollTop;
+                var offset = this.$refs.vsl && this.$refs.vsl.scrollTop || 0;
 
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset);
