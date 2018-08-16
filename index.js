@@ -318,7 +318,7 @@
                 delta.offsetAll = allHeight - this.size * this.remain
 
                 var targets = []
-                for (var i = delta.start; i <= delta.end; i++) {
+                for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     targets.push(slots[i])
                 }
                 return targets
