@@ -33,6 +33,7 @@
             }
         }
     }
+    var onlyValues = (values) => (str) => values.indexOf(str) !== -1
 
     return Vue2.component(namespace, {
         props: {
@@ -48,7 +49,14 @@
             debounce: Number,
             totop: Function,
             tobottom: Function,
-            onscroll: Function
+            toleft: Function,
+            toright: Function,
+            onscroll: Function,
+            scrolldirection: {
+                type: String,
+                default: 'vertically',
+                validator: onlyValues(['vertically', 'horizontal'])
+            }
         },
 
         created: function () {
@@ -65,7 +73,9 @@
                 paddingBottom: 0, // container wrapper real padding-bottom.
                 varCache: {}, // object to cache variable index height and scroll offset.
                 varAverSize: 0, // average/estimate item height before variable be calculated.
-                varLastCalcIndex: 0 // last calculated variable height/offset index, always increase.
+                varLastCalcIndex: 0, // last calculated variable height/offset index, always increase.
+                paddingLeft: 0, // container wrapper real padding-left,Use only when the scroll direction is horizontal.
+                paddingRight: 0 // container wrapper real padding-right,Use only when the scroll direction is horizontal.
             }
         },
 
@@ -90,7 +100,12 @@
         methods: {
             onScroll: function (e) {
                 var delta = this.delta
-                var offset = (this.$refs.vsl && this.$refs.vsl.scrollTop) || 0
+                var offset
+                if (this.scrolldirection === 'vertically') {
+                    offset = (this.$refs.vsl && this.$refs.vsl.scrollTop) || 0
+                } else if (this.scrolldirection === 'horizontal') {
+                    offset = (this.$refs.vsl && this.$refs.vsl.scrollLeft) || 0
+                }
 
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset)
@@ -109,11 +124,13 @@
                 }
 
                 if (!offset && delta.total) {
-                    this.triggerEvent('totop')
+                    var startEvent = this.scrolldirection === 'vertically' ? 'totop' : 'toleft'
+                    this.triggerEvent(startEvent)
                 }
 
                 if (offset >= offsetAll) {
-                    this.triggerEvent('tobottom')
+                    var endEvent = this.scrolldirection === 'vertically' ? 'tobottom' : 'toright'
+                    this.triggerEvent(endEvent)
                 }
             },
 
@@ -203,24 +220,32 @@
                 } else {
                     var slot = this.$slots.default[index]
                     var style = slot && slot.data && slot.data.style
-                    if (style && style.height) {
-                        var shm = style.height.match(/^(.*)px$/)
-                        return (shm && +shm[1]) || 0
+                    var shm
+                    if (this.scrolldirection === 'vertically') {
+                        if (style && style.height) {
+                            shm = style.height.match(/^(.*)px$/)
+                            return (shm && +shm[1]) || 0
+                        }
+                    } else if (this.scrolldirection === 'horizontal') {
+                        if (style && style.width) {
+                            shm = style.width.match(/^(.*)px$/)
+                            return (shm && +shm[1]) || 0
+                        }
                     }
                 }
                 return 0
             },
 
-            // return the variable paddingTop base current zone.
+            // return the variable paddingTop(paddingLeft when scroll direction is horizontal) base current zone.
             // @todo: if set a large `start` before variable was calculated,
             // here will also case too much offset calculate when list is very large,
             // consider use estimate paddingTop in this case just like `getVarPaddingBottom`.
-            getVarPaddingTop: function () {
+            getVarPaddingStart: function () {
                 return this.getVarOffset(this.delta.start)
             },
 
-            // return the variable paddingBottom base current zone.
-            getVarPaddingBottom: function () {
+            // return the variable paddingBottom(paddingRight when scroll direction is horizontal) base current zone.
+            getVarPaddingEnd: function () {
                 var delta = this.delta
                 var last = delta.total - 1
                 if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === last) {
@@ -232,8 +257,8 @@
                 }
             },
 
-            // retun the variable all heights use to judge reach bottom.
-            getVarAllHeight: function () {
+            // retun the variable all heights(widths when scroll direction is horizontal) use to judge reach bottom.
+            getVarAllSize: function () {
                 var delta = this.delta
                 if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
                     return this.getVarOffset(delta.total)
@@ -281,10 +306,14 @@
             },
 
             // set manual scroll top.
-            setScrollTop: function (scrollTop) {
+            setScroll: function (scroll) {
                 var vsl = this.$refs.vsl
                 if (vsl) {
-                    vsl.scrollTop = scrollTop
+                    if (this.scrolldirection === 'vertically') {
+                        vsl.scrollTop = scroll
+                    } else if (this.scrolldirection === 'horizontal') {
+                        vsl.scrollLeft = scroll
+                    }
                 }
             },
 
@@ -300,25 +329,34 @@
 
                 delta.total = slots.length
 
-                var paddingTop, paddingBottom, allHeight
+                var paddingStart, paddingEnd, allSize
                 var hasPadding = delta.total > delta.keeps
 
                 if (this.variable) {
-                    allHeight = this.getVarAllHeight()
-                    paddingTop = hasPadding ? this.getVarPaddingTop() : 0
-                    paddingBottom = hasPadding ? this.getVarPaddingBottom() : 0
+                    allSize = this.getVarAllSize()
+                    paddingStart = hasPadding ? this.getVarPaddingStart() : 0
+                    paddingEnd = hasPadding ? this.getVarPaddingEnd() : 0
                 } else {
-                    allHeight = this.size * delta.total
-                    paddingTop = this.size * (hasPadding ? delta.start : 0)
-                    paddingBottom = this.size * (hasPadding ? delta.total - delta.keeps : 0) - paddingTop
+                    allSize = this.size * delta.total
+                    paddingStart = this.size * (hasPadding ? delta.start : 0)
+                    paddingEnd = this.size * (hasPadding ? delta.total - delta.keeps : 0) - paddingStart
                 }
-
-                delta.paddingTop = paddingTop
-                delta.paddingBottom = paddingBottom
-                delta.offsetAll = allHeight - this.size * this.remain
+                if (this.scrolldirection === 'vertically') {
+                    delta.paddingTop = paddingStart
+                    delta.paddingBottom = paddingEnd
+                } else if (this.scrolldirection === 'horizontal') {
+                    delta.paddingLeft = paddingStart
+                    delta.paddingRight = paddingEnd
+                }
+                delta.offsetAll = allSize - this.size * this.remain
 
                 var targets = []
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
+                    if (this.scrolldirection === 'horizontal' && slots[i]) {
+                        slots[i].data.style = Object.assign({}, {
+                            flexShrink: 0
+                        }, slots[i].data.style)
+                    }
                     targets.push(slots[i])
                 }
                 return targets
@@ -328,9 +366,9 @@
         mounted: function () {
             if (this.start) {
                 var start = this.getZone(this.start).start
-                this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size)
+                this.setScroll(this.variable ? this.getVarOffset(start) : start * this.size)
             } else if (this.offset) {
-                this.setScrollTop(this.offset)
+                this.setScroll(this.offset)
             }
         },
 
@@ -344,7 +382,7 @@
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset'
+                this.$nextTick(this.setScroll.bind(this, this.alter === 'offset'
                     ? this.offset : this.variable
                         ? this.getVarOffset(zone.isLast ? delta.total : zone.start)
                         : zone.isLast && (delta.total - calcstart <= this.remain)
@@ -360,29 +398,40 @@
                 this.$forceUpdate()
             }
         },
-
         render: function (h) {
             var list = this.filter()
             var delta = this.delta
             var dbc = this.debounce
+            var rtagStyle = {
+                'display': 'block',
+                'overflow-y': 'auto'
+            }
+            var wtagStyle
+            if (this.scrolldirection === 'vertically') {
+                rtagStyle.height = this.size * this.remain + 'px'
+                wtagStyle = {
+                    'display': 'block',
+                    'padding-top': delta.paddingTop + 'px',
+                    'padding-bottom': delta.paddingBottom + 'px'
+                }
+            } else {
+                rtagStyle.width = this.size * this.remain + 'px'
+                wtagStyle = {
+                    'display': 'flex',
+                    'padding-left': delta.paddingLeft + 'px',
+                    'padding-right': delta.paddingRight + 'px'
+                }
+            }
 
             return h(this.rtag, {
                 'ref': 'vsl',
-                'style': {
-                    'display': 'block',
-                    'overflow-y': 'auto',
-                    'height': this.size * this.remain + 'px'
-                },
+                'style': rtagStyle,
                 'on': {
                     '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
                 }
             }, [
                 h(this.wtag, {
-                    'style': {
-                        'display': 'block',
-                        'padding-top': delta.paddingTop + 'px',
-                        'padding-bottom': delta.paddingBottom + 'px'
-                    },
+                    'style': wtagStyle,
                     'class': this.wclass
                 }, list)
             ])
