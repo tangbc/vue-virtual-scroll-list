@@ -2,3 +2,4 @@ dev
 node_modules
 npm-debug.log
 examples/**/*.map
+.idea
