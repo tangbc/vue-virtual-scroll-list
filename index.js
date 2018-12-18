@@ -90,7 +90,8 @@
         methods: {
             onScroll: function (e) {
                 var delta = this.delta
-                var offset = (this.$refs.vsl && this.$refs.vsl.scrollTop) || 0
+                var vsl = this.$refs.vsl;
+                var offset = (vsl && (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop) || 0
 
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset)
@@ -284,7 +285,7 @@
             setScrollTop: function (scrollTop) {
                 var vsl = this.$refs.vsl
                 if (vsl) {
-                    vsl.scrollTop = scrollTop
+                    (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop = scrollTop
                 }
             },
 
