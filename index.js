@@ -90,7 +90,7 @@
         methods: {
             onScroll: function (e) {
                 var delta = this.delta
-                var vsl = this.$refs.vsl;
+                var vsl = this.$refs.vsl
                 var offset = (vsl && (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop) || 0
 
                 if (delta.total > delta.keeps) {
