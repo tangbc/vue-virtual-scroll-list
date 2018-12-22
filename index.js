@@ -41,6 +41,7 @@
             rtag: { type: String, default: 'div' },
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
+            pageMode: { type: Boolean, default: false },
             start: { type: Number, default: 0 },
             offset: { type: Number, default: 0 },
             variable: [Function, Boolean],
@@ -91,7 +92,9 @@
             onScroll: function (e) {
                 var delta = this.delta
                 var vsl = this.$refs.vsl
-                var offset = (vsl && (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop) || 0
+                var offset = this.pageMode
+                    ? window.pageYOffset
+                    : (vsl && (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop) || 0
 
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset)
@@ -283,9 +286,13 @@
 
             // set manual scroll top.
             setScrollTop: function (scrollTop) {
-                var vsl = this.$refs.vsl
-                if (vsl) {
-                    (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop = scrollTop
+                if (this.pageMode) {
+                    window.scrollTo(0, scrollTop)
+                } else {
+                    var vsl = this.$refs.vsl
+                    if (vsl) {
+                        (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop = scrollTop
+                    }
                 }
             },
 
@@ -327,6 +334,9 @@
         },
 
         mounted: function () {
+            if (this.pageMode) {
+                window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
+            }
             if (this.start) {
                 var start = this.getZone(this.start).start
                 this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size)
@@ -366,6 +376,17 @@
             var list = this.filter()
             var delta = this.delta
             var dbc = this.debounce
+
+            if (this.pageMode) {
+                return h(this.wtag, {
+                    'style': {
+                        'display': 'block',
+                        'padding-top': delta.paddingTop + 'px',
+                        'padding-bottom': delta.paddingBottom + 'px'
+                    },
+                    'class': this.wclass
+                }, list)
+            }
 
             return h(this.rtag, {
                 'ref': 'vsl',
