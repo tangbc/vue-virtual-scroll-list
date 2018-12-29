@@ -384,7 +384,8 @@
                 'style': {
                     'display': 'block',
                     'overflow-y': 'auto',
-                    'height': this.size * this.remain + 'px'
+                    'height': this.size * this.remain + 'px',
+                    '-webkit-overflow-scrolling': 'touch'
                 },
                 'on': {
                     '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
