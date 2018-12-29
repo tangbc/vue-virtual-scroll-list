@@ -42,7 +42,7 @@
     import VirtualList from 'vue-virtual-scroll-list'
     import getItems from './getItems'
 
-    const INIT_COUNT = 10000
+    const INIT_COUNT = 100000
 
     export default {
         name: 'variable-test',
