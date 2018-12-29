@@ -133,9 +133,21 @@
                     return
                 }
 
-                delta.end = zone.end
-                delta.start = zone.start
-                this.$forceUpdate()
+                // we'd better make sure calls as less as possible.
+                if (zone.start !== delta.start || zone.end !== delta.end) {
+                    delta.end = zone.end
+                    delta.start = zone.start
+                    this.forceRender()
+                }
+            },
+
+            // force render ui list if we needed.
+            // call this before the next repaint to get better performance.
+            forceRender () {
+                var that = this
+                window.requestAnimationFrame(function () {
+                    that.$forceUpdate()
+                })
             },
 
             // return the scroll passed items count in variable.
@@ -358,7 +370,7 @@
                 this.alter = ''
                 delta.end = zone.end
                 delta.start = zone.start
-                this.$forceUpdate()
+                this.forceRender()
             }
         },
 
