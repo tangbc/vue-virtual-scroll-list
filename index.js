@@ -1,4 +1,4 @@
-;(function (root, factory) {
+(function (root, factory) {
     var namespace = 'VirtualScrollList'
     if (typeof exports === 'object' && typeof module === 'object') {
         module.exports = factory(namespace, require('vue'))
@@ -143,7 +143,7 @@
 
             // force render ui list if we needed.
             // call this before the next repaint to get better performance.
-            forceRender () {
+            forceRender: function () {
                 var that = this
                 window.requestAnimationFrame(function () {
                     that.$forceUpdate()
