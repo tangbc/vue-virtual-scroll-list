@@ -1,14 +1,14 @@
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
-    <img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg?style=flat" alt="NPM version"/>
+    <img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg?style=flat-square" alt="NPM version"/>
 </a>
 <a href="https://vuejs.org/">
-    <img src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg" alt="Vue version"/>
+    <img src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg?style=flat-square" alt="Vue version"/>
 </a>
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
-    <img src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg" alt="NPM downloads">
+    <img src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg?style=flat-square" alt="NPM downloads">
 </a>
 <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
-    <img src="http://npm.packagequality.com/shield/vue-virtual-scroll-list.svg" alt="Package quality">
+    <img src="http://npm.packagequality.com/shield/vue-virtual-scroll-list.svg?style=flat-square" alt="Package quality">
 </a>
 
 
