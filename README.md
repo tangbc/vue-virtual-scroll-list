@@ -11,10 +11,25 @@
     <img src="http://npm.packagequality.com/shield/vue-virtual-scroll-list.svg?style=flat-square" alt="Package quality">
 </a>
 
+##
 
-## vue-virtual-scroll-list
+*If you are looking for a vue component which support big data list with high scroll performance, now you are in the right place!*
 
-> If you are looking for a vue component which support big data list and high scroll performance, you are in the right place.
+* [Advantages](#advantages)
+* [Live demos](#live-demos)
+* [How it works](#how-it-works)
+* [Simple usage](#simple-usage)
+    * [Using by npm module](#using-by-npm-module)
+    * [Using by script include](#using-by-script-include)
+* [Attentions](#attentions)
+* [Props type](#props-type)
+* [Special scenes](#special-scenes)
+    * [About variable height](#about-variable-height)
+* [Contributions](#contributions)
+* [Changelogs](#changelogs)
+
+
+## Advantages
 
 * Tiny and very very easy to use.
 
@@ -29,11 +44,11 @@
 
 ## Live demos
 
-* [vue-virtual-scroll-list with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
+* [Scroll with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
 
-* [vue-virtual-scroll-list with request infinite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
+* [Scroll with request infinite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
 
-* [vue-virtual-scroll-list with variable height mode](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable/).
+* [Scroll with variable height mode](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable/).
 
 
 ## How it works
@@ -43,7 +58,7 @@
 
 ## Simple usage
 
-#### Using by npm:
+#### Using by npm module:
 
 ```
 npm install vue-virtual-scroll-list --save
@@ -100,7 +115,7 @@ new Vue({
 ```
 
 
-## Notice
+## Attentions
 
 * Must assign the `:key` property on `<item>` component or DOM frag with `v-for` directive.
 
@@ -126,6 +141,9 @@ new Vue({
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
 | onscroll | Function | * | Called when virtual-list is scrolling, with param: [`(event, data)`](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v1.1.7). |
 | variable | Function or Boolean | * | For using virtual-list with variable height mode. If assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. If assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
+
+
+## Special scenes
 
 ### About variable height
 
