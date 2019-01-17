@@ -117,7 +117,7 @@ new Vue({
 
 ## Attentions
 
-* Must assign the `:key` property on `<item>` component or DOM frag with `v-for` directive.
+* Must assign the `:key` property on `<item>` component or dom frag with `v-for` directive.
 
 * Consider use `box-sizing: border-box` on `<item>` if you want absolutely correct scroll height.
 
@@ -129,11 +129,11 @@ new Vue({
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
 | size | Number | ✓ | Each list item height, in variable height mode, this prop just use to calculate the virtual-list outside container viewport height. |
-| remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` determine the outside container viewport height (size × remian). |
+| remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` determine the outside container viewport height (`size × remian`). |
+| bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, if invalid there will be effected as `0` or the last one.  |
 | offset | Number | * | Default value is `0`, the initial scroll offset. If both `start` and `offset` are assigned at initialization, `start` is preferred. |
-| bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
-| debounce | Number | * | **It's disabled by default**, milliseconds of using `debounce` function to ensure scroll event doesn't fire so often that it bricks browser performance. |
+| debounce | Number | * | It's disabled by default, milliseconds of using `debounce` function to ensure scroll event doesn't fire so often that it bricks browser performance. |
 | rtag | String | * | Default value is `div`, the virtual-list root element tag name, in all cases it's style is set to `display: block;` |
 | wtag | String | * | Default value is `div`, the virtual-list item wrapper element tag name, in all cases it's style is set to `display: block;` |
 | wclass | String | * | Default value is an empty string, the virtual-list item wrapper element class, if assign this prop, you better **not** to change it's [CSS box model](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model). |
