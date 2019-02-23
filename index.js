@@ -38,6 +38,14 @@
         props: {
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
+
+            // replace from vue $slots.default vnodes to pure data set
+            items: {type: Array, default: () => []},
+            // for creating vnodes
+            itemComponent: {type: Object},
+            // for passing props or events to itemComponent
+            itemBinding: {type: Function, default: () => {}},
+
             rtag: { type: String, default: 'div' },
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
@@ -214,7 +222,12 @@
                 if (typeof this.variable === 'function') {
                     return this.variable(index) || 0
                 } else {
-                    var slot = this.$slots.default[index]
+                    var slot = !this.itemComponent ? this.$slots.default[index]
+                        // when using itemComponent, it can only get current components height,
+                        // need to be enhanced, or consider using variable-function instead
+                        : this.$children[index] ? this.$children[index].$vnode
+                            : undefined
+
                     var style = slot && slot.data && slot.data.style
                     if (style && style.height) {
                         var shm = style.height.match(/^(.*)px$/)
@@ -306,12 +319,20 @@
                 var delta = this.delta
                 var slots = this.$slots.default
 
-                if (!slots) {
-                    slots = []
-                    delta.start = 0
-                }
+                if (!this.itemComponent) {
+                    if (!slots) {
+                        slots = []
+                        delta.start = 0
+                    }
 
-                delta.total = slots.length
+                    delta.total = slots.length
+                } else {
+                    if (!this.items.length) {
+                        delta.start = 0
+                    }
+
+                    delta.total = this.items.length
+                }
 
                 var paddingTop, paddingBottom, allHeight
                 var hasPadding = delta.total > delta.keeps
@@ -331,9 +352,14 @@
                 delta.offsetAll = allHeight - this.size * this.remain
 
                 var targets = []
+
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
-                    targets.push(slots[i])
+                    targets.push(!this.itemComponent ? slots[i]
+                        // create vnode, using custom attrs binder (see example "finite-m")
+                        : this.$createElement(this.itemComponent, this.itemBinding(this.items[i], i) || {})
+                    )
                 }
+
                 return targets
             }
         },

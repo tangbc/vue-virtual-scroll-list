@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>Vue virtual list (finite data)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body {
+        background: #fffaf0;
+    }
+    .appWraper {
+        width: 440px;
+        margin: 0 auto;
+        overflow-y: auto;
+    }
+    .title {
+        font-size: 25px;
+        font-weight: 100;
+        text-align: center;
+    }
+    @media (max-width: 640px) {
+        .appWraper {
+            width: 100%;
+        }
+        .title {
+            font-size: 16px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <h1 class="title">
+        Vue virtual list, with 100,000 finite data.
+    </h1>
+    <div class="appWraper">
+        <div id="app"></div>
+    </div>
+    <script src="../build/finite-m.js"></script>
+</body>
+</html>
