@@ -347,6 +347,10 @@
                     paddingBottom = this.size * (hasPadding ? delta.total - delta.keeps : 0) - paddingTop
                 }
 
+                if (paddingBottom < this.size) {
+                    paddingBottom = 0
+                }
+
                 delta.paddingTop = paddingTop
                 delta.paddingBottom = paddingBottom
                 delta.offsetAll = allHeight - this.size * this.remain
