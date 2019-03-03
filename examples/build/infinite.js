@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 30);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11574,16 +11574,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         props: {
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
-
-            // replace from vue $slots.default vnodes to pure data set
-            items: { type: Array, default: function _default() {
-                    return [];
-                } },
-            // for creating vnodes
-            itemComponent: { type: Object },
-            // for passing props or events to itemComponent
-            itemBinding: { type: Function, default: function _default() {} },
-
             rtag: { type: String, default: 'div' },
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
@@ -11594,7 +11584,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             debounce: Number,
             totop: Function,
             tobottom: Function,
-            onscroll: Function
+            onscroll: Function,
+            items: { type: Array },
+            item: { type: Object },
+            itemprop: { type: Function }
         },
 
         created: function created() {
@@ -11624,12 +11617,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
             bench: function bench() {
                 this.alter = 'bench';
+                this.itemModeForceRender();
             },
             start: function start() {
                 this.alter = 'start';
+                this.itemModeForceRender();
             },
             offset: function offset() {
                 this.alter = 'offset';
+                this.itemModeForceRender();
             }
         },
 
@@ -11692,6 +11688,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 window.requestAnimationFrame(function () {
                     that.$forceUpdate();
                 });
+            },
+
+            // force render ui if using item mode.
+            itemModeForceRender: function itemModeForceRender() {
+                if (this.item) {
+                    this.forceRender();
+                }
             },
 
             // return the scroll passed items count in variable.
@@ -11758,10 +11761,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (typeof this.variable === 'function') {
                     return this.variable(index) || 0;
                 } else {
-                    var slot = !this.itemComponent ? this.$slots.default[index]
-                    // when using itemComponent, it can only get current components height,
+                    // when using item, it can only get current components height,
                     // need to be enhanced, or consider using variable-function instead
-                    : this.$children[index] ? this.$children[index].$vnode : undefined;
+                    var slot = this.item ? this.$children[index] ? this.$children[index].$vnode : null : this.$slots.default[index];
 
                     var style = slot && slot.data && slot.data.style;
                     if (style && style.height) {
@@ -11854,19 +11856,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var delta = this.delta;
                 var slots = this.$slots.default;
 
-                if (!this.itemComponent) {
+                // item mode shoud judge from items prop.
+                if (this.item) {
+                    if (!this.items.length) {
+                        delta.start = 0;
+                    }
+                    delta.total = this.items.length;
+                } else {
                     if (!slots) {
                         slots = [];
                         delta.start = 0;
                     }
-
                     delta.total = slots.length;
-                } else {
-                    if (!this.items.length) {
-                        delta.start = 0;
-                    }
-
-                    delta.total = this.items.length;
                 }
 
                 var paddingTop, paddingBottom, allHeight;
@@ -11889,9 +11890,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var targets = [];
 
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
-                    targets.push(!this.itemComponent ? slots[i]
-                    // create vnode, using custom attrs binder (see example "finite-m")
-                    : this.$createElement(this.itemComponent, this.itemBinding(this.items[i], i) || {}));
+                    // create vnode, using custom attrs binder.
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i];
+                    targets.push(slot);
                 }
 
                 return targets;
@@ -11917,7 +11918,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size));
+                var scrollTop = this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size;
+
+                this.$nextTick(this.setScrollTop.bind(this, scrollTop));
             }
 
             // if points out difference, force update once again.
@@ -14529,25 +14532,24 @@ module.exports = function(module) {
 
 /***/ }),
 /* 15 */,
-/* 16 */,
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(62)
+__webpack_require__(61)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(23),
+  __webpack_require__(21),
   /* template */
-  __webpack_require__(53),
+  __webpack_require__(52),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/infinite/infinite.vue"
+Component.options.__file = "/Users/tangbichang/Github/vue-virtual-scroll-list/examples/infinite/infinite.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] infinite.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -14568,19 +14570,18 @@ module.exports = Component.exports
 
 
 /***/ }),
+/* 17 */,
 /* 18 */,
 /* 19 */,
 /* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__item_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_vue__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_vue__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__loading_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_virtual_scroll_list__);
@@ -14649,7 +14650,7 @@ var getList = function getList(length) {
 });
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14666,7 +14667,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14714,11 +14715,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
+/* 24 */,
+/* 25 */,
 /* 26 */,
 /* 27 */,
 /* 28 */,
-/* 29 */,
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14728,7 +14730,7 @@ var _vue = __webpack_require__(1);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _infinite = __webpack_require__(17);
+var _infinite = __webpack_require__(16);
 
 var _infinite2 = _interopRequireDefault(_infinite);
 
@@ -14744,6 +14746,7 @@ new _vue2.default({
 });
 
 /***/ }),
+/* 30 */,
 /* 31 */,
 /* 32 */,
 /* 33 */,
@@ -14756,7 +14759,7 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.spinner {\n    text-align: center;\n}\n.spinner .clip {\n    display: inline-block;\n    animation: clipDelay 750ms 0s infinite linear;\n    animation-fill-mode: both;\n}\n@keyframes clipDelay {\n0% {\n        transform: rotate(0deg) scale(1);\n}\n50% {\n        transform: rotate(180deg) scale(0.8);\n}\n100% {\n        transform: rotate(360deg) scale(1);\n}\n}\n", "", {"version":3,"sources":["/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/infinite/loading.vue?a72557ac"],"names":[],"mappings":";AA4CA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,8CAAA;IACA,0BAAA;CACA;AACA;AACA;QACA,iCAAA;CACA;AACA;QACA,qCAAA;CACA;AACA;QACA,mCAAA;CACA;CACA","file":"loading.vue","sourcesContent":["<template>\n    <div class=\"spinner\" v-show=\"loading\">\n        <div class=\"clip\" :style=\"clipStyle\" style=\"background: transparent; border-style: solid; border-radius: 100%;\"></div>\n    </div>\n</template>\n\n<script>\n    export default {\n\n        name: 'Loader',\n\n        props: {\n            loading: {\n                type: Boolean,\n                default: true\n            },\n            color: {\n                type: String,\n                default: '#6495ed'\n            },\n            size: {\n                type: Number,\n                default: 20\n            },\n            borderWidth: {\n                type: Number,\n                default: 2\n            }\n        },\n\n        computed: {\n            clipStyle () {\n                return {\n                    width: this.size + 'px',\n                    height: this.size + 'px',\n                    borderWidth: this.borderWidth + 'px',\n                    borderColor: this.color + ' ' + this.color + ' transparent'\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .spinner {\n        text-align: center;\n    }\n    .spinner .clip {\n        display: inline-block;\n        animation: clipDelay 750ms 0s infinite linear;\n        animation-fill-mode: both;\n    }\n    @keyframes clipDelay {\n        0% {\n            transform: rotate(0deg) scale(1);\n        }\n        50% {\n            transform: rotate(180deg) scale(0.8);\n        }\n        100% {\n            transform: rotate(360deg) scale(1);\n        }\n    }\n</style>"],"sourceRoot":""}]);
+exports.push([module.i, "\n.spinner {\n    text-align: center;\n}\n.spinner .clip {\n    display: inline-block;\n    animation: clipDelay 750ms 0s infinite linear;\n    animation-fill-mode: both;\n}\n@keyframes clipDelay {\n0% {\n        transform: rotate(0deg) scale(1);\n}\n50% {\n        transform: rotate(180deg) scale(0.8);\n}\n100% {\n        transform: rotate(360deg) scale(1);\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/infinite/loading.vue?a72557ac"],"names":[],"mappings":";AA4CA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,8CAAA;IACA,0BAAA;CACA;AACA;AACA;QACA,iCAAA;CACA;AACA;QACA,qCAAA;CACA;AACA;QACA,mCAAA;CACA;CACA","file":"loading.vue","sourcesContent":["<template>\n    <div class=\"spinner\" v-show=\"loading\">\n        <div class=\"clip\" :style=\"clipStyle\" style=\"background: transparent; border-style: solid; border-radius: 100%;\"></div>\n    </div>\n</template>\n\n<script>\n    export default {\n\n        name: 'Loader',\n\n        props: {\n            loading: {\n                type: Boolean,\n                default: true\n            },\n            color: {\n                type: String,\n                default: '#6495ed'\n            },\n            size: {\n                type: Number,\n                default: 20\n            },\n            borderWidth: {\n                type: Number,\n                default: 2\n            }\n        },\n\n        computed: {\n            clipStyle () {\n                return {\n                    width: this.size + 'px',\n                    height: this.size + 'px',\n                    borderWidth: this.borderWidth + 'px',\n                    borderColor: this.color + ' ' + this.color + ' transparent'\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .spinner {\n        text-align: center;\n    }\n    .spinner .clip {\n        display: inline-block;\n        animation: clipDelay 750ms 0s infinite linear;\n        animation-fill-mode: both;\n    }\n    @keyframes clipDelay {\n        0% {\n            transform: rotate(0deg) scale(1);\n        }\n        50% {\n            transform: rotate(180deg) scale(0.8);\n        }\n        100% {\n            transform: rotate(360deg) scale(1);\n        }\n    }\n</style>"],"sourceRoot":""}]);
 
 // exports
 
@@ -14771,14 +14774,13 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.item {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/infinite/item.vue?15dc730c"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.item {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n    box-sizing: border-box;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/infinite/item.vue?6d77565b"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;IACA,uBAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n        box-sizing: border-box;\n    }\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 38 */,
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(true);
@@ -14786,17 +14788,17 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.counter {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count {\n    position: absolute;\n    right: 0;\n}\n.listWrap {\n    position: relative;\n}\n.list-loading {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\n.times, .count {\n        display: block;\n}\n.count {\n        position: relative;\n}\n}\n", "", {"version":3,"sources":["/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/infinite/infinite.vue?991e1622"],"names":[],"mappings":";AA+DA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,eAAA;CACA;AACA;QACA,mBAAA;CACA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    const getList = (length) => {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toBottom () {\n                if (!this.loading) {\n                    this.loading = true\n                    // Mock for requesting delay.\n                    setTimeout(() => {\n                        this.times++\n                        this.loading = false\n                        this.items = this.items.concat(getList(20))\n                    }, 2017)\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        .times, .count {\n            display: block;\n        }\n        .count {\n            position: relative;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.counter {\n    position: relative;\n    padding-bottom: 20px;\n}\n.count {\n    position: absolute;\n    right: 0;\n}\n.listWrap {\n    position: relative;\n}\n.list-loading {\n    position: absolute;\n    bottom: 0;\n    left: 50%;\n    transform: translateX(-50%);\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\n.times, .count {\n        display: block;\n}\n.count {\n        position: relative;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/infinite/infinite.vue?991e1622"],"names":[],"mappings":";AA+DA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,mBAAA;IACA,SAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,UAAA;IACA,UAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,eAAA;CACA;AACA;QACA,mBAAA;CACA;CACA","file":"infinite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"counter\">\n            <span class=\"times\">Request times: {{ times }}</span>\n            <span class=\"count\">Items count: ({{ times }} + 1) × 20 = {{ items.length }}</span>\n        </div>\n        <div class=\"listWrap\">\n            <VirtualList class=\"list\"\n                :size=\"50\"\n                :remain=\"6\"\n                :tobottom=\"toBottom\"\n            >\n                <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n            </VirtualList>\n            <Loading class=\"list-loading\" :loading=\"loading\"></Loading>\n        </div>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/infinite/infinite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import Loading from './loading.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    const getList = (length) => {\n        return new Array(length)\n    }\n\n    export default {\n        name: 'infinite-test',\n\n        components: { Item, VirtualList, Loading },\n\n        data () {\n            return {\n                times: 0,\n                loading: false,\n                items: getList(20)\n            }\n        },\n\n        methods: {\n            toBottom () {\n                if (!this.loading) {\n                    this.loading = true\n                    // Mock for requesting delay.\n                    setTimeout(() => {\n                        this.times++\n                        this.loading = false\n                        this.items = this.items.concat(getList(20))\n                    }, 2017)\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .counter {\n        position: relative;\n        padding-bottom: 20px;\n    }\n    .count {\n        position: absolute;\n        right: 0;\n    }\n    .listWrap {\n        position: relative;\n    }\n    .list-loading {\n        position: absolute;\n        bottom: 0;\n        left: 50%;\n        transform: translateX(-50%);\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        .times, .count {\n            display: block;\n        }\n        .count {\n            position: relative;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
+/* 39 */,
 /* 40 */,
 /* 41 */,
 /* 42 */,
-/* 43 */,
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -14805,7 +14807,7 @@ __webpack_require__(60)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(24),
+  __webpack_require__(22),
   /* template */
   __webpack_require__(51),
   /* scopeId */
@@ -14813,7 +14815,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/infinite/item.vue"
+Component.options.__file = "/Users/tangbichang/Github/vue-virtual-scroll-list/examples/infinite/item.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] item.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -14834,7 +14836,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -14843,7 +14845,7 @@ __webpack_require__(58)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(25),
+  __webpack_require__(23),
   /* template */
   __webpack_require__(49),
   /* scopeId */
@@ -14851,7 +14853,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/infinite/loading.vue"
+Component.options.__file = "/Users/tangbichang/Github/vue-virtual-scroll-list/examples/infinite/loading.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] loading.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -14872,6 +14874,7 @@ module.exports = Component.exports
 
 
 /***/ }),
+/* 45 */,
 /* 46 */,
 /* 47 */,
 /* 48 */,
@@ -14924,8 +14927,7 @@ if (false) {
 }
 
 /***/ }),
-/* 52 */,
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -14975,6 +14977,7 @@ if (false) {
 }
 
 /***/ }),
+/* 53 */,
 /* 54 */,
 /* 55 */,
 /* 56 */,
@@ -15032,14 +15035,13 @@ if(false) {
 }
 
 /***/ }),
-/* 61 */,
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(39);
+var content = __webpack_require__(38);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM

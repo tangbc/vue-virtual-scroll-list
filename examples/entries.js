@@ -1,7 +1,7 @@
 
 module.exports = [
     'finite',
-    'finite-m',
     'infinite',
     'variable',
+    'item-mode',
 ]

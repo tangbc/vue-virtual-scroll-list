@@ -29,6 +29,7 @@
         padding-left: 20px;
         box-sizing: border-box;
         border-bottom: 1px solid #eee;
+        box-sizing: border-box;
     }
     .px {
         position: absolute;

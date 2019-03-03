@@ -1,18 +1,26 @@
 <template>
     <div>
-        <div class="scrollToIndex">
-            <span>Scroll to index: </span>
-            <input type="text" v-model.number.lazy="startIndex">
-            <small>Change and blur to set start index.</small>
+        <div class="op">
+            <div class="op-item"><label>count:</label><input type="text" v-model.number.lazy="count"></div>
+            <div class="op-item"><label>start: </label><input type="text" v-model.number.lazy="start"></div>
+            <div class="op-item"><label>remain: </label><input type="text" v-model.number.lazy="remain"></div>
+            <!-- <div class="op-item"><label>size: </label><input type="text" v-model.number.lazy="size"></div> -->
+            <div class="op-item"><label>bench: </label><input type="text" v-model.number.lazy="bench"></div>
         </div>
-        <VirtualList :size="50" :remain="6" :bench="44" class="list" :start="startIndex"
-            :items="items" :item-component="itemComponent" :item-binding="itemBinding">
-        </VirtualList>
-        <div class="source">
+        <VirtualList class="list"
+            :size="50"
+            :remain="remain"
+            :bench="bench"
+            :start="start"
+            :items="items"
+            :item="itemComponent"
+            :itemprop="itemBinding"
+        ></VirtualList>
+        <!-- <div class="source">
             <a href="https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1">
                 View this demo source code
             </a>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -20,28 +28,31 @@
     import Item from './item.vue'
     import VirtualList from 'vue-virtual-scroll-list'
 
+    function getList (count) {
+        return new Array(count)
+    }
+
+    var INIT_COUNT = 1000
+
     export default {
-        name: 'finite-test',
+        name: 'finite-test-item-mode',
 
         components: { Item, VirtualList },
 
         data () {
             return {
+                count: INIT_COUNT,
+                start: 0,
+                remain: 6,
+                bench: 6,
+                items: getList(INIT_COUNT),
                 itemComponent: Item,
-                startIndex: 0,
-                items: ((n) => {
-                    let temp = [];
+            }
+        },
 
-                    for (let i = 0; i < n; ++i) {
-                        temp.push(i);
-                        // temp.push({
-                        //     id: `id-${i}`,
-                        //     num: i
-                        // });
-                    }
-
-                    return temp;
-                })(100000)
+        watch: {
+            count: function (val) {
+                this.items = getList(Math.max(parseInt(val, 10), 0))
             }
         },
 
@@ -51,11 +62,12 @@
             //     return 45;
             // },
 
-            itemBinding(item, idx) {
+            itemBinding (idx) {
+                const item = this.items[idx]
                 return {
                     key: item,
                     props: {
-                        index: item
+                        index: idx
                     }
                 };
 
@@ -78,6 +90,23 @@
 <style>
     .scrollToIndex {
         padding-bottom: 20px;
+    }
+    .op {
+        padding-bottom: 1em;
+    }
+    .op-item {
+        padding: .2em 0;
+    }
+    label {
+        display: inline-block;
+        width: 100px;
+        padding-right: 1em;
+        text-align: right;
+    }
+    input {
+        outline: none;
+        padding: .5em;
+        width: 80px;
     }
     input {
         outline: none;

@@ -38,14 +38,6 @@
         props: {
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
-
-            // replace from vue $slots.default vnodes to pure data set
-            items: {type: Array, default: () => []},
-            // for creating vnodes
-            itemComponent: {type: Object},
-            // for passing props or events to itemComponent
-            itemBinding: {type: Function, default: () => {}},
-
             rtag: { type: String, default: 'div' },
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
@@ -56,7 +48,10 @@
             debounce: Number,
             totop: Function,
             tobottom: Function,
-            onscroll: Function
+            onscroll: Function,
+            items: { type: Array },
+            item: { type: Object },
+            itemprop: { type: Function }
         },
 
         created: function () {
@@ -86,12 +81,15 @@
             },
             bench: function () {
                 this.alter = 'bench'
+                this.itemModeForceRender()
             },
             start: function () {
                 this.alter = 'start'
+                this.itemModeForceRender()
             },
             offset: function () {
                 this.alter = 'offset'
+                this.itemModeForceRender()
             }
         },
 
@@ -158,6 +156,13 @@
                 })
             },
 
+            // force render ui if using item mode.
+            itemModeForceRender: function () {
+                if (this.item) {
+                    this.forceRender()
+                }
+            },
+
             // return the scroll passed items count in variable.
             getVarOvers: function (offset) {
                 var low = 0
@@ -222,11 +227,11 @@
                 if (typeof this.variable === 'function') {
                     return this.variable(index) || 0
                 } else {
-                    var slot = !this.itemComponent ? this.$slots.default[index]
-                        // when using itemComponent, it can only get current components height,
-                        // need to be enhanced, or consider using variable-function instead
-                        : this.$children[index] ? this.$children[index].$vnode
-                            : undefined
+                    // when using item, it can only get current components height,
+                    // need to be enhanced, or consider using variable-function instead
+                    var slot = this.item
+                        ? (this.$children[index] ? this.$children[index].$vnode : null)
+                        : this.$slots.default[index]
 
                     var style = slot && slot.data && slot.data.style
                     if (style && style.height) {
@@ -319,19 +324,18 @@
                 var delta = this.delta
                 var slots = this.$slots.default
 
-                if (!this.itemComponent) {
+                // item mode shoud judge from items prop.
+                if (this.item) {
+                    if (!this.items.length) {
+                        delta.start = 0
+                    }
+                    delta.total = this.items.length
+                } else {
                     if (!slots) {
                         slots = []
                         delta.start = 0
                     }
-
                     delta.total = slots.length
-                } else {
-                    if (!this.items.length) {
-                        delta.start = 0
-                    }
-
-                    delta.total = this.items.length
                 }
 
                 var paddingTop, paddingBottom, allHeight
@@ -354,10 +358,9 @@
                 var targets = []
 
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
-                    targets.push(!this.itemComponent ? slots[i]
-                        // create vnode, using custom attrs binder (see example "finite-m")
-                        : this.$createElement(this.itemComponent, this.itemBinding(this.items[i], i) || {})
-                    )
+                    // create vnode, using custom attrs binder.
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i]
+                    targets.push(slot)
                 }
 
                 return targets
@@ -383,12 +386,13 @@
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset'
+                var scrollTop = this.alter === 'offset'
                     ? this.offset : this.variable
                         ? this.getVarOffset(zone.isLast ? delta.total : zone.start)
                         : zone.isLast && (delta.total - calcstart <= this.remain)
-                            ? delta.total * this.size : calcstart * this.size)
-                )
+                            ? delta.total * this.size : calcstart * this.size
+
+                this.$nextTick(this.setScrollTop.bind(this, scrollTop))
             }
 
             // if points out difference, force update once again.

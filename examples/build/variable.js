@@ -11574,16 +11574,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         props: {
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
-
-            // replace from vue $slots.default vnodes to pure data set
-            items: { type: Array, default: function _default() {
-                    return [];
-                } },
-            // for creating vnodes
-            itemComponent: { type: Object },
-            // for passing props or events to itemComponent
-            itemBinding: { type: Function, default: function _default() {} },
-
             rtag: { type: String, default: 'div' },
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
@@ -11594,7 +11584,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             debounce: Number,
             totop: Function,
             tobottom: Function,
-            onscroll: Function
+            onscroll: Function,
+            items: { type: Array },
+            item: { type: Object },
+            itemprop: { type: Function }
         },
 
         created: function created() {
@@ -11624,12 +11617,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
             bench: function bench() {
                 this.alter = 'bench';
+                this.itemModeForceRender();
             },
             start: function start() {
                 this.alter = 'start';
+                this.itemModeForceRender();
             },
             offset: function offset() {
                 this.alter = 'offset';
+                this.itemModeForceRender();
             }
         },
 
@@ -11692,6 +11688,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 window.requestAnimationFrame(function () {
                     that.$forceUpdate();
                 });
+            },
+
+            // force render ui if using item mode.
+            itemModeForceRender: function itemModeForceRender() {
+                if (this.item) {
+                    this.forceRender();
+                }
             },
 
             // return the scroll passed items count in variable.
@@ -11758,10 +11761,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (typeof this.variable === 'function') {
                     return this.variable(index) || 0;
                 } else {
-                    var slot = !this.itemComponent ? this.$slots.default[index]
-                    // when using itemComponent, it can only get current components height,
+                    // when using item, it can only get current components height,
                     // need to be enhanced, or consider using variable-function instead
-                    : this.$children[index] ? this.$children[index].$vnode : undefined;
+                    var slot = this.item ? this.$children[index] ? this.$children[index].$vnode : null : this.$slots.default[index];
 
                     var style = slot && slot.data && slot.data.style;
                     if (style && style.height) {
@@ -11854,19 +11856,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var delta = this.delta;
                 var slots = this.$slots.default;
 
-                if (!this.itemComponent) {
+                // item mode shoud judge from items prop.
+                if (this.item) {
+                    if (!this.items.length) {
+                        delta.start = 0;
+                    }
+                    delta.total = this.items.length;
+                } else {
                     if (!slots) {
                         slots = [];
                         delta.start = 0;
                     }
-
                     delta.total = slots.length;
-                } else {
-                    if (!this.items.length) {
-                        delta.start = 0;
-                    }
-
-                    delta.total = this.items.length;
                 }
 
                 var paddingTop, paddingBottom, allHeight;
@@ -11889,9 +11890,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var targets = [];
 
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
-                    targets.push(!this.itemComponent ? slots[i]
-                    // create vnode, using custom attrs binder (see example "finite-m")
-                    : this.$createElement(this.itemComponent, this.itemBinding(this.items[i], i) || {}));
+                    // create vnode, using custom attrs binder.
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i];
+                    targets.push(slot);
                 }
 
                 return targets;
@@ -11917,7 +11918,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size));
+                var scrollTop = this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size;
+
+                this.$nextTick(this.setScrollTop.bind(this, scrollTop));
             }
 
             // if points out difference, force update once again.
@@ -14548,7 +14551,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/variable/variable.vue"
+Component.options.__file = "/Users/tangbichang/Github/vue-virtual-scroll-list/examples/variable/variable.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] variable.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -14780,8 +14783,7 @@ new _vue2.default({
 /* 36 */,
 /* 37 */,
 /* 38 */,
-/* 39 */,
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(true);
@@ -14789,12 +14791,13 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.item {\n    position: relative;\n    padding-left: 20px;\n    box-sizing: border-box;\n    border-bottom: 1px solid #eee;\n}\n.px {\n    position: absolute;\n    right: 20px;\n    font-size: 12px;\n    color: #ccc;\n}\n", "", {"version":3,"sources":["/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/variable/item.vue?49fa143c"],"names":[],"mappings":";AA0BA;IACA,mBAAA;IACA,mBAAA;IACA,uBAAA;IACA,8BAAA;CACA;AACA;IACA,mBAAA;IACA,YAAA;IACA,gBAAA;IACA,YAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\" :style=\"style\">\n        <span>Item # {{ index }}</span>\n        <i class=\"px\">{{ height }}px</i>\n    </div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number,\n            height: Number\n        },\n\n        computed: {\n            style () {\n                return {\n                    'height': this.height + 'px',\n                    'line-height': this.height + 'px'\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .item {\n        position: relative;\n        padding-left: 20px;\n        box-sizing: border-box;\n        border-bottom: 1px solid #eee;\n    }\n    .px {\n        position: absolute;\n        right: 20px;\n        font-size: 12px;\n        color: #ccc;\n    }\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.item {\n    position: relative;\n    padding-left: 20px;\n    box-sizing: border-box;\n    border-bottom: 1px solid #eee;\n    box-sizing: border-box;\n}\n.px {\n    position: absolute;\n    right: 20px;\n    font-size: 12px;\n    color: #ccc;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/variable/item.vue?0813afe1"],"names":[],"mappings":";AA0BA;IACA,mBAAA;IACA,mBAAA;IACA,uBAAA;IACA,8BAAA;IACA,uBAAA;CACA;AACA;IACA,mBAAA;IACA,YAAA;IACA,gBAAA;IACA,YAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\" :style=\"style\">\n        <span>Item # {{ index }}</span>\n        <i class=\"px\">{{ height }}px</i>\n    </div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number,\n            height: Number\n        },\n\n        computed: {\n            style () {\n                return {\n                    'height': this.height + 'px',\n                    'line-height': this.height + 'px'\n                }\n            }\n        }\n    }\n</script>\n\n<style>\n    .item {\n        position: relative;\n        padding-left: 20px;\n        box-sizing: border-box;\n        border-bottom: 1px solid #eee;\n        box-sizing: border-box;\n    }\n    .px {\n        position: absolute;\n        right: 20px;\n        font-size: 12px;\n        color: #ccc;\n    }\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
+/* 40 */,
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14803,7 +14806,7 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n.scrollToIndex, .changeHeight {\n    padding: 1em 0;\n    position: relative;\n}\n.changeHeight {\n    border-top: 1px dashed #ccc;\n}\n@media (max-width: 640px) {\n.changeHeight {\n        display: none;\n}\n.indexSpan {\n        display: block;\n        padding: .5em 0;\n}\n}\n.ceil {\n    margin-right: 1em;\n}\n.smallCeil {\n    margin-right: .5em;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nbutton {\n    position: relative;\n    padding: .4em .8em;\n    height: 30px;\n    vertical-align: top;\n    border-radius: 3px;\n    background: #f8f8f8;\n    cursor: pointer;\n    outline: none;\n    border: 1px solid #ccc;\n}\nbutton:active {\n    background: #f3f3f3;\n}\n", "", {"version":3,"sources":["/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/variable/variable.vue?c3174ace"],"names":[],"mappings":";AAoGA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,4BAAA;CACA;AACA;AACA;QACA,cAAA;CACA;AACA;QACA,eAAA;QACA,gBAAA;CACA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,oBAAA;IACA,gBAAA;IACA,cAAA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;CACA","file":"variable.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span class=\"indexSpan ceil\">\n                Start index:\n                <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            </span>\n        </div>\n        <div class=\"changeHeight\">\n            <span>Index: </span>\n            <input type=\"text\" v-model.number=\"changeHeightIndex\" class=\"ceil\">\n            <span>Height: </span>\n            <input type=\"text\" v-model.number=\"changeHeight\" class=\"ceil\">\n            <button @click=\"eventChangeHeight\">Apply</button>\n        </div>\n\n        <VirtualList ref=\"vsl\" :variable=\"getVariableHeight\"\n            :size=\"50\"\n            :remain=\"6\"\n            :totop=\"toTop\"\n            :tobottom=\"toBottom\"\n            :start=\"startIndex\" class=\"list\"\n        >\n            <Item\n                v-for=\"(item, index) of items\"\n                :key=\"index\"\n                :index=\"index\"\n                :height=\"item.height\"\n            ></Item>\n        </VirtualList>\n\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n    import getItems from './getItems'\n\n    const INIT_COUNT = 100000\n\n    export default {\n        name: 'variable-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                changeHeight: 0,\n                changeHeightIndex: 0,\n                count: INIT_COUNT,\n                items: getItems(INIT_COUNT)\n            }\n        },\n\n        methods: {\n            getVariableHeight (index) {\n                let target = this.items[index]\n                return target && target.height\n            },\n\n            eventChangeHeight () {\n                let height = this.changeHeight\n                let index = this.changeHeightIndex\n                let length = this.items.length\n\n                if (!length) {\n                    return alert('empty list now.')\n                }\n\n                if (index < 0 || index !== parseInt(index, 10) || index >= length) {\n                    return alert(`please set a right index: 0 ~ ${length - 1} && int number.`)\n                }\n\n                if (height <= 0 || height !== parseInt(height, 10)) {\n                    return alert('please set a right height: greater than 0 && int number.')\n                }\n\n                this.items[index].height = height\n                this.$refs.vsl.updateVariable(index)\n            },\n\n            toTop () {\n                console.log('on the top')\n            },\n\n            toBottom () {\n                console.log('on the bottom')\n            }\n        }\n    }\n</script>\n\n<style>\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    .scrollToIndex, .changeHeight {\n        padding: 1em 0;\n        position: relative;\n    }\n    .changeHeight {\n        border-top: 1px dashed #ccc;\n    }\n    @media (max-width: 640px) {\n        .changeHeight {\n            display: none;\n        }\n        .indexSpan {\n            display: block;\n            padding: .5em 0;\n        }\n    }\n    .ceil {\n        margin-right: 1em;\n    }\n    .smallCeil {\n        margin-right: .5em;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    button {\n        position: relative;\n        padding: .4em .8em;\n        height: 30px;\n        vertical-align: top;\n        border-radius: 3px;\n        background: #f8f8f8;\n        cursor: pointer;\n        outline: none;\n        border: 1px solid #ccc;\n    }\n    button:active {\n        background: #f3f3f3;\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n.scrollToIndex, .changeHeight {\n    padding: 1em 0;\n    position: relative;\n}\n.changeHeight {\n    border-top: 1px dashed #ccc;\n}\n@media (max-width: 640px) {\n.changeHeight {\n        display: none;\n}\n.indexSpan {\n        display: block;\n        padding: .5em 0;\n}\n}\n.ceil {\n    margin-right: 1em;\n}\n.smallCeil {\n    margin-right: .5em;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nbutton {\n    position: relative;\n    padding: .4em .8em;\n    height: 30px;\n    vertical-align: top;\n    border-radius: 3px;\n    background: #f8f8f8;\n    cursor: pointer;\n    outline: none;\n    border: 1px solid #ccc;\n}\nbutton:active {\n    background: #f3f3f3;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/variable/variable.vue?c3174ace"],"names":[],"mappings":";AAoGA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,4BAAA;CACA;AACA;AACA;QACA,cAAA;CACA;AACA;QACA,eAAA;QACA,gBAAA;CACA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,oBAAA;IACA,gBAAA;IACA,cAAA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;CACA","file":"variable.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span class=\"indexSpan ceil\">\n                Start index:\n                <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            </span>\n        </div>\n        <div class=\"changeHeight\">\n            <span>Index: </span>\n            <input type=\"text\" v-model.number=\"changeHeightIndex\" class=\"ceil\">\n            <span>Height: </span>\n            <input type=\"text\" v-model.number=\"changeHeight\" class=\"ceil\">\n            <button @click=\"eventChangeHeight\">Apply</button>\n        </div>\n\n        <VirtualList ref=\"vsl\" :variable=\"getVariableHeight\"\n            :size=\"50\"\n            :remain=\"6\"\n            :totop=\"toTop\"\n            :tobottom=\"toBottom\"\n            :start=\"startIndex\" class=\"list\"\n        >\n            <Item\n                v-for=\"(item, index) of items\"\n                :key=\"index\"\n                :index=\"index\"\n                :height=\"item.height\"\n            ></Item>\n        </VirtualList>\n\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n    import getItems from './getItems'\n\n    const INIT_COUNT = 100000\n\n    export default {\n        name: 'variable-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                changeHeight: 0,\n                changeHeightIndex: 0,\n                count: INIT_COUNT,\n                items: getItems(INIT_COUNT)\n            }\n        },\n\n        methods: {\n            getVariableHeight (index) {\n                let target = this.items[index]\n                return target && target.height\n            },\n\n            eventChangeHeight () {\n                let height = this.changeHeight\n                let index = this.changeHeightIndex\n                let length = this.items.length\n\n                if (!length) {\n                    return alert('empty list now.')\n                }\n\n                if (index < 0 || index !== parseInt(index, 10) || index >= length) {\n                    return alert(`please set a right index: 0 ~ ${length - 1} && int number.`)\n                }\n\n                if (height <= 0 || height !== parseInt(height, 10)) {\n                    return alert('please set a right height: greater than 0 && int number.')\n                }\n\n                this.items[index].height = height\n                this.$refs.vsl.updateVariable(index)\n            },\n\n            toTop () {\n                console.log('on the top')\n            },\n\n            toBottom () {\n                console.log('on the bottom')\n            }\n        }\n    }\n</script>\n\n<style>\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    .scrollToIndex, .changeHeight {\n        padding: 1em 0;\n        position: relative;\n    }\n    .changeHeight {\n        border-top: 1px dashed #ccc;\n    }\n    @media (max-width: 640px) {\n        .changeHeight {\n            display: none;\n        }\n        .indexSpan {\n            display: block;\n            padding: .5em 0;\n        }\n    }\n    .ceil {\n        margin-right: 1em;\n    }\n    .smallCeil {\n        margin-right: .5em;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    button {\n        position: relative;\n        padding: .4em .8em;\n        height: 30px;\n        vertical-align: top;\n        border-radius: 3px;\n        background: #f8f8f8;\n        cursor: pointer;\n        outline: none;\n        border: 1px solid #ccc;\n    }\n    button:active {\n        background: #f3f3f3;\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -14818,19 +14821,19 @@ exports.push([module.i, "\n.list {\n    background: #fff;\n    border-radius: 3p
 
 
 /* styles */
-__webpack_require__(63)
+__webpack_require__(62)
 
 var Component = __webpack_require__(3)(
   /* script */
   __webpack_require__(26),
   /* template */
-  __webpack_require__(54),
+  __webpack_require__(53),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/variable/item.vue"
+Component.options.__file = "/Users/tangbichang/Github/vue-virtual-scroll-list/examples/variable/item.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] item.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -14857,8 +14860,7 @@ module.exports = Component.exports
 /* 50 */,
 /* 51 */,
 /* 52 */,
-/* 53 */,
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -14878,6 +14880,7 @@ if (false) {
 }
 
 /***/ }),
+/* 54 */,
 /* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15013,14 +15016,13 @@ if (false) {
 /* 59 */,
 /* 60 */,
 /* 61 */,
-/* 62 */,
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(40);
+var content = __webpack_require__(39);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -15040,6 +15042,7 @@ if(false) {
 }
 
 /***/ }),
+/* 63 */,
 /* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 

@@ -16,5 +16,6 @@
         line-height: 50px;
         padding-left: 20px;
         border-bottom: 1px solid #eee;
+        box-sizing: border-box;
     }
 </style>

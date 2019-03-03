@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11574,16 +11574,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         props: {
             size: { type: Number, required: true },
             remain: { type: Number, required: true },
-
-            // replace from vue $slots.default vnodes to pure data set
-            items: { type: Array, default: function _default() {
-                    return [];
-                } },
-            // for creating vnodes
-            itemComponent: { type: Object },
-            // for passing props or events to itemComponent
-            itemBinding: { type: Function, default: function _default() {} },
-
             rtag: { type: String, default: 'div' },
             wtag: { type: String, default: 'div' },
             wclass: { type: String, default: '' },
@@ -11594,7 +11584,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             debounce: Number,
             totop: Function,
             tobottom: Function,
-            onscroll: Function
+            onscroll: Function,
+            items: { type: Array },
+            item: { type: Object },
+            itemprop: { type: Function }
         },
 
         created: function created() {
@@ -11624,12 +11617,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
             bench: function bench() {
                 this.alter = 'bench';
+                this.itemModeForceRender();
             },
             start: function start() {
                 this.alter = 'start';
+                this.itemModeForceRender();
             },
             offset: function offset() {
                 this.alter = 'offset';
+                this.itemModeForceRender();
             }
         },
 
@@ -11692,6 +11688,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 window.requestAnimationFrame(function () {
                     that.$forceUpdate();
                 });
+            },
+
+            // force render ui if using item mode.
+            itemModeForceRender: function itemModeForceRender() {
+                if (this.item) {
+                    this.forceRender();
+                }
             },
 
             // return the scroll passed items count in variable.
@@ -11758,10 +11761,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (typeof this.variable === 'function') {
                     return this.variable(index) || 0;
                 } else {
-                    var slot = !this.itemComponent ? this.$slots.default[index]
-                    // when using itemComponent, it can only get current components height,
+                    // when using item, it can only get current components height,
                     // need to be enhanced, or consider using variable-function instead
-                    : this.$children[index] ? this.$children[index].$vnode : undefined;
+                    var slot = this.item ? this.$children[index] ? this.$children[index].$vnode : null : this.$slots.default[index];
 
                     var style = slot && slot.data && slot.data.style;
                     if (style && style.height) {
@@ -11854,19 +11856,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var delta = this.delta;
                 var slots = this.$slots.default;
 
-                if (!this.itemComponent) {
+                // item mode shoud judge from items prop.
+                if (this.item) {
+                    if (!this.items.length) {
+                        delta.start = 0;
+                    }
+                    delta.total = this.items.length;
+                } else {
                     if (!slots) {
                         slots = [];
                         delta.start = 0;
                     }
-
                     delta.total = slots.length;
-                } else {
-                    if (!this.items.length) {
-                        delta.start = 0;
-                    }
-
-                    delta.total = this.items.length;
                 }
 
                 var paddingTop, paddingBottom, allHeight;
@@ -11889,9 +11890,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var targets = [];
 
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
-                    targets.push(!this.itemComponent ? slots[i]
-                    // create vnode, using custom attrs binder (see example "finite-m")
-                    : this.$createElement(this.itemComponent, this.itemBinding(this.items[i], i) || {}));
+                    // create vnode, using custom attrs binder.
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i];
+                    targets.push(slot);
                 }
 
                 return targets;
@@ -11917,7 +11918,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             // if start, size or offset change, update scroll position.
             if (~['start', 'size', 'offset'].indexOf(this.alter)) {
-                this.$nextTick(this.setScrollTop.bind(this, this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size));
+                var scrollTop = this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size;
+
+                this.$nextTick(this.setScrollTop.bind(this, scrollTop));
             }
 
             // if points out difference, force update once again.
@@ -14528,25 +14531,24 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 15 */,
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(57)
+__webpack_require__(56)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(21),
+  __webpack_require__(19),
   /* template */
-  __webpack_require__(48),
+  __webpack_require__(47),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/finite/finite.vue"
+Component.options.__file = "/Users/tangbichang/Github/vue-virtual-scroll-list/examples/finite/finite.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] finite.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -14567,16 +14569,15 @@ module.exports = Component.exports
 
 
 /***/ }),
+/* 16 */,
 /* 17 */,
 /* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__item_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_virtual_scroll_list__);
@@ -14616,7 +14617,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14633,13 +14634,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
+/* 21 */,
+/* 22 */,
 /* 23 */,
 /* 24 */,
 /* 25 */,
 /* 26 */,
 /* 27 */,
-/* 28 */,
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14649,7 +14651,7 @@ var _vue = __webpack_require__(1);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _finite = __webpack_require__(16);
+var _finite = __webpack_require__(15);
 
 var _finite2 = _interopRequireDefault(_finite);
 
@@ -14665,11 +14667,11 @@ new _vue2.default({
 });
 
 /***/ }),
+/* 29 */,
 /* 30 */,
 /* 31 */,
 /* 32 */,
-/* 33 */,
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)(true);
@@ -14677,12 +14679,13 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.scrollToIndex {\n    padding-bottom: 20px;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nsmall {\n    color: #999;\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/finite/finite.vue?2f88e495"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index: </span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" :bench=\"44\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scrollToIndex {\n    padding-bottom: 20px;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nsmall {\n    color: #999;\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/finite/finite.vue?93d23ac8"],"names":[],"mappings":";AAqCA;IACA,qBAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"scrollToIndex\">\n            <span>Scroll to index: </span>\n            <input type=\"text\" v-model.number.lazy=\"startIndex\">\n            <small>Change and blur to set start index.</small>\n        </div>\n        <VirtualList :size=\"50\" :remain=\"6\" class=\"list\" :start=\"startIndex\">\n            <Item v-for=\"(udf, index) of items\" :index=\"index\" :key=\"index\"></Item>\n        </VirtualList>\n        <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div>\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    export default {\n        name: 'finite-test',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                startIndex: 0,\n                items: new Array(100000)\n            }\n        }\n    }\n</script>\n\n<style>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
+/* 34 */,
 /* 35 */,
 /* 36 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -14692,7 +14695,7 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.item {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n}\n", "", {"version":3,"sources":["/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/finite/item.vue?15dc730c"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n    }\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.item {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 20px;\n    border-bottom: 1px solid #eee;\n    box-sizing: border-box;\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/finite/item.vue?6d77565b"],"names":[],"mappings":";AAaA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,8BAAA;IACA,uBAAA;CACA","file":"item.vue","sourcesContent":["<template>\n    <div class=\"item\">Item # {{ index }}</div>\n</template>\n\n<script>\n    export default {\n        props: {\n            index: Number\n        }\n    }\n</script>\n\n<style>\n    .item {\n        height: 50px;\n        line-height: 50px;\n        padding-left: 20px;\n        border-bottom: 1px solid #eee;\n        box-sizing: border-box;\n    }\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -14703,8 +14706,7 @@ exports.push([module.i, "\n.item {\n    height: 50px;\n    line-height: 50px;\n 
 /* 39 */,
 /* 40 */,
 /* 41 */,
-/* 42 */,
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -14713,7 +14715,7 @@ __webpack_require__(59)
 
 var Component = __webpack_require__(3)(
   /* script */
-  __webpack_require__(22),
+  __webpack_require__(20),
   /* template */
   __webpack_require__(50),
   /* scopeId */
@@ -14721,7 +14723,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/Fisher/Desktop/code/vue-virtual-scroll-list/examples/finite/item.vue"
+Component.options.__file = "/Users/tangbichang/Github/vue-virtual-scroll-list/examples/finite/item.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] item.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -14742,11 +14744,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+/* 43 */,
 /* 44 */,
 /* 45 */,
 /* 46 */,
-/* 47 */,
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -14782,7 +14784,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "size": 50,
       "remain": 6,
-      "bench": 44,
       "start": _vm.startIndex
     }
   }, _vm._l((_vm.items), function(udf, index) {
@@ -14811,6 +14812,7 @@ if (false) {
 }
 
 /***/ }),
+/* 48 */,
 /* 49 */,
 /* 50 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -14834,14 +14836,13 @@ if (false) {
 /* 53 */,
 /* 54 */,
 /* 55 */,
-/* 56 */,
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(34);
+var content = __webpack_require__(33);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -14861,6 +14862,7 @@ if(false) {
 }
 
 /***/ }),
+/* 57 */,
 /* 58 */,
 /* 59 */
 /***/ (function(module, exports, __webpack_require__) {
