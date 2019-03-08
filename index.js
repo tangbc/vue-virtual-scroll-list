@@ -49,7 +49,7 @@
             totop: Function,
             tobottom: Function,
             onscroll: Function,
-            items: { type: Array },
+            itemdata: { type: Array },
             item: { type: Object },
             itemprop: { type: Function }
         },
@@ -147,7 +147,7 @@
                 }
             },
 
-            // force render ui list if we needed.
+            // public method, force render ui list if we needed.
             // call this before the next repaint to get better performance.
             forceRender: function () {
                 var that = this
@@ -273,7 +273,7 @@
                 }
             },
 
-            // the ONLY ONE public method, allow the parent update variable by index.
+            // public method, allow the parent update variable by index.
             updateVariable: function (index) {
                 // clear/update all the offfsets and heights ahead of index.
                 this.getVarOffset(index, true)
@@ -326,10 +326,10 @@
 
                 // item mode shoud judge from items prop.
                 if (this.item) {
-                    if (!this.items.length) {
+                    if (!this.itemdata.length) {
                         delta.start = 0
                     }
-                    delta.total = this.items.length
+                    delta.total = this.itemdata.length
                 } else {
                     if (!slots) {
                         slots = []
@@ -369,7 +369,7 @@
                 var targets = []
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     // create vnode, using custom attrs binder.
-                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i]
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.itemdata[i])) : slots[i]
                     targets.push(slot)
                 }
 
