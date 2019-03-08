@@ -359,8 +359,14 @@
                 delta.paddingBottom = paddingBottom
                 delta.offsetAll = allHeight - this.size * this.remain
 
-                var targets = []
+                // here we shoud try getZone to ensure start/end is right after new list. #88
+                var zone = this.getZone(delta.start)
+                if (zone.start !== delta.start || zone.end !== delta.end) {
+                    delta.end = zone.end
+                    delta.start = zone.start
+                }
 
+                var targets = []
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     // create vnode, using custom attrs binder.
                     var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i]
@@ -389,7 +395,7 @@
             var zone = this.getZone(calcstart)
 
             // if start, size or offset change, update scroll position.
-            if (~['start', 'size', 'offset'].indexOf(this.alter)) {
+            if (this.alter && ~['start', 'size', 'offset'].indexOf(this.alter)) {
                 var scrollTop = this.alter === 'offset'
                     ? this.offset : this.variable
                         ? this.getVarOffset(zone.isLast ? delta.total : zone.start)
