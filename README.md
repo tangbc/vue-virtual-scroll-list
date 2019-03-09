@@ -176,7 +176,7 @@ If you assign `variable` as `true`, **do not** set inline style height inside `<
 
 ### About item mode
 
-Use `item-mode` can save a considerable amount of memory, stats data check here: [#87](https://github.com/tangbc/vue-virtual-scroll-list/pull/87).
+Use `item-mode` can save a considerable amount of memory and performance, stats data check here: [#87](https://github.com/tangbc/vue-virtual-scroll-list/pull/87).
 
 In this mode, prop `item` `itemdata` `itemprop` are both required, and you don't have to put `<item/>` with a v-for frag inside `virtual-list`, just assign it as prop `item`:
 
