@@ -11585,7 +11585,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             totop: Function,
             tobottom: Function,
             onscroll: Function,
-            items: { type: Array },
+            itemdata: { type: Array },
             item: { type: Object },
             itemprop: { type: Function }
         },
@@ -11681,7 +11681,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
 
-            // force render ui list if we needed.
+            // public method, force render ui list if we needed.
             // call this before the next repaint to get better performance.
             forceRender: function forceRender() {
                 var that = this;
@@ -11805,7 +11805,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
 
-            // the ONLY ONE public method, allow the parent update variable by index.
+            // public method, allow the parent update variable by index.
             updateVariable: function updateVariable(index) {
                 // clear/update all the offfsets and heights ahead of index.
                 this.getVarOffset(index, true);
@@ -11858,10 +11858,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 // item mode shoud judge from items prop.
                 if (this.item) {
-                    if (!this.items.length) {
+                    if (!this.itemdata.length) {
                         delta.start = 0;
                     }
-                    delta.total = this.items.length;
+                    delta.total = this.itemdata.length;
                 } else {
                     if (!slots) {
                         slots = [];
@@ -11883,15 +11883,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     paddingBottom = this.size * (hasPadding ? delta.total - delta.keeps : 0) - paddingTop;
                 }
 
+                if (paddingBottom < this.size) {
+                    paddingBottom = 0;
+                }
+
                 delta.paddingTop = paddingTop;
                 delta.paddingBottom = paddingBottom;
                 delta.offsetAll = allHeight - this.size * this.remain;
 
-                var targets = [];
+                // here we shoud try getZone to ensure start/end is right after new list. #88
+                var zone = this.getZone(delta.start);
+                if (zone.start !== delta.start || zone.end !== delta.end) {
+                    delta.end = zone.end;
+                    delta.start = zone.start;
+                }
 
+                var targets = [];
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     // create vnode, using custom attrs binder.
-                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i];
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.itemdata[i])) : slots[i];
                     targets.push(slot);
                 }
 
@@ -11917,7 +11927,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var zone = this.getZone(calcstart);
 
             // if start, size or offset change, update scroll position.
-            if (~['start', 'size', 'offset'].indexOf(this.alter)) {
+            if (this.alter && ~['start', 'size', 'offset'].indexOf(this.alter)) {
                 var scrollTop = this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size;
 
                 this.$nextTick(this.setScrollTop.bind(this, scrollTop));

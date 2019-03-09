@@ -12,8 +12,8 @@
             :remain="remain"
             :bench="bench"
             :start="start"
-            :items="items"
             :item="itemComponent"
+            :itemdata="itemdata"
             :itemprop="itemBinding"
         ></VirtualList>
         <!-- <div class="source">
@@ -45,14 +45,14 @@
                 start: 0,
                 remain: 6,
                 bench: 6,
-                items: getList(INIT_COUNT),
+                itemdata: getList(INIT_COUNT),
                 itemComponent: Item,
             }
         },
 
         watch: {
             count: function (val) {
-                this.items = getList(Math.max(parseInt(val, 10), 0))
+                this.itemdata = getList(Math.max(parseInt(val, 10), 0))
             }
         },
 
@@ -63,7 +63,7 @@
             // },
 
             itemBinding (idx) {
-                const item = this.items[idx]
+                const item = this.itemdata[idx]
                 return {
                     key: item,
                     props: {

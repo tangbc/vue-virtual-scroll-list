@@ -11585,7 +11585,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             totop: Function,
             tobottom: Function,
             onscroll: Function,
-            items: { type: Array },
+            itemdata: { type: Array },
             item: { type: Object },
             itemprop: { type: Function }
         },
@@ -11681,7 +11681,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
 
-            // force render ui list if we needed.
+            // public method, force render ui list if we needed.
             // call this before the next repaint to get better performance.
             forceRender: function forceRender() {
                 var that = this;
@@ -11805,7 +11805,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
 
-            // the ONLY ONE public method, allow the parent update variable by index.
+            // public method, allow the parent update variable by index.
             updateVariable: function updateVariable(index) {
                 // clear/update all the offfsets and heights ahead of index.
                 this.getVarOffset(index, true);
@@ -11858,10 +11858,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 // item mode shoud judge from items prop.
                 if (this.item) {
-                    if (!this.items.length) {
+                    if (!this.itemdata.length) {
                         delta.start = 0;
                     }
-                    delta.total = this.items.length;
+                    delta.total = this.itemdata.length;
                 } else {
                     if (!slots) {
                         slots = [];
@@ -11883,15 +11883,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     paddingBottom = this.size * (hasPadding ? delta.total - delta.keeps : 0) - paddingTop;
                 }
 
+                if (paddingBottom < this.size) {
+                    paddingBottom = 0;
+                }
+
                 delta.paddingTop = paddingTop;
                 delta.paddingBottom = paddingBottom;
                 delta.offsetAll = allHeight - this.size * this.remain;
 
-                var targets = [];
+                // here we shoud try getZone to ensure start/end is right after new list. #88
+                var zone = this.getZone(delta.start);
+                if (zone.start !== delta.start || zone.end !== delta.end) {
+                    delta.end = zone.end;
+                    delta.start = zone.start;
+                }
 
+                var targets = [];
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     // create vnode, using custom attrs binder.
-                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.items[i])) : slots[i];
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.itemdata[i])) : slots[i];
                     targets.push(slot);
                 }
 
@@ -11917,7 +11927,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var zone = this.getZone(calcstart);
 
             // if start, size or offset change, update scroll position.
-            if (~['start', 'size', 'offset'].indexOf(this.alter)) {
+            if (this.alter && ~['start', 'size', 'offset'].indexOf(this.alter)) {
                 var scrollTop = this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size;
 
                 this.$nextTick(this.setScrollTop.bind(this, scrollTop));
@@ -14633,7 +14643,7 @@ var INIT_COUNT = 1000;
             start: 0,
             remain: 6,
             bench: 6,
-            items: getList(INIT_COUNT),
+            itemdata: getList(INIT_COUNT),
             itemComponent: __WEBPACK_IMPORTED_MODULE_0__item_vue___default.a
         };
     },
@@ -14641,7 +14651,7 @@ var INIT_COUNT = 1000;
 
     watch: {
         count: function count(val) {
-            this.items = getList(Math.max(parseInt(val, 10), 0));
+            this.itemdata = getList(Math.max(parseInt(val, 10), 0));
         }
     },
 
@@ -14652,7 +14662,7 @@ var INIT_COUNT = 1000;
         // },
 
         itemBinding: function itemBinding(idx) {
-            var item = this.items[idx];
+            var item = this.itemdata[idx];
             return {
                 key: item,
                 props: {
@@ -14753,7 +14763,7 @@ exports = module.exports = __webpack_require__(2)(true);
 
 
 // module
-exports.push([module.i, "\n.scrollToIndex {\n    padding-bottom: 20px;\n}\n.op {\n    padding-bottom: 1em;\n}\n.op-item {\n    padding: .2em 0;\n}\nlabel {\n    display: inline-block;\n    width: 100px;\n    padding-right: 1em;\n    text-align: right;\n}\ninput {\n    outline: none;\n    padding: .5em;\n    width: 80px;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nsmall {\n    color: #999;\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/item-mode/finite.vue?3dc68b8c"],"names":[],"mappings":";AA0FA;IACA,qBAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,sBAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,cAAA;IACA,cAAA;IACA,YAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"op\">\n            <div class=\"op-item\"><label>count:</label><input type=\"text\" v-model.number.lazy=\"count\"></div>\n            <div class=\"op-item\"><label>start: </label><input type=\"text\" v-model.number.lazy=\"start\"></div>\n            <div class=\"op-item\"><label>remain: </label><input type=\"text\" v-model.number.lazy=\"remain\"></div>\n            <!-- <div class=\"op-item\"><label>size: </label><input type=\"text\" v-model.number.lazy=\"size\"></div> -->\n            <div class=\"op-item\"><label>bench: </label><input type=\"text\" v-model.number.lazy=\"bench\"></div>\n        </div>\n        <VirtualList class=\"list\"\n            :size=\"50\"\n            :remain=\"remain\"\n            :bench=\"bench\"\n            :start=\"start\"\n            :items=\"items\"\n            :item=\"itemComponent\"\n            :itemprop=\"itemBinding\"\n        ></VirtualList>\n        <!-- <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div> -->\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    function getList (count) {\n        return new Array(count)\n    }\n\n    var INIT_COUNT = 1000\n\n    export default {\n        name: 'finite-test-item-mode',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                count: INIT_COUNT,\n                start: 0,\n                remain: 6,\n                bench: 6,\n                items: getList(INIT_COUNT),\n                itemComponent: Item,\n            }\n        },\n\n        watch: {\n            count: function (val) {\n                this.items = getList(Math.max(parseInt(val, 10), 0))\n            }\n        },\n\n        methods: {\n            // simple variable test\n            // variableHeight() {\n            //     return 45;\n            // },\n\n            itemBinding (idx) {\n                const item = this.items[idx]\n                return {\n                    key: item,\n                    props: {\n                        index: idx\n                    }\n                };\n\n                // return {\n                //     key: item.id,\n                //     props: {\n                //         index: item.num,\n                //     },\n                //     nativeOn: {\n                //         dblclick: (...args) => {\n                //             console.log(idx, 'dblclick');\n                //         }\n                //     }\n                // }\n            }\n        }\n    }\n</script>\n\n<style>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    .op {\n        padding-bottom: 1em;\n    }\n    .op-item {\n        padding: .2em 0;\n    }\n    label {\n        display: inline-block;\n        width: 100px;\n        padding-right: 1em;\n        text-align: right;\n    }\n    input {\n        outline: none;\n        padding: .5em;\n        width: 80px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scrollToIndex {\n    padding-bottom: 20px;\n}\n.op {\n    padding-bottom: 1em;\n}\n.op-item {\n    padding: .2em 0;\n}\nlabel {\n    display: inline-block;\n    width: 100px;\n    padding-right: 1em;\n    text-align: right;\n}\ninput {\n    outline: none;\n    padding: .5em;\n    width: 80px;\n}\ninput {\n    outline: none;\n    padding: .4em .5em;\n    width: 55px;\n    height: 16px;\n    border-radius: 3px;\n    border: 1px solid;\n    border-color: #dddddd;\n    font-size: 16px;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\ninput:focus {\n    border-color: #6495ed;\n}\nsmall {\n    color: #999;\n}\n.list {\n    background: #fff;\n    border-radius: 3px;\n    border: 1px solid #ddd;\n    -webkit-overflow-scrolling: touch;\n    overflow-scrolling: touch;\n}\n.source {\n    text-align: center;\n    padding-top: 20px;\n}\n.source a {\n    color: #999;\n    text-decoration: none;\n    font-weight: 100;\n}\n@media (max-width: 640px) {\nsmall {\n        display: none;\n}\n}\n", "", {"version":3,"sources":["/Users/tangbichang/Github/vue-virtual-scroll-list/examples/item-mode/finite.vue?bda84a8a"],"names":[],"mappings":";AA0FA;IACA,qBAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,sBAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,cAAA;IACA,cAAA;IACA,YAAA;CACA;AACA;IACA,cAAA;IACA,mBAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kBAAA;IACA,sBAAA;IACA,gBAAA;IACA,yBAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,iBAAA;IACA,mBAAA;IACA,uBAAA;IACA,kCAAA;IACA,0BAAA;CACA;AACA;IACA,mBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;AACA;QACA,cAAA;CACA;CACA","file":"finite.vue","sourcesContent":["<template>\n    <div>\n        <div class=\"op\">\n            <div class=\"op-item\"><label>count:</label><input type=\"text\" v-model.number.lazy=\"count\"></div>\n            <div class=\"op-item\"><label>start: </label><input type=\"text\" v-model.number.lazy=\"start\"></div>\n            <div class=\"op-item\"><label>remain: </label><input type=\"text\" v-model.number.lazy=\"remain\"></div>\n            <!-- <div class=\"op-item\"><label>size: </label><input type=\"text\" v-model.number.lazy=\"size\"></div> -->\n            <div class=\"op-item\"><label>bench: </label><input type=\"text\" v-model.number.lazy=\"bench\"></div>\n        </div>\n        <VirtualList class=\"list\"\n            :size=\"50\"\n            :remain=\"remain\"\n            :bench=\"bench\"\n            :start=\"start\"\n            :item=\"itemComponent\"\n            :itemdata=\"itemdata\"\n            :itemprop=\"itemBinding\"\n        ></VirtualList>\n        <!-- <div class=\"source\">\n            <a href=\"https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/finite/finite.vue#L1\">\n                View this demo source code\n            </a>\n        </div> -->\n    </div>\n</template>\n\n<script>\n    import Item from './item.vue'\n    import VirtualList from 'vue-virtual-scroll-list'\n\n    function getList (count) {\n        return new Array(count)\n    }\n\n    var INIT_COUNT = 1000\n\n    export default {\n        name: 'finite-test-item-mode',\n\n        components: { Item, VirtualList },\n\n        data () {\n            return {\n                count: INIT_COUNT,\n                start: 0,\n                remain: 6,\n                bench: 6,\n                itemdata: getList(INIT_COUNT),\n                itemComponent: Item,\n            }\n        },\n\n        watch: {\n            count: function (val) {\n                this.itemdata = getList(Math.max(parseInt(val, 10), 0))\n            }\n        },\n\n        methods: {\n            // simple variable test\n            // variableHeight() {\n            //     return 45;\n            // },\n\n            itemBinding (idx) {\n                const item = this.itemdata[idx]\n                return {\n                    key: item,\n                    props: {\n                        index: idx\n                    }\n                };\n\n                // return {\n                //     key: item.id,\n                //     props: {\n                //         index: item.num,\n                //     },\n                //     nativeOn: {\n                //         dblclick: (...args) => {\n                //             console.log(idx, 'dblclick');\n                //         }\n                //     }\n                // }\n            }\n        }\n    }\n</script>\n\n<style>\n    .scrollToIndex {\n        padding-bottom: 20px;\n    }\n    .op {\n        padding-bottom: 1em;\n    }\n    .op-item {\n        padding: .2em 0;\n    }\n    label {\n        display: inline-block;\n        width: 100px;\n        padding-right: 1em;\n        text-align: right;\n    }\n    input {\n        outline: none;\n        padding: .5em;\n        width: 80px;\n    }\n    input {\n        outline: none;\n        padding: .4em .5em;\n        width: 55px;\n        height: 16px;\n        border-radius: 3px;\n        border: 1px solid;\n        border-color: #dddddd;\n        font-size: 16px;\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n    }\n    input:focus {\n        border-color: #6495ed;\n    }\n    small {\n        color: #999;\n    }\n    .list {\n        background: #fff;\n        border-radius: 3px;\n        border: 1px solid #ddd;\n        -webkit-overflow-scrolling: touch;\n        overflow-scrolling: touch;\n    }\n    .source {\n        text-align: center;\n        padding-top: 20px;\n    }\n    .source a {\n        color: #999;\n        text-decoration: none;\n        font-weight: 100;\n    }\n    @media (max-width: 640px) {\n        small {\n            display: none;\n        }\n    }\n</style>\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -14946,8 +14956,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "remain": _vm.remain,
       "bench": _vm.bench,
       "start": _vm.start,
-      "items": _vm.items,
       "item": _vm.itemComponent,
+      "itemdata": _vm.itemdata,
       "itemprop": _vm.itemBinding
     }
   })], 1)
