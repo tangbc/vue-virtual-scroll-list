@@ -25,7 +25,7 @@
 * [Props type](#props-type)
 * [Public methods](#public-methods)
 * [Special scenes](#special-scenes)
-    * [About variable height](#about-variable-height)
+    * [About variable mode](#about-variable-mode)
     * [About item mode](#about-item-mode)
 * [Contributions](#contributions)
 * [Changelogs](#changelogs)
@@ -142,28 +142,28 @@ new Vue({
 | totop | Function | * | Called when virtual-list is scrolled to top, no param. |
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
 | onscroll | Function | * | Called when virtual-list is scrolling, with param: [`(event, data)`](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v1.1.7). |
-| variable | Function or Boolean | * | For using virtual-list with `variable height mode`. If assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. If assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
-| item | Component | * | For using virtual-list with `item mode` see [details](#about-item-mode) below. |
-| itemdata | Array | * | For using virtual-list with `item mode` see [details](#about-item-mode) below |
-| itemprop | Function | * | For using virtual-list with `item mode` see [details](#about-item-mode) below. |
+| variable | Function or Boolean | * | For using virtual-list in `variable-mode`. If assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. If assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
+| item | Component | * | For using virtual-list in `item-mode`. List item vue component, see [details](#about-item-mode) below. |
+| itemdata | Array | * | For using virtual-list in `item-mode`. Prop data list or item slots assign to each item, see [details](#about-item-mode) below. |
+| itemprop | Function | * | For using virtual-list in `item-mode`. Function call when each item is going to be rendered, see [details](#about-item-mode) below. |
 
 
 ## Public methods
 
-Here are some usefull public methods if you can call via [`ref`](https://vuejs.org/v2/guide/components-edge-cases.html#Accessing-Child-Component-Instances-amp-Child-Elements):
+Here are some usefull public methods you can call via [`ref`](https://vuejs.org/v2/guide/components-edge-cases.html#Accessing-Child-Component-Instances-amp-Child-Elements):
 
 * `forceRender()`: force render virtual-list if you need or make it refresh.
 
-* `updateVariable(index)`: update variable by index in variable height mode.
+* `updateVariable(index)`: update item height by index in variable height mode.
 
 
 ## Special scenes
 
-### About variable height
+### About variable mode
 
-In variable height mode, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cache, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
+In `variable-mode`, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cache, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
 
-If you are using `variable` assign by `Boolean`, **do not** set inline style height inside `<item/>` component, you **must** set inline style height on `<item/>` component outside directly, such as:
+If you assign `variable` as `true`, **do not** set inline style height inside `<item/>` component, you **must** set inline style height on `<item/>` component outside directly, such as:
 ```vue
 <template>
     <div>
@@ -176,15 +176,9 @@ If you are using `variable` assign by `Boolean`, **do not** set inline style hei
 
 ### About item mode
 
-Use item mode can save a considerable amount of memory, stats can see [#87](https://github.com/tangbc/vue-virtual-scroll-list/pull/87).
+Use `item-mode` can save a considerable amount of memory, stats data check here: [#87](https://github.com/tangbc/vue-virtual-scroll-list/pull/87).
 
-In this mode prop `item`, `itemdata` and `itemprop` is both required, you don't need put `<item/>` inside `virtual-list` just assign it as prop `item`:
-
-* `item`: The list vue item component.
-
-* `itemdata`: The prop data list assign to each item.
-
-* `itemprop`: Call when each item is going to be rendered.
+In this mode, prop `item` `itemdata` `itemprop` are both required, and you don't have to put `<item/>` with a v-for frag inside `virtual-list`, just assign it as prop `item`:
 
 ```vue
 <template>
@@ -209,11 +203,13 @@ In this mode prop `item`, `itemdata` and `itemprop` is both required, you don't 
             }
         },
         methods: {
+            // index: item index
+            // data: item data get from itemdata array
             itemprop (index, data) {
+                const id = { data }
+                const itemProps = getItemProp(id)
                 return {
-                    props: {
-                        data
-                    }
+                    props: itemProps // <item/> will receive prop with itemProps
                 }
             }
         },
