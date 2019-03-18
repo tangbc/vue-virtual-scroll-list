@@ -49,8 +49,8 @@
             totop: Function,
             tobottom: Function,
             onscroll: Function,
-            itemdata: { type: Array },
             item: { type: Object },
+            itemcount: { type: Number },
             itemprop: { type: Function }
         },
 
@@ -326,10 +326,7 @@
 
                 // item mode shoud judge from items prop.
                 if (this.item) {
-                    if (!this.itemdata.length) {
-                        delta.start = 0
-                    }
-                    delta.total = this.itemdata.length
+                    delta.total = this.itemcount
                 } else {
                     if (!slots) {
                         slots = []
@@ -369,7 +366,7 @@
                 var targets = []
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     // create vnode, using custom attrs binder.
-                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i, this.itemdata[i])) : slots[i]
+                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i)) : slots[i]
                     targets.push(slot)
                 }
 

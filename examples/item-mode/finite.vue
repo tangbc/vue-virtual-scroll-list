@@ -12,8 +12,8 @@
             :remain="remain"
             :bench="bench"
             :start="start"
-            :item="itemComponent"
-            :itemdata="itemdata"
+            :item="item"
+            :itemcount="count"
             :itemprop="itemBinding"
         ></VirtualList>
         <!-- <div class="source">
@@ -32,7 +32,8 @@
         return new Array(count)
     }
 
-    var INIT_COUNT = 1000
+    var TenThousand = 10000
+    var INIT_COUNT = TenThousand * 50
 
     export default {
         name: 'finite-test-item-mode',
@@ -45,14 +46,12 @@
                 start: 0,
                 remain: 6,
                 bench: 6,
-                itemdata: getList(INIT_COUNT),
-                itemComponent: Item,
+                item: Item,
             }
         },
 
         watch: {
             count: function (val) {
-                this.itemdata = getList(Math.max(parseInt(val, 10), 0))
             }
         },
 
@@ -63,9 +62,8 @@
             // },
 
             itemBinding (idx) {
-                const item = this.itemdata[idx]
                 return {
-                    key: item,
+                    key: 'item' + idx,
                     props: {
                         index: idx
                     }
@@ -111,7 +109,7 @@
     input {
         outline: none;
         padding: .4em .5em;
-        width: 55px;
+        width: 105px;
         height: 16px;
         border-radius: 3px;
         border: 1px solid;
