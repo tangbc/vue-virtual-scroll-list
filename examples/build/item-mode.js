@@ -11626,6 +11626,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             offset: function offset() {
                 this.alter = 'offset';
                 this.itemModeForceRender();
+            },
+            itemcount: function itemcount() {
+                this.alter = 'itemcount';
+                this.itemModeForceRender();
             }
         },
 

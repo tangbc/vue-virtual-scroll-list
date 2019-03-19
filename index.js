@@ -90,6 +90,10 @@
             offset: function () {
                 this.alter = 'offset'
                 this.itemModeForceRender()
+            },
+            itemcount: function () {
+                this.alter = 'itemcount'
+                this.itemModeForceRender()
             }
         },
 
