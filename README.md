@@ -13,7 +13,7 @@
 
 ##
 
-*If you are looking for a vue component which support big data list with high scroll performance, now you are in the right place!*
+*If you are looking for a vue component which support big amount data list with high scroll performance, now you are in the right place!*
 
 * [Advantages](#advantages)
 * [Live demos](#live-demos)

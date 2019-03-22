@@ -1,15 +1,15 @@
 {
   "name": "vue-virtual-scroll-list",
   "version": "1.3.1",
-  "description": "A vue component support big data list with high scroll performance.",
+  "description": "A vue component support big amount data list with high scroll performance.",
   "main": "index.js",
   "files": [
     "index.js"
   ],
   "scripts": {
     "lint": "eslint index.js",
-    "dev": "webpack --watch --config ./dev/webpack.conf.js",
-    "examples": "webpack --watch --config ./examples/webpack.conf.js"
+    "demo:dev": "cross-env NODE_ENV=development webpack --watch --config ./demos/webpack.conf.js",
+    "demo:build": "cross-env NODE_ENV=production webpack --watch --config ./demos/webpack.conf.js"
   },
   "keywords": [
     "vue",
@@ -26,20 +26,15 @@
   "author": "TANG",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.24.0",
-    "babel-loader": "^6.4.0",
-    "babel-preset-env": "^1.5.1",
-    "css-loader": "^0.27.2",
-    "eslint": "^4.1.1",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-es5": "^1.3.1",
-    "eslint-plugin-import": "^2.6.1",
-    "eslint-plugin-node": "^5.1.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "vue": "^2.3.0",
-    "vue-loader": "^11.1.4",
-    "vue-template-compiler": "^2.3.0",
-    "webpack": "^2.2.1"
+    "@babel/core": "^7.4.0",
+    "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.0",
+    "vue": "^2.6.10",
+    "vue-loader": "^15.7.0",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
   }
 }
