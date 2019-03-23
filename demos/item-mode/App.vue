@@ -4,7 +4,7 @@
     <div class="container">
         <header>
             <h1>item-mode</h1>
-            <p>Use vNode to build item list.</p>
+            <p>Use vNode to build list.</p>
         </header>
         <div class="main">
             <virtual-list class="list"
@@ -30,6 +30,11 @@ const remain = 6
 const itemSize = 80
 const itemCount = 1000 * 100
 
+let userInfoList = []
+for (let i = 0; i < itemCount; i++) {
+    userInfoList.push(getRandomUser())
+}
+
 export default {
     name: 'app',
 
@@ -53,7 +58,7 @@ export default {
                 props: {
                     height: itemSize,
                     index: itemIndex,
-                    info: getRandomUser()
+                    info: userInfoList[itemIndex] || {}
                 }
             }
         }

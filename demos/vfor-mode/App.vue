@@ -4,7 +4,7 @@
     <div class="container">
         <header>
             <h1>vfor-mode</h1>
-            <p>Use v-for to build item list.</p>
+            <p>Use v-for to build list.</p>
         </header>
         <div class="main">
             <virtual-list class="list"

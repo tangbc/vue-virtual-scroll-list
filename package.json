@@ -8,7 +8,9 @@
   ],
   "scripts": {
     "lint": "eslint index.js",
-    "demo": "cross-env NODE_ENV=development webpack --config ./demos/webpack.conf.js",
+    "dev": "npm run server & npm run demo:dev",
+    "server": "node node_modules/@tangbc/tiny-node-server",
+    "demo:dev": "cross-env NODE_ENV=development webpack --config ./demos/webpack.conf.js",
     "demo:build": "cross-env NODE_ENV=production webpack --config ./demos/webpack.conf.js"
   },
   "keywords": [
@@ -19,6 +21,11 @@
     "scroll-list",
     "virtual-list"
   ],
+  "tinyNodeServer": {
+    "root": "./",
+    "port": 8088,
+    "log": 0
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/tangbc/vue-virtual-scroll-list"
@@ -28,6 +35,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
+    "@tangbc/tiny-node-server": "^1.0.2",
     "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
