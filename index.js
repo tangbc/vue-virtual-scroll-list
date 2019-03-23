@@ -51,7 +51,7 @@
             onscroll: Function,
             item: { type: Object },
             itemcount: { type: Number },
-            itemprop: { type: Function }
+            itemprops: { type: Function }
         },
 
         created: function () {
@@ -370,7 +370,9 @@
                 var targets = []
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     // create vnode, using custom attrs binder.
-                    var slot = this.item ? this.$createElement(this.item, this.itemprop(i)) : slots[i]
+                    var slot = this.item && this.itemprops
+                        ? this.$createElement(this.item, this.itemprops(i))
+                        : slots[i]
                     targets.push(slot)
                 }
 
