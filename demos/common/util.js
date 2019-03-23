@@ -9,3 +9,11 @@ export const getRandomUser = () => {
         // avatar: `https://getavataaars.com/?hairColor=BrownDark&topType=LongHairStraight2`
     }
 }
+
+export const getQuery = (query) => {
+    try {
+        return new URLSearchParams(window.location.search).get(query)
+    } catch (e) {
+        return false
+    }
+}

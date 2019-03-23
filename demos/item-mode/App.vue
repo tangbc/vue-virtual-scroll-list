@@ -4,7 +4,7 @@
     <div class="container">
         <header>
             <h1>item-mode</h1>
-            <p>Use this mode can save a considerable amount of memory and performance.</p>
+            <p>Use vNode to build item list.</p>
         </header>
         <div class="main">
             <virtual-list class="list"

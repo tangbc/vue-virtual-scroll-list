@@ -2,9 +2,9 @@
 <div class="item" v-bind:style="itemStyle">
     <div class="index">#{{ index }}</div>
     <div class="card">
-        <div class="card-avatar">
-            {{ info.name.substr(0, 2) }}
-            <!-- <img class="card-avatar-img" v-bind:src="info.avatar" alt="AVATAR"> -->
+        <div class="card-avatar" v-bind:class="{'no-avatar': !avatar}">
+            <span v-if="!avatar">{{ info.name.substr(0, 2) }}</span>
+            <img v-else class="card-avatar-img" v-bind:src="info.avatar" alt="AVATAR">
         </div>
         <div class="card-info">
             <div class="card-info-item name">Name: {{ info.name }}</div>
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { getQuery } from './util'
+
 export default {
     name: 'item',
 
@@ -26,6 +28,12 @@ export default {
             name: String,
             email: String,
             avatar: String
+        }
+    },
+
+    data () {
+        return {
+            avatar: getQuery('avatar') !== null
         }
     },
 
@@ -62,11 +70,15 @@ export default {
         &-avatar {
             width: 40px;
             height: 40px;
-            background: #ff6347;
+            background: #efefef;
+            color: #4169e1;
             border-radius: 50%;
             text-align: center;
             line-height: 40px;
-            color: #ffffff;
+            &.no-avatar {
+                background: #ff6347;
+                color: #ffffff;
+            }
             &-img {
                 display: block;
                 width: 100%;

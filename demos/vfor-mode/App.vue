@@ -1,10 +1,10 @@
 <template>
 <div class="app">
-    <GithubCorner path="/frag-mode" />
+    <GithubCorner path="/vfor-mode" />
     <div class="container">
         <header>
-            <h1>frag-mode</h1>
-            <p></p>
+            <h1>vfor-mode</h1>
+            <p>Use v-for to build item list.</p>
         </header>
         <div class="main">
             <virtual-list class="list"
@@ -31,7 +31,7 @@ import { getRandomUser } from '../common/util'
 
 const remain = 6
 const itemSize = 80
-const itemCount = 1000 * 10
+const itemCount = 1000 * 100
 
 let itemList = []
 for (let idx = 0; idx < itemCount; idx++) {
