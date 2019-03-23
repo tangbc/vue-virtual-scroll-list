@@ -1,3 +1,7 @@
+* {
+    margin: 0;
+    padding: 0;
+}
 html,body {
     height: 100%;
     overflow: hidden;
@@ -6,6 +10,9 @@ html,body {
 }
 header {
     font-family: monospace;
+    h1 {
+        padding: 20px 0;
+    }
     p {
         font-size: 14px;
         background: #f7f7f7;
@@ -17,6 +24,7 @@ header {
 .app {
     height: 100%;
     position: relative;
+    z-index: 1;
 }
 .container {
     width: 520px;

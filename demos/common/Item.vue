@@ -3,12 +3,14 @@
     <div class="index">#{{ index }}</div>
     <div class="card">
         <div class="card-avatar">
-            <img class="card-avatar-img" v-bind:src="info.avatar" alt="AVATAR">
+            {{ info.name.substr(0, 2) }}
+            <!-- <img class="card-avatar-img" v-bind:src="info.avatar" alt="AVATAR"> -->
         </div>
         <div class="card-info">
             <div class="card-info-item name">Name: {{ info.name }}</div>
             <div class="card-info-item email">Email: {{ info.email }}</div>
         </div>
+        <div class="card-height">{{ this.height }}px</div>
     </div>
 </div>
 </template>
@@ -42,11 +44,17 @@ export default {
 .item {
     box-sizing: border-box;
     display: flex;
+    // &:hover {
+    //     .card-height {
+    //         visibility: visible;
+    //     }
+    // }
     .index {
         flex: 1;
         text-align: center;
     }
     .card {
+        position: relative;
         flex: 4;
         display: flex;
         align-items: center;
@@ -54,6 +62,11 @@ export default {
         &-avatar {
             width: 40px;
             height: 40px;
+            background: #ff6347;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            color: #ffffff;
             &-img {
                 display: block;
                 width: 100%;
@@ -83,6 +96,13 @@ export default {
                     color: #a9a9a9;
                 }
             }
+        }
+        &-height {
+            // visibility: hidden;
+            position: absolute;
+            right: 30px;
+            font-style: italic;
+            color: #d8bfd8;
         }
     }
 }

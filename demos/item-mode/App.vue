@@ -1,5 +1,6 @@
 <template>
 <div class="app">
+    <GithubCorner path="/item-mode" />
     <div class="container">
         <header>
             <h1>item-mode</h1>
@@ -9,7 +10,7 @@
             <virtual-list class="list"
                 :size="size"
                 :remain="remain"
-                :bench="bench"
+
                 :item="item"
                 :itemcount="itemCount"
                 :itemprops="getItemProps"
@@ -26,7 +27,6 @@ import VirtualList from 'vue-virtual-scroll-list'
 import { getRandomUser } from '../common/util'
 
 const remain = 6
-const bench = remain
 const itemSize = 80
 const itemCount = 1000 * 100
 
@@ -39,7 +39,6 @@ export default {
 
     data () {
         return {
-            bench,
             remain,
             size: itemSize,
             item: Item,
@@ -63,5 +62,5 @@ export default {
 </script>
 
 <style lang="less">
-@import '../common/base.less';
+@import '../common/app.less';
 </style>

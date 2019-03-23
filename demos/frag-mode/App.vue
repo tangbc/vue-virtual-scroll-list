@@ -1,5 +1,6 @@
 <template>
 <div class="app">
+    <GithubCorner path="/frag-mode" />
     <div class="container">
         <header>
             <h1>frag-mode</h1>
@@ -9,7 +10,6 @@
             <virtual-list class="list"
                 :size="size"
                 :remain="remain"
-                :bench="bench"
             >
                 <item
                     v-for="item in items"
@@ -30,9 +30,8 @@ import VirtualList from 'vue-virtual-scroll-list'
 import { getRandomUser } from '../common/util'
 
 const remain = 6
-const bench = remain
 const itemSize = 80
-const itemCount = 1000 * 100
+const itemCount = 1000 * 10
 
 let itemList = []
 for (let idx = 0; idx < itemCount; idx++) {
@@ -53,28 +52,14 @@ export default {
 
     data () {
         return {
-            bench,
             remain,
             size: itemSize,
             items: itemList
-        }
-    },
-
-    methods: {
-        getItemProps (itemIndex) {
-            const props = {
-                height: itemSize,
-                index: itemIndex,
-                ...getRandomUser()
-            }
-            return {
-                props
-            }
         }
     }
 }
 </script>
 
 <style lang="less">
-@import '../common/base.less';
+@import '../common/app.less';
 </style>
