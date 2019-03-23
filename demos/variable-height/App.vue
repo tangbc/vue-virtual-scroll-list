@@ -1,6 +1,6 @@
 <template>
 <div class="app">
-    <GithubCorner path="/item-mode" />
+    <GithubCorner path="/variable-height" />
     <div class="container">
         <header>
             <h1>variable-mode</h1>
