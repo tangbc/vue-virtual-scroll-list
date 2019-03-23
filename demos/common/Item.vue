@@ -10,10 +10,10 @@
             <img v-else class="card-avatar-img" v-bind:src="info.avatar" alt="AVATAR">
         </div>
         <div class="card-info">
-            <div class="card-info-item name">Name: {{ info.name }}</div>
+            <div class="card-info-item name">{{ info.name }}</div>
             <div class="card-info-item time">Birthday: {{ info.time }}</div>
         </div>
-        <div class="card-height">{{ this.height }}px</div>
+        <div class="card-height" v-if="variable">{{ height }}px</div>
     </div>
 </div>
 </template>
@@ -27,11 +27,12 @@ export default {
     props: {
         height: Number,
         index: Number,
+        variable: Boolean,
         info: {
             name: String,
             time: String,
             avatar: String,
-            color: String
+            color: String,
         }
     },
 
@@ -69,7 +70,7 @@ export default {
     display: flex;
     -webkit-user-select: none;
     user-select: none;
-    &:active, &:hover {
+    &:hover {
         background-color: #f0f8ff;
     }
     .index {
@@ -82,7 +83,7 @@ export default {
         display: flex;
         align-items: center;
         border-bottom: 1px dashed #cecece;
-        @media (max-width: 640px), (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        @media (max-width: 640px) and (-webkit-min-device-pixel-ratio: 2) {
             border-bottom: 0.5px solid #cccccc;
         }
         &-avatar {
@@ -107,7 +108,7 @@ export default {
         &-info {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            // height: 100%;
             padding-left: 20px;
             &-item {
                 flex: 1;
@@ -122,10 +123,10 @@ export default {
                     max-width: 180px;
                 }
                 &.name {
-                    top: 25%;
+                    padding-bottom: 3px;
                 }
                 &.time {
-                    top: 5%;
+                    padding-top: 3px;
                     color: #a9a9a9;
                 }
             }
@@ -134,9 +135,12 @@ export default {
             position: absolute;
             right: 30px;
             font-style: italic;
-            color: #d8bfd8;
+            color: #999;
+            font-weight: 100;
+            font-family: sans-serif;
+            font-size: 12px;
             @media (max-width: 375px) {
-                visibility: hidden;
+                right: 10px;
             }
         }
     }

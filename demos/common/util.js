@@ -185,6 +185,8 @@ export const getRandomUser = () => {
     }
 }
 
+export const getRandomHeight = () => Random.pick([40, 50, 80, 100, 140, 180])
+
 export const getQuery = (query) => {
     try {
         return new URLSearchParams(window.location.search).get(query)
