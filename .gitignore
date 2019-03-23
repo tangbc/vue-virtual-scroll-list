@@ -2,4 +2,5 @@ dev
 node_modules
 npm-debug.log
 demos/dev/
+demos/dev*/
 demos/**/*.map
