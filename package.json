@@ -8,8 +8,8 @@
   ],
   "scripts": {
     "lint": "eslint index.js",
-    "demo": "cross-env NODE_ENV=development webpack --watch --config ./demos/webpack.conf.js",
-    "demo:build": "cross-env NODE_ENV=production webpack --watch --config ./demos/webpack.conf.js"
+    "demo": "cross-env NODE_ENV=development webpack --config ./demos/webpack.conf.js",
+    "demo:build": "cross-env NODE_ENV=production webpack --config ./demos/webpack.conf.js"
   },
   "keywords": [
     "vue",
@@ -27,6 +27,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
     "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
@@ -38,6 +39,8 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.0",
     "vue-template-compiler": "^2.6.10",

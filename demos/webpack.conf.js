@@ -2,9 +2,12 @@ const path = require('path')
 const { lstatSync, readdirSync } = require('fs')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
-const isDirectory = source => lstatSync(source).isDirectory()
-const getDirectories = source => readdirSync(source).map((name) => path.join(source, name)).filter(isDirectory)
-const demoDirectorys = getDirectories('demos').map((demo) => demo.split('/').pop()).filter((demo) => demo !== 'dev')
+const isProduction = process.env.NODE_ENV === 'production'
+
+const isDirectory = (source) => lstatSync(source).isDirectory()
+const getDirectories = (source) => readdirSync(source).map((name) => path.join(source, name)).filter(isDirectory)
+const isDemoDirectory = (source) => !['dev', 'common'].includes(source)
+const demoDirectorys = getDirectories('demos').map((demo) => demo.split('/').pop()).filter(isDemoDirectory)
 
 console.log('\x1b[36m', `Building demos: [ ${demoDirectorys.join(', ')} ].` ,'\x1b[0m')
 
@@ -20,11 +23,11 @@ demoDirectorys.forEach((entry) => {
     })
 })
 
-const isProduction = process.env.NODE_ENV === 'production'
-
 module.exports = multiConfigs.map((config) => {
     return Object.assign(config, {
         stats: 'minimal',
+
+        watch: !isProduction,
 
         mode: isProduction ? 'production' : 'development',
 
@@ -53,7 +56,7 @@ module.exports = multiConfigs.map((config) => {
                     use: {
                         loader: 'babel-loader',
                         options: {
-                            presets: ['env']
+                            presets: ['@babel/preset-env']
                         }
                     }
                 },
@@ -66,10 +69,18 @@ module.exports = multiConfigs.map((config) => {
                         {
                             loader: 'css-loader',
                             options: {
-                            modules: true,
-                            localIdentName: '[local]_[hash:base64:8]'
+                                modules: true,
+                                localIdentName: '[local]'
                             }
                         }
+                    ]
+                },
+                {
+                    test: /\.less$/,
+                    use: [
+                        'vue-style-loader',
+                        'css-loader',
+                        'less-loader'
                     ]
                 }
             ]
