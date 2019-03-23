@@ -25,7 +25,7 @@
 * [Props type](#props-type)
 * [Public methods](#public-methods)
 * [Special scenes](#special-scenes)
-    * [About variable mode](#about-variable-mode)
+    * [About variable height](#about-variable-height)
     * [About item mode](#about-item-mode)
 * [Contributions](#contributions)
 * [Changelogs](#changelogs)
@@ -46,11 +46,11 @@
 
 ## Live demos
 
-* [Scroll with 100,000 finite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/finite/).
+* [Use with item-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/item-mode).
 
-* [Scroll with request infinite data](https://tangbc.github.io/vue-virtual-scroll-list/examples/infinite/).
+* [Use with vfor-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/vfor-mode).
 
-* [Scroll with variable height mode](https://tangbc.github.io/vue-virtual-scroll-list/examples/variable/).
+* [Use with variable height](https://tangbc.github.io/vue-virtual-scroll-list/demos/variable-height).
 
 
 ## How it works
@@ -78,7 +78,6 @@ npm install vue-virtual-scroll-list --save
 <script>
     import item from '../item.vue'
     import virtualList from 'vue-virtual-scroll-list'
-
     export default {
         data () {
             return {
@@ -96,10 +95,9 @@ npm install vue-virtual-scroll-list --save
 ```html
 <script src="https://unpkg.com/vue@2.3.0/dist/vue.js"></script>
 <script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script>
-
 <div id="app">
     <virtual-list :size="40" :remain="8" wtag="ul">
-        <li class="item" v-for="(udf, index) of items" :key="index">Item: # {{ index }}</li>
+        <li class="item" v-for="(udf, index) of items" :key="index">Item: #{{ index }}</li>
     </virtual-list>
 </div>
 ```
@@ -107,7 +105,6 @@ npm install vue-virtual-scroll-list --save
 ```javascript
 // Global name as `VirtualScrollList`
 Vue.component('virtual-list', VirtualScrollList)
-
 new Vue({
     el: '#app',
     data: {
@@ -115,6 +112,8 @@ new Vue({
     }
 })
 ```
+
+More use ways or get start you can refer to these clearly [demos](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos).
 
 
 ## Attentions
@@ -130,7 +129,7 @@ new Vue({
 
 *Prop* | *Type* | *Required* | *Description* |
 :--- | :--- | :--- | :--- |
-| size | Number | ✓ | Each list item height, in variable height mode, this prop just use to calculate the virtual-list outside container viewport height. |
+| size | Number | ✓ | Each list item height, in variable height, this prop just use to calculate the virtual-list outside container viewport fixed height. |
 | remain | Number | ✓ | How many items should be shown in virtual-list viewport, so `size` and `remain` determine the outside container viewport height (`size × remian`). |
 | bench | Number | * | Default value is equal to `remain`, unreached items count, not show in virtual-list viewport but exist in real DOM, the larger the bench, the higher the scroll performance will achieved.  |
 | start | Number | * | Default value is `0`, the initial scroll start index. It must be integer and in the range of list index, if invalid there will be effected as `0` or the last one.  |
@@ -142,10 +141,10 @@ new Vue({
 | totop | Function | * | Called when virtual-list is scrolled to top, no param. |
 | tobottom | Function | * | Called when virtual-list is scrolled to bottom, no param. |
 | onscroll | Function | * | Called when virtual-list is scrolling, with param: [`(event, data)`](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v1.1.7). |
-| variable | Function or Boolean | * | For using virtual-list in `variable-mode`. If assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated. If assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
-| item | Component | * | For using virtual-list in `item-mode`. List item vue component, see [details](#about-item-mode) below. |
-| itemdata | Array | * | For using virtual-list in `item-mode`. Prop data list or item slots assign to each item, see [details](#about-item-mode) below. |
-| itemprop | Function | * | For using virtual-list in `item-mode`. Function call when each item is going to be rendered, see [details](#about-item-mode) below. |
+| variable | Function or Boolean | * | Used in variable height, if assign `Function`, this prop is a variable height getter function which is called with param: `(index)` when each item is ready to be calculated; if assign `Boolean`, virtual-list will get each item variable height by it's inline style height automatic. |
+| item | Component | * | Used in `item-mode`, list item vue component. |
+| itemcount | Number | * | Used in `item-mode`, list data total counts. |
+| itemprops | Function | * | Used in `item-mode`, a function call when each item is going to be rendered. |
 
 
 ## Public methods
@@ -154,14 +153,14 @@ Here are some usefull public methods you can call via [`ref`](https://vuejs.org/
 
 * `forceRender()`: force render virtual-list if you need or make it refresh.
 
-* `updateVariable(index)`: update item height by index in variable height mode.
+* `updateVariable(index)`: update item height by index in variable height list.
 
 
 ## Special scenes
 
-### About variable mode
+### About variable height
 
-In `variable-mode`, prop `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<item/>` height from data, you should call virtual-list's `updateVariable(index)` method to clear the offset cache, refer to [variable example](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/examples/variable/variable.vue#L1) source for detail.
+In variable height, prop `remain` and `size` is still required. All the index variable height and scroll offset will be cached by virtual-list after the binary-search calculate, if you want to change anyone `<item/>` height from data, you should call virtual-list public method `updateVariable(index)` to clear the offset cache.
 
 If you assign `variable` as `true`, **do not** set inline style height inside `<item/>` component, you **must** set inline style height on `<item/>` component outside directly, such as:
 ```vue
@@ -176,17 +175,15 @@ If you assign `variable` as `true`, **do not** set inline style height inside `<
 
 ### About item mode
 
-Use `item-mode` can save a considerable amount of memory and performance, stats data check here: [#87](https://github.com/tangbc/vue-virtual-scroll-list/pull/87).
-
-In this mode, prop `item` `itemdata` `itemprop` are both required, and you don't have to put `<item/>` with a v-for frag inside `virtual-list`, just assign it as prop `item`:
+Use `item-mode` can save a considerable amount of memory and performance (it's memory occupied is about only 1/10 of `vfor-mode`). In this mode, prop `item`, `itemcount` and `itemprops` are both required, and you don't have to put `<item/>` with a v-for frag inside `virtual-list`, just assign it as prop `item`:
 
 ```vue
 <template>
     <div>
         <virtual-list :size="40" :remain="8"
             :item="item"
-            :itemdata="itemdata"
-            :itemprop="itemprop"
+            :itemcount="100000"
+            :itemprops="getItemprops"
         />
     </div>
 </template>
@@ -194,22 +191,17 @@ In this mode, prop `item` `itemdata` `itemprop` are both required, and you don't
 <script>
     import itemComponent from '../item.vue'
     import virtualList from 'vue-virtual-scroll-list'
-
     export default {
         data () {
             return {
                 item: itemComponent,
-                itemdata: [ {id: 1}, {id: 2}, {id: 3}, ... ]
             }
         },
         methods: {
-            // index: item index
-            // data: item data get from itemdata array
-            itemprop (index, data) {
-                const id = { data }
-                const itemProps = getItemProp(id)
+            getItemprops (itemIndex) {
+                const itemProps = getItemProp(itemIndex)
                 return {
-                    props: itemProps // <item/> will receive prop with itemProps
+                    props: itemProps // <item/> will render with itemProps.
                 }
             }
         },
