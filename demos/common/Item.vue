@@ -70,9 +70,9 @@ export default {
     display: flex;
     -webkit-user-select: none;
     user-select: none;
-    &:hover {
-        background-color: #f0f8ff;
-    }
+    // &:hover {
+    //     background-color: #f0f8ff;
+    // }
     .index {
         flex: 1;
         text-align: center;

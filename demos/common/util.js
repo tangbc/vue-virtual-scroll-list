@@ -199,3 +199,23 @@ const ua = navigator.userAgent
 const Android = !!ua.match(/Android/i)
 export const iOS = !!ua.match(/iPhone|iPad|iPod/i)
 export const isMobile = Android || iOS
+
+export const debounce = (func, wait, immediate) => {
+    let timeout
+    return function () {
+        const context = this
+        const args = arguments
+        const later = function () {
+            timeout = null
+            if (!immediate) {
+                func.apply(context, args)
+            }
+        }
+        const callNow = immediate && !timeout
+        clearTimeout(timeout)
+        timeout = setTimeout(later, wait)
+        if (callNow) {
+            func.apply(context, args)
+        }
+    }
+}

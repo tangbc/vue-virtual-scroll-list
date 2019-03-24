@@ -2,14 +2,17 @@
 <div class="app">
     <GithubCorner path="/item-mode" />
     <div class="container">
-        <header>
-            <h1>item-mode</h1>
-            <p>Use vNode to build list.</p>
-        </header>
+        <Header
+            title="item-mode"
+            :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
+            :startIndex="start"
+            :onDataChange="onHeaderDataChange"
+        ></Header>
         <div class="main">
             <virtual-list class="list"
                 :size="size"
                 :remain="remain"
+                :start="start"
 
                 :item="item"
                 :itemcount="itemCount"
@@ -45,6 +48,7 @@ export default {
     data () {
         return {
             remain,
+            start: 0,
             size: itemSize,
             item: Item,
             itemCount: itemCount
@@ -61,7 +65,13 @@ export default {
                     info: userInfoList[itemIndex] || {}
                 }
             }
-        }
+        },
+
+        onHeaderDataChange (type, value) {
+            if (type === 'start') {
+                this.start = value
+            }
+        },
     }
 }
 </script>

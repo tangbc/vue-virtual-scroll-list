@@ -2,22 +2,24 @@
 <div class="app">
     <GithubCorner path="/variable-height" />
     <div class="container">
-        <header>
-            <h1>variable-mode</h1>
-            <p>Use variable to build list.</p>
-        </header>
+        <Header
+            title="variable-height"
+            :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
+            :startIndex="start"
+            :onDataChange="onHeaderDataChange"
+        ></Header>
         <div class="main">
             <virtual-list class="list"
                 :size="size"
                 :remain="remain"
+                :start="start"
 
                 :variable="getVariableHeight"
 
                 :item="item"
                 :itemcount="itemCount"
                 :itemprops="getItemProps"
-            >
-            </virtual-list>
+            ></virtual-list>
         </div>
     </div>
 </div>
@@ -50,6 +52,7 @@ export default {
     data () {
         return {
             remain,
+            start: 0,
             size: itemSize,
             item: Item,
             itemCount: itemCount
@@ -71,6 +74,12 @@ export default {
 
         getVariableHeight (itemIndex) {
             return userInfoList[itemIndex].vHeight
+        },
+
+        onHeaderDataChange (type, value) {
+            if (type === 'start') {
+                this.start = value
+            }
         }
     }
 }
