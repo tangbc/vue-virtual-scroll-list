@@ -10,8 +10,8 @@
             <img v-else class="card-avatar-img" v-bind:src="info.avatar" alt="AVATAR">
         </div>
         <div class="card-info">
-            <div class="card-info-item name">{{ info.name }}</div>
-            <div class="card-info-item time">Birthday: {{ info.time }}</div>
+            <div class="card-info-item name" v-bind:style="{color: info.color}">{{ info.name }}</div>
+            <div class="card-info-item time">Registered: {{ info.time }}</div>
         </div>
         <div class="card-height" v-if="variable">{{ height }}px</div>
     </div>
@@ -109,7 +109,10 @@ export default {
             display: flex;
             flex-direction: column;
             // height: 100%;
-            padding-left: 20px;
+            padding-left: 40px;
+            @media (max-width: 640px) {
+                padding-left: 20px;
+            }
             &-item {
                 flex: 1;
                 height: 50%;

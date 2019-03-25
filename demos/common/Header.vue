@@ -139,7 +139,6 @@ header {
                     display: inline-block;
                     min-width: 120px;
                     text-align: left;
-                    font-size: 16px;
                 }
             }
             i {
