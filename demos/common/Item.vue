@@ -68,8 +68,10 @@ export default {
 .item {
     box-sizing: border-box;
     display: flex;
-    -webkit-user-select: none;
-    user-select: none;
+    @media (max-width: 640px) {
+        -webkit-user-select: none;
+        user-select: none;
+    }
     // &:hover {
     //     background-color: #f0f8ff;
     // }
