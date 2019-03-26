@@ -38,7 +38,8 @@ export default {
 
     data () {
         return {
-            avatar: isMobile ? getQuery('avatar') !== null : getQuery('noavatar') === null
+            // avatar: isMobile ? getQuery('avatar') !== null : getQuery('noavatar') === null
+            avatar: getQuery('avatar') !== null
         }
     },
 
