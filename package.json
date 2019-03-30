@@ -24,7 +24,8 @@
   "tinyNodeServer": {
     "root": "./",
     "port": 8088,
-    "log": 0
+    "log": 0,
+    "suffix": "/demos/item-mode"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
-    "@tangbc/tiny-node-server": "^1.0.2",
+    "@tangbc/tiny-node-server": "^1.0.3",
     "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
