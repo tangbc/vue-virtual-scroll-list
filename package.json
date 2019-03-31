@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
-    "@tangbc/tiny-node-server": "^1.0.3",
+    "@tangbc/tiny-node-server": "^1.0.4",
     "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
