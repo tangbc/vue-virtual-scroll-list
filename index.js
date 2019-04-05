@@ -1,5 +1,6 @@
 (function (root, factory) {
     var namespace = 'VirtualScrollList'
+    /* istanbul ignore next */
     if (typeof exports === 'object' && typeof module === 'object') {
         module.exports = factory(namespace, require('vue'))
     } else if (typeof define === 'function' && define.amd) {
@@ -10,10 +11,12 @@
         root[namespace] = factory(namespace, root['Vue'])
     }
 })(this, function (namespace, Vue2) {
+    /* istanbul ignore next */
     if (typeof Vue2 === 'object' && typeof Vue2.default === 'function') {
         Vue2 = Vue2.default
     }
 
+    /* istanbul ignore next */
     var _debounce = function (func, wait, immediate) {
         var timeout
         return function () {
@@ -101,7 +104,7 @@
             onScroll: function (e) {
                 var delta = this.delta
                 var vsl = this.$refs.vsl
-                var offset = (vsl && (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop) || 0
+                var offset = (vsl.$el || vsl).scrollTop || 0
 
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset)
@@ -319,7 +322,7 @@
             setScrollTop: function (scrollTop) {
                 var vsl = this.$refs.vsl
                 if (vsl) {
-                    (vsl instanceof Vue2 ? vsl.$el : vsl).scrollTop = scrollTop
+                    (vsl.$el || vsl).scrollTop = scrollTop
                 }
             },
 
