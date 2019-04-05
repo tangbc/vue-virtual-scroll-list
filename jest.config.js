@@ -3,6 +3,7 @@ module.exports = {
         'node_modules'
     ],
     collectCoverage: true,
+    coverageDirectory: './coverage',
     coverageReporters: [
         'html',
         'text-summary'
