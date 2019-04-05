@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint index.js",
-    "ci": "npm run lint && npm run test",
+    "cover": "jest && codecov",
+    "ci": "npm run lint && npm run cover",
     "dev": "npm run server & npm run demo:dev",
     "server": "node node_modules/@tangbc/tiny-node-server",
     "demo:dev": "cross-env NODE_ENV=development webpack --config ./demos/webpack.conf.js",
@@ -43,6 +44,7 @@
     "babel-jest": "^24.7.0",
     "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
+    "codecov": "^3.3.0",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.0",
     "eslint": "^5.15.3",
