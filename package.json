@@ -7,7 +7,9 @@
     "index.js"
   ],
   "scripts": {
+    "test": "jest",
     "lint": "eslint index.js",
+    "ci": "npm run lint && npm run test",
     "dev": "npm run server & npm run demo:dev",
     "server": "node node_modules/@tangbc/tiny-node-server",
     "demo:dev": "cross-env NODE_ENV=development webpack --config ./demos/webpack.conf.js",
@@ -37,6 +39,8 @@
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
     "@tangbc/tiny-node-server": "^1.0.4",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-jest": "^24.7.0",
     "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
@@ -48,6 +52,7 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.7.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "vue": "^2.6.10",
