@@ -5,8 +5,9 @@ module.exports = {
     collectCoverage: true,
     coverageDirectory: './coverage',
     coverageReporters: [
+        'lcov',
         'html',
-        'text-summary'
+        'text-summary',
     ],
     collectCoverageFrom: [
         '**/index.js',
