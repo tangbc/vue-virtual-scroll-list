@@ -1,22 +1,23 @@
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
-    <img src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg" alt="NPM version"/>
+    <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
 </a>
-<a href="https://vuejs.org/">
-    <img src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg" alt="Vue version"/>
-</a>
-
 <a href="https://travis-ci.org/tangbc/vue-virtual-scroll-list">
-    <img src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master" alt="Travis CI Status"/>
+    <img alt="Travis CI Status" src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master"/>
 </a>
 <a href="https://codecov.io/gh/tangbc/vue-virtual-scroll-list">
-    <img src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg" alt="Code Coverage"/>
+    <img alt="Code Coverage" src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg"/>
 </a>
-
 <a href="https://npmjs.com/package/vue-virtual-scroll-list">
-    <img src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg" alt="NPM downloads">
+    <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
+</a>
+<a href="https://vuejs.org/">
+    <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
+</a>
+<a href="https://opensource.org/licenses/MIT">
+    <img alt="License" src="https://img.shields.io/npm/l/vue-virtual-scroll-list.svg">
 </a>
 <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
-    <img src="http://npm.packagequality.com/shield/vue-virtual-scroll-list.svg" alt="Package quality">
+    <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
 </a>
 
 ##
