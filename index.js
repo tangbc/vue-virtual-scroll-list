@@ -369,13 +369,6 @@
                 delta.paddingBottom = paddingBottom
                 delta.offsetAll = allHeight - this.size * this.remain
 
-                // here we shoud try getZone to ensure start/end is right after new list. #88
-                var zone = this.getZone(delta.start)
-                if (zone.start !== delta.start || zone.end !== delta.end) {
-                    delta.end = zone.end
-                    delta.start = zone.start
-                }
-
                 var targets = []
                 for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
                     // create vnode, using custom attrs binder.
