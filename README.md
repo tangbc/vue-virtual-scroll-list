@@ -1,28 +1,30 @@
-<a href="https://npmjs.com/package/vue-virtual-scroll-list">
-    <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
-</a>
-<a href="https://travis-ci.org/tangbc/vue-virtual-scroll-list">
-    <img alt="Travis CI Status" src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master"/>
-</a>
-<a href="https://codecov.io/gh/tangbc/vue-virtual-scroll-list">
-    <img alt="Code Coverage" src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg"/>
-</a>
-<a href="https://npmjs.com/package/vue-virtual-scroll-list">
-    <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
-</a>
-<a href="https://vuejs.org/">
-    <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
-</a>
-<a href="https://opensource.org/licenses/MIT">
-    <img alt="License" src="https://img.shields.io/npm/l/vue-virtual-scroll-list.svg">
-</a>
-<a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
-    <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
-</a>
+<p>
+    <a href="https://travis-ci.org/tangbc/vue-virtual-scroll-list">
+        <img alt="Travis CI Status" src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master"/>
+    </a>
+    <a href="https://codecov.io/gh/tangbc/vue-virtual-scroll-list">
+        <img alt="Code Coverage" src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg"/>
+    </a>
+    <a href="https://npmjs.com/package/vue-virtual-scroll-list">
+        <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
+    </a>
+    <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
+        <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
+    </a>
+    <a href="https://npmjs.com/package/vue-virtual-scroll-list">
+        <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
+    </a>
+    <a href="https://vuejs.org/">
+        <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
+    </a>
+    <a href="https://opensource.org/licenses/MIT">
+        <img alt="License" src="https://img.shields.io/npm/l/vue-virtual-scroll-list.svg">
+    </a>
+</p>
 
-##
-
-*If you are looking for a vue component which support big amount data list with high scroll performance, now you are in the right place!*
+<p>
+    <i>If you are looking for a vue component which support big amount data list with high scroll performance, now you are in the right place!</i>
+</p>
 
 * [Advantages](#advantages)
 * [Live demos](#live-demos)
@@ -60,6 +62,8 @@
 * [Use with vfor-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/vfor-mode).
 
 * [Use with variable height](https://tangbc.github.io/vue-virtual-scroll-list/demos/variable-height).
+
+Besides, you can also compare the experience which **without using** virtual-list here: [without-virtual-list](https://tangbc.github.io/vue-virtual-scroll-list/demos/without-virtual-list).
 
 
 ## How it works
@@ -122,7 +126,7 @@ new Vue({
 })
 ```
 
-More use ways or get start you can refer to these clearly [demos](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos).
+More use ways or get start you can refer to these clearly [demos](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos) or [test suites](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/test).
 
 
 ## Attentions
