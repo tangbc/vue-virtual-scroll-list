@@ -29,6 +29,10 @@ module.exports = multiConfigs.map((config) => {
 
         watch: !isProduction,
 
+        performance: {
+            hints: false
+        },
+
         mode: isProduction ? 'production' : 'development',
 
         resolve: {

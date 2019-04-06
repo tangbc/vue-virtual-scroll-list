@@ -1,10 +1,10 @@
 <template>
-<header>
+<header v-bind:class="warning ? 'warning': ''">
     <h1>{{ title }}</h1>
     <section>
-        <span>{{ desciption }}</span>
-        <span class="memory" v-if="supportMemory">Memory used: {{memoryUsed}} MB.</span>
-        <div class="icon" v-bind:class="showSetting ? 'active' : ''" v-on:click="clickIcon">
+        <span class="desciption">{{ desciption }}</span>
+        <span class="memory" v-if="supportMemory && isRenderSetting">Memory used: {{memoryUsed}} MB.</span>
+        <div class="icon" v-if="isRenderSetting" v-bind:class="showSetting ? 'active' : ''" v-on:click="clickIcon">
             <svg width="25" height="25" t="1553394278598" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8690" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <path d="M809.21 474.749H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.864-16.101-35.966-35.966-35.966m0 215.796H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966M220.52 258.954c-19.865 0-35.966 16.101-35.966 35.966 0 19.865 16.101 35.966 35.966 35.966s35.966-16.101 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966m153.502 71.932H809.21c19.865 0 35.966-16.101 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.864 16.102 35.966 35.966 35.966M220.52 474.749c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.864-16.102-35.966-35.966-35.966m0 215.796c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966" p-id="8691" fill="#2c2c2c"></path>
             </svg>
@@ -51,6 +51,7 @@ export default {
     },
 
     props: {
+        warning: Boolean,
         title: String,
         desciption: String,
         startIndex: Number,
@@ -164,6 +165,11 @@ header {
                 }
             }
         }
+    }
+}
+header.warning {
+    h1  {
+        color: #ffc107;
     }
 }
 </style>
