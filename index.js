@@ -142,12 +142,18 @@
                 var bench = this.bench || this.remain
 
                 // for better performance, if scroll pass items within now bench, do not update.
-                if (!zone.isLast && (overs > delta.start) && (overs - delta.start <= bench)) {
+                // and if overs is going to reach last item, we should render next zone immediately.
+                var shouldRenderNextZone = Math.abs(overs - delta.start - bench) === 1
+                if (
+                    !shouldRenderNextZone &&
+                    (overs - delta.start <= bench) &&
+                    !zone.isLast && (overs > delta.start)
+                ) {
                     return
                 }
 
-                // we'd better make sure calls as less as possible.
-                if (zone.start !== delta.start || zone.end !== delta.end) {
+                // we'd better make sure forceRender calls as less as possible.
+                if (shouldRenderNextZone || zone.start !== delta.start || zone.end !== delta.end) {
                     delta.end = zone.end
                     delta.start = zone.start
                     this.forceRender()
