@@ -62,6 +62,8 @@
             var keeps = this.remain + (this.bench || this.remain)
 
             this.delta = {
+                direction: '', // current scroll direction, D: down, U: up.
+                scrollTop: 0, // current scroll top, use to direction.
                 start: start, // start index.
                 end: start + keeps - 1, // end index.
                 keeps: keeps, // nums keeping in real dom.
@@ -75,6 +77,7 @@
             }
         },
 
+        // use alter to identify which prop change.
         watch: {
             size: function () {
                 this.alter = 'size'
@@ -106,6 +109,9 @@
                 var vsl = this.$refs.vsl
                 var offset = (vsl.$el || vsl).scrollTop || 0
 
+                delta.direction = offset > delta.scrollTop ? 'D' : 'U'
+                delta.scrollTop = offset
+
                 if (delta.total > delta.keeps) {
                     this.updateZone(offset)
                 } else {
@@ -133,11 +139,16 @@
 
             // update render zone by scroll offset.
             updateZone: function (offset) {
+                var delta = this.delta
                 var overs = this.variable
                     ? this.getVarOvers(offset)
                     : Math.floor(offset / this.size)
 
-                var delta = this.delta
+                // if scroll up, we'd better decrease it's numbers.
+                if (delta.direction === 'U') {
+                    overs = overs - this.remain + 1
+                }
+
                 var zone = this.getZone(overs)
                 var bench = this.bench || this.remain
 
@@ -157,6 +168,31 @@
                     delta.end = zone.end
                     delta.start = zone.start
                     this.forceRender()
+                }
+            },
+
+            // return the right zone info base on `start/index`.
+            getZone: function (index) {
+                var start, end
+                var delta = this.delta
+
+                index = parseInt(index, 10)
+                index = Math.max(0, index)
+
+                var lastStart = delta.total - delta.keeps
+                var isLast = (index <= delta.total && index >= lastStart) || (index > delta.total)
+                if (isLast) {
+                    end = delta.total - 1
+                    start = Math.max(0, lastStart)
+                } else {
+                    start = index
+                    end = start + delta.keeps - 1
+                }
+
+                return {
+                    end: end,
+                    start: start,
+                    isLast: isLast
                 }
             },
 
@@ -290,31 +326,6 @@
             updateVariable: function (index) {
                 // clear/update all the offfsets and heights ahead of index.
                 this.getVarOffset(index, true)
-            },
-
-            // return the right zone info base on `start/index`.
-            getZone: function (index) {
-                var start, end
-                var delta = this.delta
-
-                index = parseInt(index, 10)
-                index = Math.max(0, index)
-
-                var lastStart = delta.total - delta.keeps
-                var isLast = (index <= delta.total && index >= lastStart) || (index > delta.total)
-                if (isLast) {
-                    end = delta.total - 1
-                    start = Math.max(0, lastStart)
-                } else {
-                    start = index
-                    end = start + delta.keeps - 1
-                }
-
-                return {
-                    end: end,
-                    start: start,
-                    isLast: isLast
-                }
             },
 
             // trigger a props event on parent.
