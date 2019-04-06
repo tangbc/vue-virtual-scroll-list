@@ -123,11 +123,11 @@
                 }
 
                 if (!offset && delta.total) {
-                    this.triggerEvent('totop')
+                    this.fireEvent('totop')
                 }
 
                 if (offset >= offsetAll) {
-                    this.triggerEvent('tobottom')
+                    this.fireEvent('tobottom')
                 }
             },
 
@@ -318,7 +318,7 @@
             },
 
             // trigger a props event on parent.
-            triggerEvent: function (event) {
+            fireEvent: function (event) {
                 if (this[event]) {
                     this[event]()
                 }
