@@ -259,3 +259,19 @@ export const settingStorage = {
         } catch (e) {}
     }
 }
+
+export const reportPerformance = () => {
+    const initTime = window.app_init_time
+    const timeElement = document.getElementById('time')
+    if (timeElement && initTime) {
+        const timeWaste = Date.now() - initTime
+        timeElement.textContent = 'Build waste: ' + timeWaste + ' ms.'
+    }
+
+    const memoryElement = document.getElementById('memory')
+    const performance = window.performance || window.webkitPerformance
+    if (memoryElement && performance && performance.memory && performance.memory.usedJSHeapSize) {
+        const memoryUsed = parseInt(performance.memory.usedJSHeapSize / (1024 * 1024))
+        memoryElement.textContent = 'Memory used: ' + memoryUsed + ' MB.'
+    }
+}
