@@ -30,11 +30,11 @@
 <script>
 import Item from '../common/Item.vue'
 import VirtualList from 'vue-virtual-scroll-list'
-import { getRandomUser } from '../common/util'
+import { countStorage, getRandomUser } from '../common/util'
 
 const remain = 6
 const itemSize = 80
-const itemCount = 1000 * 100
+const itemCount = countStorage.get()
 
 let itemList = []
 for (let idx = 0; idx < itemCount; idx++) {

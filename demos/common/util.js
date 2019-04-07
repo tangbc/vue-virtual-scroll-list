@@ -219,3 +219,43 @@ export const debounce = (func, wait, immediate) => {
         }
     }
 }
+const oneThousand = 1000
+const typeMap = {
+    1: oneThousand,
+    2: oneThousand * 10,
+    3: oneThousand * 100
+}
+// browser will crash render 100,000 in example `without-virtual-list`.
+const isWitoutVirtual = window.location.href.indexOf('without-virtual-list') > -1
+const defaultCount = typeMap[isWitoutVirtual ? 2 : 3]
+export const countStorage = {
+    get () {
+        try {
+            return +sessionStorage.getItem('RENDER-COUNT') || defaultCount
+        } catch (e) {
+            return defaultCount
+        }
+    },
+
+    set (type) {
+        try {
+            sessionStorage.setItem('RENDER-COUNT', typeMap[type] || defaultCount)
+        } catch (e) {}
+    }
+}
+
+export const settingStorage = {
+    isShow () {
+        try {
+            return !!+(sessionStorage.getItem('SETTING-SHOW'))
+        } catch (e) {
+            return false
+        }
+    },
+
+    setShow (isShow) {
+        try {
+            sessionStorage.setItem('SETTING-SHOW', isShow ? 1 : 0)
+        } catch (e) {}
+    }
+}

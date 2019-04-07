@@ -3,40 +3,57 @@
     <h1>{{ title }}</h1>
     <section>
         <span class="desciption">{{ desciption }}</span>
-        <span class="memory" v-if="supportMemory && isRenderSetting">Memory used: {{memoryUsed}} MB.</span>
-        <div class="icon" v-if="isRenderSetting" v-bind:class="showSetting ? 'active' : ''" v-on:click="clickIcon">
+        <span id="time" class="performance time"></span>
+        <span id="memory" class="performance memory"></span>
+        <div class="icon" v-bind:class="showSetting ? 'active' : ''" v-on:click="clickIcon">
             <svg width="25" height="25" t="1553394278598" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8690" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <path d="M809.21 474.749H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.864-16.101-35.966-35.966-35.966m0 215.796H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966M220.52 258.954c-19.865 0-35.966 16.101-35.966 35.966 0 19.865 16.101 35.966 35.966 35.966s35.966-16.101 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966m153.502 71.932H809.21c19.865 0 35.966-16.101 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.864 16.102 35.966 35.966 35.966M220.52 474.749c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.864-16.102-35.966-35.966-35.966m0 215.796c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966" p-id="8691" fill="#2c2c2c"></path>
             </svg>
         </div>
-        <div class="setting" v-if="isRenderSetting">
-            <label v-if="showStart">
-                <span class="name">START INDEX:</span>
+        <div class="setting" v-show="showSetting">
+            <div class="option" v-if="showStart">
+                <span class="name" v-if="isMobile">Index:</span>
+                <span class="name" v-else>Start index:</span>
                 <input type="text"
                     v-model="selfStartIndex"
                     v-on:focus="$event.target.select()"
                     v-on:input="inputDataChange('start', $event.target.value)"
                 >
-            </label>
-            <i v-bind:style="{visibility: hasTypingInput ? 'visible' : 'hidden'}">updated after debounce 1s.</i>
+            </div>
+
+            <div class="option">
+                <span class="name" v-if="isMobile">Count:</span>
+                <span class="name" v-else>List count:</span>
+                <label>
+                    <input type="radio" value="1" v-model="renderCount">
+                    <span class="t1">1,000</span>
+                </label>
+                <label class="middle">
+                    <input type="radio" value="2" v-model="renderCount">
+                    <span class="t2">10,000</span>
+                </label>
+                <label>
+                    <input type="radio" value="3" v-model="renderCount">
+                    <span class="t3">100,000</span>
+                </label>
+            </div>
         </div>
     </section>
 </header>
 </template>
 
 <script>
-import { debounce } from './util'
+import { isMobile, debounce, getQuery, countStorage, settingStorage } from './util'
 
 export default {
     name: 'app-header',
 
     data () {
         return {
-            memoryUsed: 0,
-            supportMemory: false,
-            showSetting: false,
+            isMobile,
             selfStartIndex: 0,
-            hasTypingInput: false,
+            showSetting: settingStorage.isShow(),
+            renderCount: String(countStorage.get()).length - 3
         }
     },
 
@@ -50,6 +67,13 @@ export default {
         }
     },
 
+    watch: {
+        renderCount (val) {
+            countStorage.set(val)
+            window.location.reload()
+        }
+    },
+
     props: {
         warning: Boolean,
         title: String,
@@ -60,13 +84,14 @@ export default {
 
     methods: {
         clickIcon () {
-            this.showSetting = !this.showSetting
+            const nextStatus = !this.showSetting
+            this.showSetting = nextStatus
+            settingStorage.setShow(nextStatus)
         },
 
         inputDataChange: debounce(function (type, value) {
             const val = Number(value)
             if (this.onDataChange && value !== '' && !isNaN(val) && val >= 0) {
-                this.hasTypingInput = true
                 this.onDataChange(type, val)
             }
         }, 1000, false)
@@ -74,11 +99,6 @@ export default {
 
     mounted () {
         this.selfStartIndex = this.startIndex
-
-        if (window.performance && window.performance.memory && window.performance.memory.usedJSHeapSize) {
-            this.supportMemory = true
-            this.memoryUsed = parseInt(window.performance.memory.usedJSHeapSize / (1024 * 1024))
-        }
     }
 }
 </script>
@@ -100,16 +120,30 @@ header {
         margin-bottom: 20px;
         border-radius: 5px;
         position: relative;
-        .memory {
+        .performance {
             color: #ee82ee;
             position: absolute;
             right: 50px;
+            font-size: 12px;
             @media (max-width: 640px) {
                 display: block;
                 position: relative;
                 right: 0;
                 padding-top: 5px;
             }
+        }
+        .memory {
+            top: 18px;
+            @media (max-width: 640px) {
+                display: block;
+                position: relative;
+                right: 0;
+                padding-top: 5px;
+                top: 0;
+            }
+        }
+        .time {
+            top: 5px;
         }
         .icon {
             width: 25px;
@@ -128,7 +162,10 @@ header {
         .setting {
             position: relative;
             padding: 30px 0 20px 20px;
-            label {
+            @media (max-width: 640px) {
+                padding: 20px 0 20px 0px;
+            }
+            .option {
                 display: block;
                 margin-bottom: 20px;
                 &:last-child {
@@ -140,6 +177,29 @@ header {
                     display: inline-block;
                     min-width: 120px;
                     text-align: left;
+                    @media (max-width: 640px) {
+                        min-width: 50px;
+                    }
+                }
+                .middle {
+                    margin: 0 20px;
+                    @media (max-width: 640px) {
+                        margin: 0;
+                    }
+                }
+                label {
+                    input {
+                        @media (max-width: 640px) {
+                            position: relative;
+                            top: 3px;
+                        }
+                    }
+                    span {
+                        @media (max-width: 640px) {
+                            position: relative;
+                            left: -5px;
+                        }
+                    }
                 }
             }
             i {
@@ -148,7 +208,7 @@ header {
                 color: lightsteelblue;
                 font-size: 12px;
             }
-            input {
+            input[type="text"] {
                 -webkit-appearance: none;
                 appearance: none;
                 padding: 5px;
@@ -168,8 +228,11 @@ header {
     }
 }
 header.warning {
-    h1  {
+    h1, .desciption {
         color: #ffc107;
+    }
+    .t3 {
+        color: red;
     }
 }
 </style>

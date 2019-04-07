@@ -4,7 +4,7 @@
         <Header
             :warning="true"
             title="without-virtual-list"
-            :desciption="'Build ' + itemCount.toLocaleString() + ' full items, without using virtual list.'"
+            :desciption="'Build ' + itemCount.toLocaleString() + ' full items.'"
         ></Header>
         <div class="main">
             <div class="list" :style="rootStyle">
@@ -25,11 +25,13 @@
 
 <script>
 import Item from '../common/Item.vue'
-import { getRandomUser } from '../common/util'
+import { countStorage, getRandomUser } from '../common/util'
+
+const defaultCount = countStorage.get()
 
 const remain = 6
 const itemSize = 80
-const itemCount = 1000 * 10
+const itemCount = countStorage.get()
 
 let itemList = []
 for (let idx = 0; idx < itemCount; idx++) {

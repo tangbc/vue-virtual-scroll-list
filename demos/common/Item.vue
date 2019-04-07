@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { getQuery, isMobile } from './util'
+import { getQuery } from './util'
 
 export default {
     name: 'item',
@@ -38,7 +38,6 @@ export default {
 
     data () {
         return {
-            // avatar: isMobile ? getQuery('avatar') !== null : getQuery('noavatar') === null
             avatar: getQuery('avatar') !== null
         }
     },
