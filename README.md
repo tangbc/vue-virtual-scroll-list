@@ -29,8 +29,6 @@
     * [Total memory used](#total-memory-used)
 * [How it works](#how-it-works)
 * [Simple usage](#simple-usage)
-    * [Using by npm module](#using-by-npm-module)
-    * [Using by script include](#using-by-script-include)
 * [Attentions](#attentions)
 * [Props type](#props-type)
 * [Public methods](#public-methods)
@@ -43,7 +41,7 @@
 
 ## Advantages
 
-* Tiny and very very easy to use.
+* Tiny and very easy to use.
 
 * Big data list with high performance.
 
@@ -56,13 +54,15 @@
 
 ## Live demos
 
-* [Use with item-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/item-mode).
+* [Build 100,000 items with item-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/item-mode).
 
-* [Use with vfor-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/vfor-mode).
+* [Build 100,000 items with vfor-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/vfor-mode).
 
-* [Use with variable height](https://tangbc.github.io/vue-virtual-scroll-list/demos/variable-height).
+* [Build 100,000 items with variable height](https://tangbc.github.io/vue-virtual-scroll-list/demos/variable-height).
 
-Besides, you can also compare the experience which **without using** virtual-list here: [without-virtual-list](https://tangbc.github.io/vue-virtual-scroll-list/demos/without-virtual-list).
+The main difference between `item-mode` and `vfor-mode` is that: `item-mode` make a higher performance but not very convenient to handle changing data frequently; however, `vfor-mode` is just the opposite.
+
+Besides, you can also compare the experience which without using virtual-list here: [without-virtual-list](https://tangbc.github.io/vue-virtual-scroll-list/demos/without-virtual-list).
 
 
 ## Performance comparison
@@ -71,19 +71,19 @@ According to the demos above, here are lists of approximate statistics:
 
 #### Build time wasted
 
-| Count       | item-mode | vfor-mode | without-virtual-list |
-|-------------|-----------|-----------|----------------------|
-| 1,000       | 8 ms      | 35 ms     | 220 ms               |
-| 10,000      | 10 ms     | 170 ms    | 1500 ms              |
-| 100,000     | 20 ms     | 1300 ms   | Browser crash!       |
+| Build amount | item-mode | vfor-mode | *without virtual list* |
+|-------------:|-----------|-----------|------------------------|
+|    **1,000** | 8 ms      | 35 ms     | 220 ms                 |
+|   **10,000** | 10 ms     | 170 ms    | 1500 ms                |
+|  **100,000** | 20 ms     | 1300 ms   | Browser crash!         |
 
 #### Total memory used
 
-| Count       | item-mode | vfor-mode | without-virtual-list |
-|-------------|-----------|-----------|----------------------|
-| 1,000       | 15 MB     | 80 MB     | 200 MB               |
-| 10,000      | 25 MB     | 120 MB    | 220 MB               |
-| 100,000     | 55 MB     | 550 MB    | Browser crash!       |
+| Build amount | item-mode | vfor-mode | *without virtual list* |
+|-------------:|-----------|-----------|------------------------|
+|    **1,000** | 10 MB     | 80 MB     | 200 MB                 |
+|   **10,000** | 25 MB     | 120 MB    | 220 MB                 |
+|  **100,000** | 55 MB     | 550 MB    | Browser crash!         |
 
 ## How it works
 
@@ -91,8 +91,6 @@ According to the demos above, here are lists of approximate statistics:
 
 
 ## Simple usage
-
-#### Using by npm module:
 
 ```console
 npm install vue-virtual-scroll-list --save
@@ -121,38 +119,14 @@ npm install vue-virtual-scroll-list --save
 </script>
 ```
 
-
-#### Using by script include:
-
-```html
-<script src="https://unpkg.com/vue@2.3.0/dist/vue.js"></script>
-<script src="https://tangbc.github.io/vue-virtual-scroll-list/index.js"></script>
-<div id="app">
-    <virtual-list :size="40" :remain="8" wtag="ul">
-        <li class="item" v-for="(udf, index) of items" :key="index">Item: #{{ index }}</li>
-    </virtual-list>
-</div>
-```
-
-```javascript
-// Global name as `VirtualScrollList`
-Vue.component('virtual-list', VirtualScrollList)
-new Vue({
-    el: '#app',
-    data: {
-        items: new Array(100000)
-    }
-})
-```
-
-More use ways or get start you can refer to these clearly [demos](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos) or [test suites](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/test).
+**More use ways or getting start you can refer to these clearly [demos](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos) or [test suites](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/test).**
 
 
 ## Attentions
 
 * Must assign the `:key` property on `<item>` component or dom frag with `v-for` directive.
 
-* Consider use `box-sizing: border-box` on `<item>` if you want absolutely correct scroll height.
+* Consider using `box-sizing: border-box` on `<item>` if you want absolutely correct scroll height.
 
 
 ## Props type
@@ -205,9 +179,11 @@ If you assign `variable` as `true`, **do not** set inline style height inside `<
 </template>
 ```
 
+Corresponding example you can refer to the [demo of variable height](https://tangbc.github.io/vue-virtual-scroll-list/demos/variable-height).
+
 ### About item mode
 
-Use `item-mode` can save a considerable amount of memory and performance (it's memory occupied is about only 1/10 of `vfor-mode`). In this mode, prop `item`, `itemcount` and `itemprops` are both required, and you don't have to put `<item/>` with a v-for frag inside `virtual-list`, just assign it as prop `item`:
+Using `item-mode` can save a considerable amount of memory and performance. In this mode, prop `item`, `itemcount` and `itemprops` are both required, and you don't have to put `<item/>` with a v-for frag inside `virtual-list`, just assign it as prop `item`:
 
 ```vue
 <template>
@@ -243,6 +219,8 @@ Use `item-mode` can save a considerable amount of memory and performance (it's m
 
 ```
 
+Corresponding example you can refer to the [demo of item-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/item-mode).
+
 
 ## Contributions
 
@@ -252,6 +230,7 @@ Welcome to improve vue-virtual-scroll-list with any issue, pull request or code 
 ## Changelogs
 
 Maintain and update occasionally, for changes see [release](https://github.com/tangbc/vue-virtual-scroll-list/releases).
+
 
 ## License
 
