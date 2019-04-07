@@ -22,12 +22,11 @@
     </a>
 </p>
 
-<p>
-    <i>If you are looking for a vue component which support big amount data list with high scroll performance, now you are in the right place!</i>
-</p>
-
 * [Advantages](#advantages)
 * [Live demos](#live-demos)
+* [Performance comparison](#performance-comparison)
+    * [Build time wasted](#build-time-wasted)
+    * [Total memory used](#total-memory-used)
 * [How it works](#how-it-works)
 * [Simple usage](#simple-usage)
     * [Using by npm module](#using-by-npm-module)
@@ -65,6 +64,26 @@
 
 Besides, you can also compare the experience which **without using** virtual-list here: [without-virtual-list](https://tangbc.github.io/vue-virtual-scroll-list/demos/without-virtual-list).
 
+
+## Performance comparison
+
+According to the demos above, here are lists of approximate statistics:
+
+#### Build time wasted
+
+| Count       | item-mode | vfor-mode | without-virtual-list |
+|-------------|-----------|-----------|----------------------|
+| 1,000       | 8 ms      | 35 ms     | 220 ms               |
+| 10,000      | 10 ms     | 170 ms    | 1500 ms              |
+| 100,000     | 20 ms     | 1300 ms   | Browser crash!       |
+
+#### Total memory used
+
+| Count       | item-mode | vfor-mode | without-virtual-list |
+|-------------|-----------|-----------|----------------------|
+| 1,000       | 15 MB     | 80 MB     | 200 MB               |
+| 10,000      | 25 MB     | 120 MB    | 220 MB               |
+| 100,000     | 55 MB     | 550 MB    | Browser crash!       |
 
 ## How it works
 
