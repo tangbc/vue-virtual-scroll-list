@@ -183,7 +183,7 @@ Corresponding example you can refer to the [demo of variable height](https://tan
 
 ### About item mode
 
-Using `item-mode` can save a considerable amount of memory and performance. In this mode, prop `item`, `itemcount` and `itemprops` are both required, and you don't have to put `<item/>` with a v-for frag inside `virtual-list`, just assign it as prop `item`:
+Using `item-mode` can save a considerable amount of memory and performance. In this mode, prop `item`, `itemcount` and `itemprops` are both required, and you don't have to put `<item/>` with a v-for directive inside `virtual-list`, just assign it as prop `item`:
 
 ```vue
 <template>
@@ -218,6 +218,8 @@ Using `item-mode` can save a considerable amount of memory and performance. In t
 </script>
 
 ```
+
+Whenever if you want to change any item data from list in `item-mode`, you just need call public method `forceRender()` after source data change. Increase or decrease items, you need to change `itemcount` and call `forceRender()` together.
 
 Corresponding example you can refer to the [demo of item-mode](https://tangbc.github.io/vue-virtual-scroll-list/demos/item-mode).
 
