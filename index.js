@@ -452,7 +452,8 @@
                         'padding-top': delta.paddingTop + 'px',
                         'padding-bottom': delta.paddingBottom + 'px'
                     },
-                    'class': this.wclass
+                    'class': this.wclass,
+                    'role': 'group'
                 }, list)
             ])
         }
