@@ -455,7 +455,9 @@
                         'padding-bottom': delta.paddingBottom + 'px'
                     },
                     'class': this.wclass,
-                    'role': 'group'
+                    attrs: {
+                        'role': 'group'
+                    }
                 }, list)
             ])
         }
