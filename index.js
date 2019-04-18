@@ -205,7 +205,7 @@
                 })
             },
 
-            // force render ui if using item mode.
+            // force render ui if using item-mode.
             itemModeForceRender: function () {
                 if (this.item) {
                     this.forceRender()
@@ -344,11 +344,11 @@
             },
 
             // filter the shown items base on `start` and `end`.
-            filter: function () {
+            filter: function (h) {
                 var delta = this.delta
                 var slots = this.$slots.default
 
-                // item mode shoud judge from items prop.
+                // item-mode shoud judge from items prop.
                 if (this.item) {
                     delta.total = this.itemcount
                 } else {
@@ -380,16 +380,18 @@
                 delta.paddingBottom = paddingBottom
                 delta.offsetAll = allHeight - this.size * this.remain
 
-                var targets = []
-                for (var i = delta.start; i <= Math.ceil(delta.end); i++) {
-                    // create vnode, using custom attrs binder.
-                    var slot = this.item && this.itemprops
-                        ? this.$createElement(this.item, this.itemprops(i))
-                        : slots[i]
-                    targets.push(slot)
+                var renders = []
+                for (var i = delta.start; i < delta.total && i <= Math.ceil(delta.end); i++) {
+                    var slot = null
+                    if (this.item) {
+                        slot = h(this.item, this.itemprops(i))
+                    } else {
+                        slot = slots[i]
+                    }
+                    renders.push(slot)
                 }
 
-                return targets
+                return renders
             }
         },
 
@@ -431,7 +433,7 @@
         },
 
         render: function (h) {
-            var list = this.filter()
+            var list = this.filter(h)
             var delta = this.delta
             var dbc = this.debounce
 
