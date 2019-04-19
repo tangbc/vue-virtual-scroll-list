@@ -21,7 +21,7 @@
                     :index="item.index"
                     :height="size"
                     :info="item.info"
-                    role="list-item"
+                    role="listitem"
                     :aria-posinset="item.index"
                     :aria-setsize="setSize"
                 />
