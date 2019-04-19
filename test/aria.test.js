@@ -20,7 +20,7 @@ describe(theme, () => {
                         v-for="(item, index) in items"
                         :key="index"
                         style="height: 40px; line-height: 40px;"
-                        role="list-item"
+                        role="listitem"
                         :aria-setsize="setSize"
                         :aria-posinset="index"
                     >
@@ -55,7 +55,7 @@ describe(theme, () => {
     it('check to see if aria roles and states are set on list items', () => {
         const itemFrags = wrapper.findAll('.for-item')
         const allListItemsTest = itemFrags.wrappers.every((x, i) => {
-           return x.attributes('role') === 'list-item'
+           return x.attributes('role') === 'listitem'
             && x.attributes('aria-setsize') === `${listCount}` 
             && x.attributes('aria-posinset') === `${i}`
         })
