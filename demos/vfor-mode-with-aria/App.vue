@@ -16,7 +16,7 @@
                 :start="start"
             >
                 <item
-                    v-for="(item, index) in items"
+                    v-for="item in items"
                     v-bind:key="item.index"
                     :index="item.index"
                     :height="size"

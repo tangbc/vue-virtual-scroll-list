@@ -6,7 +6,7 @@ import { getIndexList } from './util'
 const theme = 'aria-test'
 
 describe(theme, () => {
-    const listCount = 100
+    const listCount = 1000
     const wrapper = mount({
         template: `
             <div id="app" style="width: 300px;">
@@ -21,7 +21,7 @@ describe(theme, () => {
                         :key="index"
                         style="height: 40px; line-height: 40px;"
                         role="list-item"
-                        :aria-setsize="items.length"
+                        :aria-setsize="setSize"
                         :aria-posinset="index"
                     >
                         <span class="for-item-text">{{ item }}</span>
@@ -38,7 +38,8 @@ describe(theme, () => {
 
         data () {
             return {
-                items: getIndexList(listCount)
+                items: getIndexList(listCount),
+                setSize: listCount
             }
         }
     })
