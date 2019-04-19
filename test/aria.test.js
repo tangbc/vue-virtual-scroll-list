@@ -6,7 +6,7 @@ import { getIndexList } from './util'
 const theme = 'aria-test'
 
 describe(theme, () => {
-    const listCount = 1000
+    const listCount = 100
     const wrapper = mount({
         template: `
             <div id="app" style="width: 300px;">
@@ -21,7 +21,7 @@ describe(theme, () => {
                         :key="index"
                         style="height: 40px; line-height: 40px;"
                         role="list-item"
-                        :aria-setsize="listCount"
+                        :aria-setsize="items.length"
                         :aria-posinset="index"
                     >
                         <span class="for-item-text">{{ item }}</span>
@@ -38,8 +38,7 @@ describe(theme, () => {
 
         data () {
             return {
-                items: getIndexList(listCount),
-                listCount
+                items: getIndexList(listCount)
             }
         }
     })
@@ -56,8 +55,8 @@ describe(theme, () => {
         const itemFrags = wrapper.findAll('.for-item')
         const allListItemsTest = itemFrags.wrappers.every((x, i) => {
            return x.attributes('role') === 'list-item'
-            && x.attributes('aria-setsize') === listCount.toString() 
-            && x.attributes('aria-posinset') === i.toString()
+            && x.attributes('aria-setsize') === `${listCount}` 
+            && x.attributes('aria-posinset') === `${i}`
         })
         expect(allListItemsTest).toBe(true)
     });
