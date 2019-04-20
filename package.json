@@ -24,6 +24,12 @@
     "scroll-list",
     "virtual-list"
   ],
+  "eslintIgnore": [
+    "demos/dev/",
+    "demos/dev*/",
+    "demos/**/*.min.js",
+    "demos/**/*build.js"
+  ],
   "tinyNodeServer": {
     "root": "./",
     "port": 8088,
