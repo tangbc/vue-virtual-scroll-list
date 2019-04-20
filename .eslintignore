@@ -1,2 +1,4 @@
 demos/dev/
 demos/dev*/
+demos/**/*.min.js
+demos/**/*build.js
