@@ -2,12 +2,11 @@
 <div class="app">
     <GithubCorner path="/item-mode" />
     <div class="container">
-        <Header
-            title="item-mode"
+        <Header title="item-mode"
             :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
-            :startIndex="start"
-            :onDataChange="onHeaderDataChange"
-        ></Header>
+            :start-index="start"
+            :on-data-change="onHeaderDataChange"
+        />
         <div class="main">
             <virtual-list class="list"
                 :size="size"
@@ -17,8 +16,7 @@
                 :item="item"
                 :itemcount="itemCount"
                 :itemprops="getItemProps"
-            >
-            </virtual-list>
+            />
         </div>
     </div>
 </div>
@@ -39,7 +37,7 @@ for (let i = 0; i < itemCount; i++) {
 }
 
 export default {
-    name: 'app',
+    name: 'App',
 
     components: {
         'virtual-list': VirtualList
@@ -71,7 +69,7 @@ export default {
             if (type === 'start') {
                 this.start = value
             }
-        },
+        }
     }
 }
 </script>

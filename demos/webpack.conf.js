@@ -9,7 +9,7 @@ const getDirectories = (source) => readdirSync(source).map((name) => path.join(s
 const isDemoDirectory = (source) => !['dev', 'common'].includes(source)
 const demoDirectorys = getDirectories('demos').map((demo) => demo.split('/').pop()).filter(isDemoDirectory)
 
-console.log('\x1b[36m', `Building demos: [ ${demoDirectorys.join(', ')} ].` ,'\x1b[0m')
+console.log('\x1b[36m', `Building demos: [ ${demoDirectorys.join(', ')} ].`, '\x1b[0m')
 
 let multiConfigs = []
 demoDirectorys.forEach((entry) => {
@@ -38,7 +38,7 @@ module.exports = multiConfigs.map((config) => {
         resolve: {
             alias: {
                 'vue$': 'vue/dist/vue.js',
-                'vue-virtual-scroll-list': path.resolve(__dirname, '../index.js')
+                'vue-virtual-scroll-list': path.resolve(__dirname, '../src/index.js')
             }
         },
 

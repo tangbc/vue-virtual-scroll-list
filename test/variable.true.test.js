@@ -1,4 +1,4 @@
-import VirtualList from '../index'
+import VirtualList from '../src/index'
 import { mount } from '@vue/test-utils'
 import { getVariableList } from './util'
 
@@ -71,4 +71,3 @@ describe(theme, () => {
         expect(Object.keys(listDelta.varCache).length !== 0).toBe(true)
     })
 })
-

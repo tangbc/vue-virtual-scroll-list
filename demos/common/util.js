@@ -35,7 +35,7 @@ const topTypeArr = [
     'ShortHairShortWaved',
     'ShortHairSides',
     'ShortHairTheCaesar',
-    'ShortHairTheCaesarSidePart',
+    'ShortHairTheCaesarSidePart'
 ]
 const accessoriesTypeArr = [
     'Blank',
@@ -44,7 +44,7 @@ const accessoriesTypeArr = [
     'Prescription02',
     'Round',
     'Sunglasses',
-    'Wayfarers',
+    'Wayfarers'
 ]
 const facialHairTypeArr = [
     'Blank',
@@ -52,7 +52,7 @@ const facialHairTypeArr = [
     'BeardLight',
     'BeardMagestic',
     'MoustacheFancy',
-    'MoustacheMagnum',
+    'MoustacheMagnum'
 ]
 const facialHairColor = [
     'Auburn',
@@ -62,7 +62,7 @@ const facialHairColor = [
     'Brown',
     'BrownDark',
     'Platinum',
-    'Red',
+    'Red'
 ]
 const clotheTypeArr = [
     'BlazerShirt',
@@ -73,7 +73,7 @@ const clotheTypeArr = [
     'Overall',
     'ShirtCrewNeck',
     'ShirtScoopNeck',
-    'ShirtVNeck',
+    'ShirtVNeck'
 ]
 const clotheColor = [
     'Black',
@@ -90,7 +90,7 @@ const clotheColor = [
     'PastelYellow',
     'Pink',
     'Red',
-    'White',
+    'White'
 ]
 const graphicTypeArr = [
     'Bat',
@@ -103,7 +103,7 @@ const graphicTypeArr = [
     'Selena',
     'Bear',
     'SkullOutline',
-    'Skull',
+    'Skull'
 ]
 const eyeTypeArr = [
     'Close',
@@ -117,7 +117,7 @@ const eyeTypeArr = [
     'Squint',
     'Surprised',
     'Wink',
-    'WinkWacky',
+    'WinkWacky'
 ]
 const eyebrowTypeArr = [
     'Angry',
@@ -131,7 +131,7 @@ const eyebrowTypeArr = [
     'SadConcernedNatural',
     'UnibrowNatural',
     'UpDown',
-    'UpDownNatural',
+    'UpDownNatural'
 ]
 const mouthTypeArr = [
     'Concerned',
@@ -145,7 +145,7 @@ const mouthTypeArr = [
     'Smile',
     'Tongue',
     'Twinkle',
-    'Vomit',
+    'Vomit'
 ]
 const skinColorArr = [
     'Tanned',
@@ -154,7 +154,7 @@ const skinColorArr = [
     'Light',
     'Brown',
     'DarkBrown',
-    'Black',
+    'Black'
 ]
 
 export const getRandomAvatar = () => {
@@ -165,13 +165,13 @@ export const getRandomAvatar = () => {
         `hatColor=${Random.pick(facialHairTypeArr)}`,
         `facialHairType=${Random.pick(facialHairTypeArr)}`,
         `facialHairColor=${Random.pick(facialHairColor)}`,
-        // `clotheType=${Random.pick(clotheTypeArr)}`,
+        `clotheType=${Random.pick(clotheTypeArr)}`,
         `clotheColor=${Random.pick(clotheColor)}`,
         `graphicType=${Random.pick(graphicTypeArr)}`,
         `eyeType=${Random.pick(eyeTypeArr)}`,
-        // `eyebrowType=${Random.pick(eyebrowTypeArr)}`,
+        `eyebrowType=${Random.pick(eyebrowTypeArr)}`,
         `mouthType=${Random.pick(mouthTypeArr)}`,
-        `skinColor=${Random.pick(skinColorArr)}`,
+        `skinColor=${Random.pick(skinColorArr)}`
     ].join('&')
 }
 
@@ -180,7 +180,7 @@ export const getRandomUser = () => {
         name: Random.name(),
         time: Random.date(),
         color: Random.color(),
-        avatar: getRandomAvatar(),
+        avatar: getRandomAvatar()
         // avatar: `https://api.adorable.io/avatars/100/${Random.name()}`
     }
 }

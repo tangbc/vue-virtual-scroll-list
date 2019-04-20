@@ -1,4 +1,4 @@
-import VirtualList from '../index'
+import VirtualList from '../src/index'
 import { mount } from '@vue/test-utils'
 import { getVariableList } from './util'
 
@@ -101,4 +101,3 @@ describe(theme, () => {
         expect(itemFrags.at(0).vm.$el.style.height).toBe('35px')
     })
 })
-

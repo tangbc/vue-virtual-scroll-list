@@ -10,9 +10,7 @@ module.exports = {
         'text-summary',
     ],
     collectCoverageFrom: [
-        '**/index.js',
-        '!**/node_modules/**',
-        '!**/test/**',
+        'src/index.js'
     ],
     // testRegex: '/test/base.test.js?$'
 }

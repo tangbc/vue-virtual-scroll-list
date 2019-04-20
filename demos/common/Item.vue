@@ -1,19 +1,27 @@
 <template>
-<div class="item" v-bind:style="itemStyle">
-    <div class="index">#{{ index }}</div>
+<div class="item" :style="itemStyle">
+    <div class="index">
+        #{{ index }}
+    </div>
     <div class="card">
         <div class="card-avatar"
-            v-bind:class="{'no-avatar': !avatar}"
-            v-bind:style="{'background-color': !avatar && info.color}"
+            :class="{'no-avatar': !avatar}"
+            :style="{'background-color': !avatar && info.color}"
         >
             <span v-if="!avatar">{{ getAbbrName(info.name) }}</span>
-            <img v-else class="card-avatar-img" v-bind:src="info.avatar" alt="AVATAR">
+            <img v-else class="card-avatar-img" :src="info.avatar" alt="AVATAR">
         </div>
         <div class="card-info">
-            <div class="card-info-item name" v-bind:style="{color: info.color}">{{ info.name }}</div>
-            <div class="card-info-item time">Registered: {{ info.time }}</div>
+            <div class="card-info-item name" :style="{color: info.color}">
+                {{ info.name }}
+            </div>
+            <div class="card-info-item time">
+                Registered: {{ info.time }}
+            </div>
         </div>
-        <div class="card-height" v-if="variable">{{ height }}px</div>
+        <div v-if="variable" class="card-height">
+            {{ height }}px
+        </div>
     </div>
 </div>
 </template>
@@ -22,17 +30,26 @@
 import { getQuery } from './util'
 
 export default {
-    name: 'item',
+    name: 'Item',
 
     props: {
-        height: Number,
-        index: Number,
+        height: {
+            type: Number,
+            default: 0
+        },
+        index: {
+            type: Number,
+            default: 0
+        },
         variable: Boolean,
         info: {
-            name: String,
-            time: String,
-            avatar: String,
-            color: String,
+            type: Object,
+            default: () => ({
+                name: '',
+                time: '',
+                avatar: '',
+                color: ''
+            })
         }
     },
 
@@ -46,7 +63,7 @@ export default {
         itemStyle () {
             return {
                 'height': `${this.height}px`,
-                'line-height': `${this.height}px`,
+                'line-height': `${this.height}px`
             }
         }
     },

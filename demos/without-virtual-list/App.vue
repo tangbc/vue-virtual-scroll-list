@@ -5,13 +5,13 @@
             :warning="true"
             title="without-virtual-list"
             :desciption="'Build ' + itemCount.toLocaleString() + ' full items.'"
-        ></Header>
+        />
         <div class="main">
             <div class="list" :style="rootStyle">
                 <div>
                     <item
                         v-for="item in items"
-                        v-bind:key="item.index"
+                        :key="item.index"
                         :index="item.index"
                         :height="size"
                         :info="item.info"
@@ -27,8 +27,6 @@
 import Item from '../common/Item.vue'
 import { countStorage, getRandomUser } from '../common/util'
 
-const defaultCount = countStorage.get()
-
 const remain = 6
 const itemSize = 80
 const itemCount = countStorage.get()
@@ -43,7 +41,7 @@ for (let idx = 0; idx < itemCount; idx++) {
 }
 
 export default {
-    name: 'app',
+    name: 'App',
 
     components: {
         'item': Item

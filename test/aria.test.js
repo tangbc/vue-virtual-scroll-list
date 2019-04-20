@@ -1,4 +1,4 @@
-import VirtualList from '../index'
+import VirtualList from '../src/index'
 import { mount } from '@vue/test-utils'
 import { getIndexList } from './util'
 
@@ -44,21 +44,23 @@ describe(theme, () => {
         }
     })
 
-    it('check to see if aria role "list" is set on parent', () => {
-        const role = wrapper.find('.list').attributes('role');
+    it('check to see if aria role `list` is set on parent', () => {
+        const role = wrapper.find('.list').attributes('role')
         expect(role).toBe('list')
-    });
-    it('check to see if aria role "group" is set on list container', () => {
+    })
+
+    it('check to see if aria role `group` is set on list container', () => {
         const groupRole = wrapper.find('.list > .group').attributes('role')
         expect(groupRole).toBe('group')
-    });
+    })
+
     it('check to see if aria roles and states are set on list items', () => {
         const itemFrags = wrapper.findAll('.for-item')
         const allListItemsTest = itemFrags.wrappers.every((x, i) => {
-           return x.attributes('role') === 'listitem'
-            && x.attributes('aria-setsize') === `${listCount}` 
-            && x.attributes('aria-posinset') === `${i}`
+            return x.attributes('role') === 'listitem' &&
+                x.attributes('aria-setsize') === `${listCount}` &&
+                x.attributes('aria-posinset') === `${i}`
         })
         expect(allListItemsTest).toBe(true)
-    });
+    })
 })

@@ -1,4 +1,4 @@
-import VirtualList from '../index'
+import VirtualList from '../src/index'
 import { mount } from '@vue/test-utils'
 import { getIndexList } from './util'
 
@@ -54,7 +54,6 @@ describe(theme, () => {
             }
         }
     })
-
 
     it(`[${theme}] check list build init success.`, () => {
         const listEl = wrapper.find('.list').vm.$el

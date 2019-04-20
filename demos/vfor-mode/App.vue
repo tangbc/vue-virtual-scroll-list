@@ -2,12 +2,11 @@
 <div class="app">
     <GithubCorner path="/vfor-mode" />
     <div class="container">
-        <Header
-            title="vfor-mode"
+        <Header title="vfor-mode"
             :desciption="'Build ' + items.length.toLocaleString() + ' items.'"
-            :startIndex="start"
-            :onDataChange="onHeaderDataChange"
-        ></Header>
+            :start-index="start"
+            :on-data-change="onHeaderDataChange"
+        />
         <div class="main">
             <virtual-list class="list"
                 :size="size"
@@ -16,7 +15,7 @@
             >
                 <item
                     v-for="item in items"
-                    v-bind:key="item.index"
+                    :key="item.index"
                     :index="item.index"
                     :height="size"
                     :info="item.info"
@@ -46,7 +45,7 @@ for (let idx = 0; idx < itemCount; idx++) {
 }
 
 export default {
-    name: 'app',
+    name: 'App',
 
     components: {
         'item': Item,
@@ -67,7 +66,7 @@ export default {
             if (type === 'start') {
                 this.start = value
             }
-        },
+        }
     }
 }
 </script>

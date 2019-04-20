@@ -1,39 +1,38 @@
 <template>
-<header v-bind:class="warning ? 'warning': ''">
+<header :class="warning ? 'warning': ''">
     <h1>{{ title }}</h1>
     <section>
         <span class="desciption">{{ desciption }}</span>
-        <span id="time" class="performance time"></span>
-        <span id="memory" class="performance memory"></span>
-        <div class="icon" v-bind:class="showSetting ? 'active' : ''" v-on:click="clickIcon">
+        <span id="time" class="performance time" />
+        <span id="memory" class="performance memory" />
+        <div class="icon" :class="showSetting ? 'active' : ''" @click="clickIcon">
             <svg width="25" height="25" t="1553394278598" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8690" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <path d="M809.21 474.749H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.864-16.101-35.966-35.966-35.966m0 215.796H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966M220.52 258.954c-19.865 0-35.966 16.101-35.966 35.966 0 19.865 16.101 35.966 35.966 35.966s35.966-16.101 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966m153.502 71.932H809.21c19.865 0 35.966-16.101 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.864 16.102 35.966 35.966 35.966M220.52 474.749c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.864-16.102-35.966-35.966-35.966m0 215.796c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966" p-id="8691" fill="#2c2c2c"></path>
+                <path d="M809.21 474.749H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.864-16.101-35.966-35.966-35.966m0 215.796H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966H809.21c19.865 0 35.966-16.107 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966M220.52 258.954c-19.865 0-35.966 16.101-35.966 35.966 0 19.865 16.101 35.966 35.966 35.966s35.966-16.101 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966m153.502 71.932H809.21c19.865 0 35.966-16.101 35.966-35.966 0-19.865-16.101-35.966-35.966-35.966H374.022c-19.865 0-35.966 16.101-35.966 35.966 0 19.864 16.102 35.966 35.966 35.966M220.52 474.749c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.864-16.102-35.966-35.966-35.966m0 215.796c-19.865 0-35.966 16.101-35.966 35.966 0 19.859 16.101 35.966 35.966 35.966s35.966-16.107 35.966-35.966c0-19.865-16.102-35.966-35.966-35.966" p-id="8691" fill="#2c2c2c" />
             </svg>
         </div>
-        <div class="setting" v-show="showSetting">
-            <div class="option" v-if="showStart">
-                <span class="name" v-if="isMobile">Index:</span>
-                <span class="name" v-else>Start index:</span>
-                <input type="text"
-                    v-model="selfStartIndex"
-                    v-on:focus="$event.target.select()"
-                    v-on:input="inputDataChange('start', $event.target.value)"
+        <div v-show="showSetting" class="setting">
+            <div v-if="showStart" class="option">
+                <span v-if="isMobile" class="name">Index:</span>
+                <span v-else class="name">Start index:</span>
+                <input v-model="selfStartIndex" type="text"
+                    @focus="$event.target.select()"
+                    @input="inputDataChange('start', $event.target.value)"
                 >
             </div>
 
             <div class="option">
-                <span class="name" v-if="isMobile">Count:</span>
-                <span class="name" v-else>List count:</span>
+                <span v-if="isMobile" class="name">Count:</span>
+                <span v-else class="name">List count:</span>
                 <label>
-                    <input type="radio" value="1" v-model="renderCount">
+                    <input v-model="renderCount" type="radio" value="1">
                     <span class="t1">1,000</span>
                 </label>
                 <label class="middle">
-                    <input type="radio" value="2" v-model="renderCount">
+                    <input v-model="renderCount" type="radio" value="2">
                     <span class="t2">10,000</span>
                 </label>
                 <label>
-                    <input type="radio" value="3" v-model="renderCount">
+                    <input v-model="renderCount" type="radio" value="3">
                     <span class="t3">100,000</span>
                 </label>
             </div>
@@ -43,10 +42,30 @@
 </template>
 
 <script>
-import { isMobile, debounce, getQuery, countStorage, settingStorage } from './util'
+import { isMobile, debounce, countStorage, settingStorage } from './util'
 
 export default {
-    name: 'app-header',
+    name: 'AppHeader',
+
+    props: {
+        warning: Boolean,
+        title: {
+            type: String,
+            default: ''
+        },
+        desciption: {
+            type: String,
+            default: ''
+        },
+        startIndex: {
+            type: Number,
+            default: 0
+        },
+        onDataChange: {
+            type: Function,
+            default: () => {}
+        }
+    },
 
     data () {
         return {
@@ -74,12 +93,8 @@ export default {
         }
     },
 
-    props: {
-        warning: Boolean,
-        title: String,
-        desciption: String,
-        startIndex: Number,
-        onDataChange: Function
+    mounted () {
+        this.selfStartIndex = this.startIndex
     },
 
     methods: {
@@ -95,10 +110,6 @@ export default {
                 this.onDataChange(type, val)
             }
         }, 1000, false)
-    },
-
-    mounted () {
-        this.selfStartIndex = this.startIndex
     }
 }
 </script>

@@ -1,4 +1,4 @@
-import VirtualList from '../index'
+import VirtualList from '../src/index'
 import { mount } from '@vue/test-utils'
 import { getIndexList } from './util'
 import jest from 'jest-mock'
