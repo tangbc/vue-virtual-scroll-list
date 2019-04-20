@@ -274,8 +274,8 @@
                 index = parseInt(index, 10)
                 index = Math.max(0, index)
 
-                var lastStart = delta.total - delta.keeps
-                var isLast = (index <= delta.total && index >= lastStart) || (index > delta.total)
+                const lastStart = delta.total - delta.keeps
+                const isLast = (index <= delta.total && index >= lastStart) || (index > delta.total)
                 if (isLast) {
                     end = delta.total - 1
                     start = Math.max(0, lastStart)
