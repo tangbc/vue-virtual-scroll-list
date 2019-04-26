@@ -445,6 +445,10 @@
                 // item-mode shoud judge from items prop.
                 if (this.item) {
                     delta.total = this.itemcount
+                    if (delta.keeps > delta.total) {
+                        delta.keeps = delta.total
+                        delta.end = delta.total - 1
+                    }
                 } else {
                     if (!slots.length) {
                         delta.start = 0
