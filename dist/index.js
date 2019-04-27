@@ -116,28 +116,28 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         default: function _default() {}
       }
     },
-    // use alter to identify which prop change.
+    // use changeProp to identify which prop change.
     watch: {
       size: function size() {
-        this.alter = 'size';
+        this.changeProp = 'size';
       },
       remain: function remain() {
-        this.alter = 'remain';
+        this.changeProp = 'remain';
       },
       bench: function bench() {
-        this.alter = 'bench';
+        this.changeProp = 'bench';
         this.itemModeForceRender();
       },
       start: function start() {
-        this.alter = 'start';
+        this.changeProp = 'start';
         this.itemModeForceRender();
       },
       offset: function offset() {
-        this.alter = 'offset';
+        this.changeProp = 'offset';
         this.itemModeForceRender();
       },
       itemcount: function itemcount() {
-        this.alter = 'itemcount';
+        this.changeProp = 'itemcount';
         this.itemModeForceRender();
       }
     },
@@ -183,17 +183,17 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     beforeUpdate: function beforeUpdate() {
       var delta = this.delta;
       delta.keeps = this.remain + (this.bench || this.remain);
-      var calcstart = this.alter === 'start' ? this.start : delta.start;
+      var calcstart = this.changeProp === 'start' ? this.start : delta.start;
       var zone = this.getZone(calcstart); // if start, size or offset change, update scroll position.
 
-      if (this.alter && ['start', 'size', 'offset'].includes(this.alter)) {
-        var scrollTop = this.alter === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size;
+      if (this.changeProp && ['start', 'size', 'offset'].includes(this.changeProp)) {
+        var scrollTop = this.changeProp === 'offset' ? this.offset : this.variable ? this.getVarOffset(zone.isLast ? delta.total : zone.start) : zone.isLast && delta.total - calcstart <= this.remain ? delta.total * this.size : calcstart * this.size;
         this.$nextTick(this.setScrollTop.bind(this, scrollTop));
       } // if points out difference, force update once again.
 
 
-      if (this.alter || delta.end !== zone.end || calcstart !== zone.start) {
-        this.alter = '';
+      if (this.changeProp || delta.end !== zone.end || calcstart !== zone.start) {
+        this.changeProp = '';
         delta.end = zone.end;
         delta.start = zone.start;
         this.forceRender();
@@ -473,9 +473,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
     },
     render: function render(h) {
-      var list = this.filter(h);
-      var delta = this.delta;
       var dbc = this.debounce;
+      var list = this.filter(h);
+      var _this$delta = this.delta,
+          paddingTop = _this$delta.paddingTop,
+          paddingBottom = _this$delta.paddingBottom;
       return h(this.rtag, {
         'ref': 'vsl',
         'style': {
@@ -489,8 +491,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }, [h(this.wtag, {
         'style': {
           'display': 'block',
-          'padding-top': delta.paddingTop + 'px',
-          'padding-bottom': delta.paddingBottom + 'px'
+          'padding-top': paddingTop + 'px',
+          'padding-bottom': paddingBottom + 'px'
         },
         'class': this.wclass,
         'attrs': {

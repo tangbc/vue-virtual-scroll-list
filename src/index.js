@@ -105,28 +105,28 @@
             }
         },
 
-        // use alter to identify which prop change.
+        // use changeProp to identify which prop change.
         watch: {
             size () {
-                this.alter = 'size'
+                this.changeProp = 'size'
             },
             remain () {
-                this.alter = 'remain'
+                this.changeProp = 'remain'
             },
             bench () {
-                this.alter = 'bench'
+                this.changeProp = 'bench'
                 this.itemModeForceRender()
             },
             start () {
-                this.alter = 'start'
+                this.changeProp = 'start'
                 this.itemModeForceRender()
             },
             offset () {
-                this.alter = 'offset'
+                this.changeProp = 'offset'
                 this.itemModeForceRender()
             },
             itemcount () {
-                this.alter = 'itemcount'
+                this.changeProp = 'itemcount'
                 this.itemModeForceRender()
             }
         },
@@ -167,12 +167,12 @@
             let delta = this.delta
             delta.keeps = this.remain + (this.bench || this.remain)
 
-            const calcstart = this.alter === 'start' ? this.start : delta.start
+            const calcstart = this.changeProp === 'start' ? this.start : delta.start
             const zone = this.getZone(calcstart)
 
             // if start, size or offset change, update scroll position.
-            if (this.alter && ['start', 'size', 'offset'].includes(this.alter)) {
-                const scrollTop = this.alter === 'offset'
+            if (this.changeProp && ['start', 'size', 'offset'].includes(this.changeProp)) {
+                const scrollTop = this.changeProp === 'offset'
                     ? this.offset : this.variable
                         ? this.getVarOffset(zone.isLast ? delta.total : zone.start)
                         : zone.isLast && (delta.total - calcstart <= this.remain)
@@ -183,11 +183,11 @@
 
             // if points out difference, force update once again.
             if (
-                this.alter ||
+                this.changeProp ||
                 delta.end !== zone.end ||
                 calcstart !== zone.start
             ) {
-                this.alter = ''
+                this.changeProp = ''
                 delta.end = zone.end
                 delta.start = zone.start
                 this.forceRender()
@@ -489,9 +489,9 @@
         },
 
         render (h) {
-            const list = this.filter(h)
-            const delta = this.delta
             const dbc = this.debounce
+            const list = this.filter(h)
+            const { paddingTop, paddingBottom } = this.delta
 
             return h(this.rtag, {
                 'ref': 'vsl',
@@ -507,8 +507,8 @@
                 h(this.wtag, {
                     'style': {
                         'display': 'block',
-                        'padding-top': delta.paddingTop + 'px',
-                        'padding-bottom': delta.paddingBottom + 'px'
+                        'padding-top': paddingTop + 'px',
+                        'padding-bottom': paddingBottom + 'px'
                     },
                     'class': this.wclass,
                     'attrs': {
