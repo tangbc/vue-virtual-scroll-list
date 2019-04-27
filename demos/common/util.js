@@ -181,7 +181,6 @@ export const getRandomUser = () => {
         time: Random.date(),
         color: Random.color(),
         avatar: getRandomAvatar()
-        // avatar: `https://api.adorable.io/avatars/100/${Random.name()}`
     }
 }
 
@@ -219,6 +218,7 @@ export const debounce = (func, wait, immediate) => {
         }
     }
 }
+
 const oneThousand = 1000
 const typeMap = {
     1: oneThousand,

@@ -11,6 +11,7 @@
             <virtual-list class="list"
                 :size="size"
                 :remain="remain"
+                :bench="30"
                 :start="start"
 
                 :item="item"
