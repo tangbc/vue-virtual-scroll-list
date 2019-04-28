@@ -427,6 +427,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
         if (this.item) {
           delta.total = this.itemcount;
+
+          if (delta.keeps > delta.total) {
+            delta.end = delta.total - 1;
+          }
         } else {
           if (!slots.length) {
             delta.start = 0;
