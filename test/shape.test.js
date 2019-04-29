@@ -76,9 +76,11 @@ describe(theme, () => {
     })
 
     it(`[${theme}] check update correct.`, () => {
+        const list = wrapper.find('.list')
+        const listEl = list.vm.$el
         const vmData = wrapper.vm.$data
-        const listEl = wrapper.find('.list').vm.$el
 
+        let itemFrags
         let expectOutsideHeight
 
         // change size and check shape.
@@ -96,7 +98,13 @@ describe(theme, () => {
         expect(listEl.style.height).toBe(expectOutsideHeight)
 
         vmData.bench = 66
-        const itemFrags = wrapper.findAll('.for-item')
+        itemFrags = wrapper.findAll('.for-item')
         expect(itemFrags.length).toBe(vmData.remian + 66)
+
+        vmData.items = getIndexList(7)
+        listEl.scrollTop = 1000 // over scroll.
+        list.trigger('scroll')
+        itemFrags = wrapper.findAll('.for-item')
+        expect(itemFrags.length).toBe(7)
     })
 })

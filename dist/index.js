@@ -113,6 +113,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       itemprops: {
         type: Function,
+
+        /* istanbul ignore next */
         default: function _default() {}
       }
     },

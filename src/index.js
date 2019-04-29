@@ -101,6 +101,7 @@
             },
             itemprops: {
                 type: Function,
+                /* istanbul ignore next */
                 default () {}
             }
         },

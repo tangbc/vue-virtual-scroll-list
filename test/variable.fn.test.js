@@ -51,7 +51,7 @@ describe(theme, () => {
 
         data () {
             return {
-                start: 0,
+                start: 5,
                 size: initSize,
                 remian: initRemian,
                 items: getVariableList(listCount)
@@ -79,7 +79,7 @@ describe(theme, () => {
         // no cache init.
         const list = wrapper.find('.list')
         const listDelta = list.vm.delta
-        expect(Object.keys(listDelta.varCache).length === 0).toBe(true)
+        expect(Object.keys(listDelta.varCache).length !== 0).toBe(true)
     })
 
     it(`[${theme}] check update.`, () => {
