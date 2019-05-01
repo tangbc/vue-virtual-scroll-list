@@ -26,14 +26,14 @@
 
 * [Advantages](#advantages)
 * [Live demos](#live-demos)
-* [Performance comparison](#performance-comparison)
-    * [Build time wasted](#build-time-wasted)
-    * [Total memory used](#total-memory-used)
 * [How it works](#how-it-works)
 * [Simple usage](#simple-usage)
     * [vfor-mode](#vfor-mode)
     * [item-mode](#item-mode)
     * [variable height](#variable-height)
+* [Performance comparison](#performance-comparison)
+    * [Build time wasted](#build-time-wasted)
+    * [Total memory used](#total-memory-used)
 * [Attentions](#attentions)
 * [**Props type**](#props-type)
 * [Public methods](#public-methods)
@@ -62,26 +62,6 @@ The main difference between `item-mode` and `vfor-mode` is that: `item-mode` mak
 
 Besides, you can also compare the experience which without using virtual-list here: [without-virtual-list](https://tangbc.github.io/vue-virtual-scroll-list/demos/without-virtual-list).
 
-
-## Performance comparison
-
-According to the demos above, here are lists of approximate statistics:
-
-#### Build time wasted
-
-| Build amount | item-mode | vfor-mode | *without virtual list* |
-|-------------:|-----------|-----------|------------------------|
-|    **1,000** | 8 ms      | 35 ms     | 220 ms                 |
-|   **10,000** | 10 ms     | 170 ms    | 1500 ms                |
-|  **100,000** | 20 ms     | 1300 ms   | Browser crash!         |
-
-#### Total memory used
-
-| Build amount | item-mode | vfor-mode | *without virtual list* |
-|-------------:|-----------|-----------|------------------------|
-|    **1,000** | 10 MB     | 80 MB     | 200 MB                 |
-|   **10,000** | 25 MB     | 120 MB    | 220 MB                 |
-|  **100,000** | 55 MB     | 550 MB    | Browser crash!         |
 
 ## How it works
 
@@ -177,6 +157,27 @@ If you assign `variable` as `true`, **do not** set inline style height inside `<
 ```
 
 **More use ways or getting start you can refer to these clearly [demos](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos) or [test suites](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/test).**
+
+
+## Performance comparison
+
+According to the demos above, here are lists of approximate statistics:
+
+#### Build time wasted
+
+| Build amount | item-mode | vfor-mode | *without virtual list* |
+|-------------:|-----------|-----------|------------------------|
+|    **1,000** | 8 ms      | 35 ms     | 220 ms                 |
+|   **10,000** | 10 ms     | 170 ms    | 1500 ms                |
+|  **100,000** | 20 ms     | 1300 ms   | Browser crash!         |
+
+#### Total memory used
+
+| Build amount | item-mode | vfor-mode | *without virtual list* |
+|-------------:|-----------|-----------|------------------------|
+|    **1,000** | 10 MB     | 80 MB     | 200 MB                 |
+|   **10,000** | 25 MB     | 120 MB    | 220 MB                 |
+|  **100,000** | 55 MB     | 550 MB    | Browser crash!         |
 
 
 ## Attentions
