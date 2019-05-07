@@ -59,7 +59,7 @@
                 type: String,
                 default: ''
             },
-            pageMode: {
+            pagemode: {
                 type: Boolean,
                 default: false
             },
