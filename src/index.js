@@ -159,7 +159,7 @@
         },
 
         mounted () {
-            if (this.pageMode) {
+            if (this.pagemode) {
                 window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
             }
             if (this.start) {
@@ -171,7 +171,7 @@
         },
 
         beforeDestroy () {
-            if (this.pageMode) {
+            if (this.pagemode) {
                 window.removeEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
             }
         },
@@ -212,7 +212,7 @@
             onScroll (event) {
                 let delta = this.delta
                 const vsl = this.$refs.vsl
-                const offset = this.pageMode
+                const offset = this.pagemode
                     ? window.pageYOffset
                     : (vsl.$el || vsl).scrollTop || 0
 
@@ -447,7 +447,7 @@
 
             // set manual scroll top.
             setScrollTop (scrollTop) {
-                if (this.pageMode) {
+                if (this.pagemode) {
                     window.scrollTo(0, scrollTop)
                 } else {
                     let vsl = this.$refs.vsl
@@ -516,7 +516,7 @@
             const list = this.filter(h)
             const { paddingTop, paddingBottom } = this.delta
 
-            if (this.pageMode) {
+            if (this.pagemode) {
                 return h(this.wtag, {
                     'style': {
                         'display': 'block',

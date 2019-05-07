@@ -178,7 +178,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       this.delta = delta;
     },
     mounted: function mounted() {
-      if (this.pageMode) {
+      if (this.pagemode) {
         window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false);
       }
 
@@ -190,7 +190,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
     },
     beforeDestroy: function beforeDestroy() {
-      if (this.pageMode) {
+      if (this.pagemode) {
         window.removeEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false);
       }
     },
@@ -218,7 +218,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       onScroll: function onScroll(event) {
         var delta = this.delta;
         var vsl = this.$refs.vsl;
-        var offset = this.pageMode ? window.pageYOffset : (vsl.$el || vsl).scrollTop || 0;
+        var offset = this.pagemode ? window.pageYOffset : (vsl.$el || vsl).scrollTop || 0;
         delta.direction = offset > delta.scrollTop ? 'D' : 'U';
         delta.scrollTop = offset;
 
@@ -429,7 +429,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       // set manual scroll top.
       setScrollTop: function setScrollTop(scrollTop) {
-        if (this.pageMode) {
+        if (this.pagemode) {
           window.scrollTo(0, scrollTop);
         } else {
           var vsl = this.$refs.vsl;
@@ -502,7 +502,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           paddingTop = _this$delta.paddingTop,
           paddingBottom = _this$delta.paddingBottom;
 
-      if (this.pageMode) {
+      if (this.pagemode) {
         return h(this.wtag, {
           'style': {
             'display': 'block',
