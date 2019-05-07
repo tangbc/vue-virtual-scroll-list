@@ -1,4 +1,7 @@
 dev
 node_modules
 npm-debug.log
-examples/**/*.map
+coverage
+demos/dev/
+demos/dev*/
+demos/**/*.map
