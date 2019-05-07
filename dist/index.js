@@ -67,6 +67,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         type: String,
         default: ''
       },
+      pageMode: {
+        type: Boolean,
+        default: false
+      },
       start: {
         type: Number,
         default: 0
@@ -174,6 +178,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       this.delta = delta;
     },
     mounted: function mounted() {
+      if (this.pageMode) {
+        window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false);
+      }
+
       if (this.start) {
         var start = this.getZone(this.start).start;
         this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size);
@@ -181,7 +189,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         this.setScrollTop(this.offset);
       }
     },
-    // check if delta should update when prorps change.
+    beforeDestroy: function beforeDestroy() {
+      if (this.pageMode) {
+        window.removeEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false);
+      }
+    },
+    // check if delta should update when props change.
     beforeUpdate: function beforeUpdate() {
       var delta = this.delta;
       delta.keeps = this.remain + (this.bench || this.remain);
@@ -205,7 +218,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       onScroll: function onScroll(event) {
         var delta = this.delta;
         var vsl = this.$refs.vsl;
-        var offset = (vsl.$el || vsl).scrollTop || 0;
+        var offset = this.pageMode ? window.pageYOffset : (vsl.$el || vsl).scrollTop || 0;
         delta.direction = offset > delta.scrollTop ? 'D' : 'U';
         delta.scrollTop = offset;
 
@@ -416,10 +429,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       // set manual scroll top.
       setScrollTop: function setScrollTop(scrollTop) {
-        var vsl = this.$refs.vsl;
+        if (this.pageMode) {
+          window.scrollTo(0, scrollTop);
+        } else {
+          var vsl = this.$refs.vsl;
 
-        if (vsl) {
-          (vsl.$el || vsl).scrollTop = scrollTop;
+          if (vsl) {
+            (vsl.$el || vsl).scrollTop = scrollTop;
+          }
         }
       },
       // filter the shown items base on `start` and `end`.
@@ -484,6 +501,18 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var _this$delta = this.delta,
           paddingTop = _this$delta.paddingTop,
           paddingBottom = _this$delta.paddingBottom;
+
+      if (this.pageMode) {
+        return h(this.wtag, {
+          'style': {
+            'display': 'block',
+            'padding-top': paddingTop + 'px',
+            'padding-bottom': paddingBottom + 'px'
+          },
+          'class': this.wclass
+        }, list);
+      }
+
       return h(this.rtag, {
         'ref': 'vsl',
         'style': {
