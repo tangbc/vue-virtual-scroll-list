@@ -67,7 +67,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         type: String,
         default: ''
       },
-      pageMode: {
+      pagemode: {
         type: Boolean,
         default: false
       },
