@@ -1,6 +1,7 @@
 import VirtualList from '../src/index'
 import { mount } from '@vue/test-utils'
 import { getIndexList } from './util'
+import sinon from 'sinon'
 
 // for testing pagemode build.
 const theme = 'pagemode-test'
@@ -10,6 +11,7 @@ describe(theme, () => {
     const initRemian = 6
     const initStart = 100
     const listCount = 1000
+    const spy = sinon.stub()
     const wrapper = mount({
         template: `
             <div id="app" style="width: 300px;">
@@ -44,6 +46,10 @@ describe(theme, () => {
                 start: initStart,
                 items: getIndexList(listCount)
             }
+        },
+
+        beforeDestroy () {
+            spy()
         }
     })
 
@@ -112,5 +118,10 @@ describe(theme, () => {
         expectPaddingBottom = 0
         expect(listEl.style['padding-top']).toBe(`${expectPaddingTop}px`)
         expect(listEl.style['padding-bottom']).toBe(`${expectPaddingBottom}px`)
+    })
+
+    it(`[${theme}] before destroy is triggerd.`, () => {
+        wrapper.destroy()
+        expect(spy.calledOnce)
     })
 })
