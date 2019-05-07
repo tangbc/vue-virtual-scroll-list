@@ -6,14 +6,18 @@ import { getIndexList } from './util'
 const theme = 'pagemode-test'
 
 describe(theme, () => {
+    const initSize = 40
+    const initRemian = 6
+    const initStart = 100
     const listCount = 1000
     const wrapper = mount({
         template: `
             <div id="app" style="width: 300px;">
                 <virtual-list class="list"
-                    :size="40"
-                    :remain="6"
                     ref="vlist"
+                    :size="size"
+                    :remain="remian"
+                    :start="start"
                     :pagemode="true"
                 >
                     <div class="for-item"
@@ -35,6 +39,9 @@ describe(theme, () => {
 
         data () {
             return {
+                size: initSize,
+                remian: initRemian,
+                start: initStart,
                 items: getIndexList(listCount)
             }
         }
@@ -45,10 +52,10 @@ describe(theme, () => {
         expect(wrapper.find('.for-item-text').exists()).toBe(true)
 
         // list wraper height is remain * size.
-        const expectOutsideHeight = 40 * 6
         const listEl = wrapper.find('.list').vm.$el
-        const expectPaddingBottom = listCount * 40 - expectOutsideHeight * 2
-        expect(listEl.style['padding-top']).toBe(`0px`)
+        const expectPaddingTop = initStart * initSize
+        const expectPaddingBottom = (listCount - initRemian - initRemian - initStart) * initSize
+        expect(listEl.style['padding-top']).toBe(`${expectPaddingTop}px`)
         expect(listEl.style['padding-bottom']).toBe(`${expectPaddingBottom}px`)
     })
 
@@ -61,8 +68,49 @@ describe(theme, () => {
         // check every item render content.
         for (let i = 0; i < itemFrags.length; i++) {
             const item = itemFrags.at(i)
-            expect(item.text()).toBe('#' + i)
+            expect(item.text()).toBe('#' + (initStart + i))
             expect(item.classes('for-item')).toBe(true)
         }
+    })
+
+    it(`[${theme}] check update correct.`, () => {
+        const vmData = wrapper.vm.$data
+        const listEl = wrapper.find('.list').vm.$el
+
+        let expectPaddingTop
+        let expectPaddingBottom
+
+        vmData.start = 200
+        expectPaddingTop = 200 * initSize
+        expectPaddingBottom = (listCount - initRemian - initRemian - 200) * initSize
+        expect(listEl.style['padding-top']).toBe(`${expectPaddingTop}px`)
+        expect(listEl.style['padding-bottom']).toBe(`${expectPaddingBottom}px`)
+
+        vmData.start = 0
+        expectPaddingTop = 0
+        expectPaddingBottom = (listCount - initRemian - initRemian) * initSize
+        expect(listEl.style['padding-top']).toBe(`${expectPaddingTop}px`)
+        expect(listEl.style['padding-bottom']).toBe(`${expectPaddingBottom}px`)
+
+        // start on last zone.
+        vmData.start = listCount - initRemian - 3
+        expectPaddingTop = (listCount - initRemian - initRemian) * initSize
+        expectPaddingBottom = 0
+        expect(listEl.style['padding-top']).toBe(`${expectPaddingTop}px`)
+        expect(listEl.style['padding-bottom']).toBe(`${expectPaddingBottom}px`)
+
+        // start on last zone edge.
+        vmData.start = listCount - initRemian - initRemian - 1
+        expectPaddingTop = (listCount - initRemian - initRemian - 1) * initSize
+        expectPaddingBottom = 1 * initSize
+        expect(listEl.style['padding-top']).toBe(`${expectPaddingTop}px`)
+        expect(listEl.style['padding-bottom']).toBe(`${expectPaddingBottom}px`)
+
+        // start overflow.
+        vmData.start = listCount + 10
+        expectPaddingTop = (listCount - initRemian - initRemian) * initSize
+        expectPaddingBottom = 0
+        expect(listEl.style['padding-top']).toBe(`${expectPaddingTop}px`)
+        expect(listEl.style['padding-bottom']).toBe(`${expectPaddingBottom}px`)
     })
 })
