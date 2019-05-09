@@ -475,6 +475,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           paddingBottom = 0;
         }
 
+        if (this.pagemode && this.$el && this.$el.parentElement) {
+          var bodyRect = document.body.getBoundingClientRect();
+          var elemRect = this.$el.parentElement.getBoundingClientRect();
+          var offset = elemRect.top - bodyRect.top;
+          paddingTop -= offset;
+          if (paddingTop < 0) paddingTop = 0;
+        }
+
         delta.paddingTop = paddingTop;
         delta.paddingBottom = paddingBottom;
         delta.offsetAll = allHeight - this.size * this.remain;

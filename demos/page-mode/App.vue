@@ -1,8 +1,8 @@
 <template>
 <div class="app">
-    <GithubCorner path="/item-mode" />
+    <GithubCorner path="/page-mode" />
     <div class="container">
-        <Header title="item-mode"
+        <Header title="page-mode"
             :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
             :start-index="start"
             :on-data-change="onHeaderDataChange"
@@ -11,7 +11,6 @@
             <virtual-list class="list"
                 :size="size"
                 :remain="remain"
-                :bench="30"
                 :start="start"
                 :pagemode="true"
                 :item="item"
@@ -28,7 +27,7 @@ import Item from '../common/Item.vue'
 import VirtualList from 'vue-virtual-scroll-list'
 import { countStorage, getRandomUser } from '../common/util'
 
-const remain = 6
+const remain = 17
 const itemSize = 80
 const itemCount = countStorage.get()
 
@@ -77,4 +76,10 @@ export default {
 
 <style lang="less">
 @import '../common/app.less';
+html,body {
+    overflow: inherit;
+}
+.main {
+    margin-bottom: 500px
+}
 </style>

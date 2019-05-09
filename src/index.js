@@ -491,7 +491,13 @@
                 if (paddingBottom < this.size) {
                     paddingBottom = 0
                 }
-
+                if (this.pagemode && this.$el && this.$el.parentElement) {
+                    let bodyRect = document.body.getBoundingClientRect()
+                    let elemRect = this.$el.parentElement.getBoundingClientRect()
+                    let offset = elemRect.top - bodyRect.top
+                    paddingTop -= offset
+                    if (paddingTop < 0) paddingTop = 0
+                }
                 delta.paddingTop = paddingTop
                 delta.paddingBottom = paddingBottom
                 delta.offsetAll = allHeight - this.size * this.remain

@@ -8,7 +8,7 @@ const theme = 'pagemode-test'
 
 describe(theme, () => {
     const initSize = 40
-    const initRemian = 6
+    const initRemian = 10
     const initStart = 100
     const listCount = 1000
     const spy = sinon.stub()
@@ -69,7 +69,7 @@ describe(theme, () => {
         const itemFrags = wrapper.findAll('.for-item')
 
         // default real dom count is remain + default bench.
-        expect(itemFrags.length).toBe(6 + 6)
+        expect(itemFrags.length).toBe(initRemian + initRemian)
 
         // check every item render content.
         for (let i = 0; i < itemFrags.length; i++) {
