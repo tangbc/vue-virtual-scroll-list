@@ -12,6 +12,9 @@ describe(theme, () => {
     const initStart = 100
     const listCount = 1000
     const spy = sinon.stub()
+
+    let windowScrollTo = window.scrollTo
+
     const wrapper = mount({
         template: `
             <div id="app" style="width: 300px;">
@@ -48,10 +51,18 @@ describe(theme, () => {
             }
         },
 
+        beforeCreate () {
+            // Error: Not implemented: window.scrollTo
+            window.scrollTo = () => {}
+        },
+
         beforeDestroy () {
             spy()
+            window.scrollTo = windowScrollTo
         }
     })
+
+
 
     it(`[${theme}] check list build success.`, () => {
         expect(wrapper.find('.for-item').exists()).toBe(true)
