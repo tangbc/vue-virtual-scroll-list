@@ -509,16 +509,20 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var _this$delta = this.delta,
           paddingTop = _this$delta.paddingTop,
           paddingBottom = _this$delta.paddingBottom;
+      var renderList = h(this.wtag, {
+        'style': {
+          'display': 'block',
+          'padding-top': paddingTop + 'px',
+          'padding-bottom': paddingBottom + 'px'
+        },
+        'class': this.wclass,
+        'attrs': {
+          'role': 'group'
+        }
+      }, list); // page mode just render list, no wraper.
 
       if (this.pagemode) {
-        return h(this.wtag, {
-          'style': {
-            'display': 'block',
-            'padding-top': paddingTop + 'px',
-            'padding-bottom': paddingBottom + 'px'
-          },
-          'class': this.wclass
-        }, list);
+        return renderList;
       }
 
       return h(this.rtag, {
@@ -531,17 +535,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         'on': {
           '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
         }
-      }, [h(this.wtag, {
-        'style': {
-          'display': 'block',
-          'padding-top': paddingTop + 'px',
-          'padding-bottom': paddingBottom + 'px'
-        },
-        'class': this.wclass,
-        'attrs': {
-          'role': 'group'
-        }
-      }, list)]);
+      }, [renderList]);
     }
   });
 });
