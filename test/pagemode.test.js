@@ -62,8 +62,6 @@ describe(theme, () => {
         }
     })
 
-
-
     it(`[${theme}] check list build success.`, () => {
         expect(wrapper.find('.for-item').exists()).toBe(true)
         expect(wrapper.find('.for-item-text').exists()).toBe(true)
