@@ -80,6 +80,6 @@ html,body {
     overflow: inherit;
 }
 .main {
-    margin-bottom: 500px
+    margin-bottom: 500px;
 }
 </style>
