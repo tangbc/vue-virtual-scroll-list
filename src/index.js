@@ -162,6 +162,7 @@
             if (this.pagemode) {
                 window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
             }
+
             if (this.start) {
                 const start = this.getZone(this.start).start
                 this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size)
@@ -522,15 +523,21 @@
             const list = this.filter(h)
             const { paddingTop, paddingBottom } = this.delta
 
+            const renderList = h(this.wtag, {
+                'style': {
+                    'display': 'block',
+                    'padding-top': paddingTop + 'px',
+                    'padding-bottom': paddingBottom + 'px'
+                },
+                'class': this.wclass,
+                'attrs': {
+                    'role': 'group'
+                }
+            }, list)
+
+            // page mode just render list, no wraper.
             if (this.pagemode) {
-                return h(this.wtag, {
-                    'style': {
-                        'display': 'block',
-                        'padding-top': paddingTop + 'px',
-                        'padding-bottom': paddingBottom + 'px'
-                    },
-                    'class': this.wclass
-                }, list)
+                return renderList
             }
 
             return h(this.rtag, {
@@ -544,17 +551,7 @@
                     '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
                 }
             }, [
-                h(this.wtag, {
-                    'style': {
-                        'display': 'block',
-                        'padding-top': paddingTop + 'px',
-                        'padding-bottom': paddingBottom + 'px'
-                    },
-                    'class': this.wclass,
-                    'attrs': {
-                        'role': 'group'
-                    }
-                }, list)
+                renderList
             ])
         }
     })
