@@ -59,6 +59,10 @@
                 type: String,
                 default: ''
             },
+            pagemode: {
+                type: Boolean,
+                default: false
+            },
             start: {
                 type: Number,
                 default: 0
@@ -155,6 +159,9 @@
         },
 
         mounted () {
+            if (this.pagemode) {
+                window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
+            }
             if (this.start) {
                 const start = this.getZone(this.start).start
                 this.setScrollTop(this.variable ? this.getVarOffset(start) : start * this.size)
@@ -163,7 +170,13 @@
             }
         },
 
-        // check if delta should update when prorps change.
+        beforeDestroy () {
+            if (this.pagemode) {
+                window.removeEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
+            }
+        },
+
+        // check if delta should update when props change.
         beforeUpdate () {
             let delta = this.delta
             delta.keeps = this.remain + (this.bench || this.remain)
@@ -199,7 +212,9 @@
             onScroll (event) {
                 let delta = this.delta
                 const vsl = this.$refs.vsl
-                const offset = (vsl.$el || vsl).scrollTop || 0
+                const offset = this.pagemode
+                    ? window.pageYOffset
+                    : (vsl.$el || vsl).scrollTop || 0
 
                 delta.direction = offset > delta.scrollTop ? 'D' : 'U'
                 delta.scrollTop = offset
@@ -432,9 +447,13 @@
 
             // set manual scroll top.
             setScrollTop (scrollTop) {
-                let vsl = this.$refs.vsl
-                if (vsl) {
-                    (vsl.$el || vsl).scrollTop = scrollTop
+                if (this.pagemode) {
+                    window.scrollTo(0, scrollTop)
+                } else {
+                    let vsl = this.$refs.vsl
+                    if (vsl) {
+                        (vsl.$el || vsl).scrollTop = scrollTop
+                    }
                 }
             },
 
@@ -472,7 +491,13 @@
                 if (paddingBottom < this.size) {
                     paddingBottom = 0
                 }
-
+                if (this.pagemode && this.$el && this.$el.parentElement) {
+                    let bodyRect = document.body.getBoundingClientRect()
+                    let elemRect = this.$el.parentElement.getBoundingClientRect()
+                    let offset = elemRect.top - bodyRect.top
+                    paddingTop -= offset
+                    if (paddingTop < 0) paddingTop = 0
+                }
                 delta.paddingTop = paddingTop
                 delta.paddingBottom = paddingBottom
                 delta.offsetAll = allHeight - this.size * this.remain
@@ -496,6 +521,17 @@
             const dbc = this.debounce
             const list = this.filter(h)
             const { paddingTop, paddingBottom } = this.delta
+
+            if (this.pagemode) {
+                return h(this.wtag, {
+                    'style': {
+                        'display': 'block',
+                        'padding-top': paddingTop + 'px',
+                        'padding-bottom': paddingBottom + 'px'
+                    },
+                    'class': this.wclass
+                }, list)
+            }
 
             return h(this.rtag, {
                 'ref': 'vsl',
