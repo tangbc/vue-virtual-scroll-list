@@ -1,6 +1,7 @@
 const path = require('path')
 const { lstatSync, readdirSync } = require('fs')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -15,6 +16,7 @@ let multiConfigs = []
 demoDirectorys.forEach((entry) => {
     const _entry = path.resolve(__dirname, entry)
     multiConfigs.push({
+        name: entry,
         entry: `${_entry}/main.js`,
         output: {
             filename: 'build.js',
@@ -43,7 +45,11 @@ module.exports = multiConfigs.map((config) => {
         },
 
         plugins: [
-            new VueLoaderPlugin()
+            new VueLoaderPlugin(),
+            new HtmlWebpackPlugin({
+                title: config.name,
+                template: path.resolve(__dirname, './demo.html')
+            })
         ],
 
         devtool: '#source-map',
