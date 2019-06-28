@@ -71,6 +71,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         type: Boolean,
         default: false
       },
+      scrollelement: {
+        type: HTMLElement,
+        default: null
+      },
       start: {
         type: Number,
         default: 0
@@ -145,6 +149,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       itemcount: function itemcount() {
         this.changeProp = 'itemcount';
         this.itemModeForceRender();
+      },
+      scrollelement: function scrollelement(newScrollelement, oldScrollelement) {
+        if (this.pagemode) return;
+        if (oldScrollelement) this.removeScrollListener(oldScrollelement);
+        if (newScrollelement) this.addScrollListener(newScrollelement);
       }
     },
     created: function created() {
@@ -179,7 +188,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     },
     mounted: function mounted() {
       if (this.pagemode) {
-        window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false);
+        this.addScrollListener(window);
+      } else if (this.scrollelement) {
+        this.addScrollListener(this.scrollelement);
       }
 
       if (this.start) {
@@ -191,7 +202,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     },
     beforeDestroy: function beforeDestroy() {
       if (this.pagemode) {
-        window.removeEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false);
+        this.removeScrollListener(window);
+      } else if (this.scrollelement) {
+        this.removeScrollListener(this.scrollelement);
       }
     },
     // check if delta should update when props change.
@@ -215,10 +228,33 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
     },
     methods: {
+      // add pagemode/scrollelement scroll event listener
+      addScrollListener: function addScrollListener(element) {
+        this.scrollHandler = this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll;
+        element.addEventListener('scroll', this.scrollHandler, false);
+      },
+      // remove pagemode/scrollelement scroll event listener
+      removeScrollListener: function removeScrollListener(element) {
+        element.removeEventListener('scroll', this.scrollHandler, false);
+      },
       onScroll: function onScroll(event) {
         var delta = this.delta;
         var vsl = this.$refs.vsl;
-        var offset = this.pagemode ? window.pageYOffset : (vsl.$el || vsl).scrollTop || 0;
+        var offset;
+
+        if (this.pagemode) {
+          var elemRect = this.$el.getBoundingClientRect();
+          offset = -elemRect.top;
+        } else if (this.scrollelement) {
+          var scrollelementRect = this.scrollelement.getBoundingClientRect();
+
+          var _elemRect = this.$el.getBoundingClientRect();
+
+          offset = scrollelementRect.top - _elemRect.top;
+        } else {
+          offset = (vsl.$el || vsl).scrollTop || 0;
+        }
+
         delta.direction = offset > delta.scrollTop ? 'D' : 'U';
         delta.scrollTop = offset;
 
@@ -431,6 +467,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       setScrollTop: function setScrollTop(scrollTop) {
         if (this.pagemode) {
           window.scrollTo(0, scrollTop);
+        } else if (this.scrollelement) {
+          this.scrollelement.scrollTo(0, scrollTop);
         } else {
           var vsl = this.$refs.vsl;
 
@@ -475,14 +513,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           paddingBottom = 0;
         }
 
-        if (this.pagemode && this.$el && this.$el.parentElement) {
-          var bodyRect = document.body.getBoundingClientRect();
-          var elemRect = this.$el.parentElement.getBoundingClientRect();
-          var offset = elemRect.top - bodyRect.top;
-          paddingTop -= offset;
-          if (paddingTop < 0) paddingTop = 0;
-        }
-
         delta.paddingTop = paddingTop;
         delta.paddingBottom = paddingBottom;
         delta.offsetAll = allHeight - this.size * this.remain;
@@ -521,7 +551,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }
       }, list); // page mode just render list, no wraper.
 
-      if (this.pagemode) {
+      if (this.pagemode || this.scrollelement) {
         return renderList;
       }
 
