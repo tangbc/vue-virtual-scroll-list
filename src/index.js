@@ -63,6 +63,10 @@
                 type: Boolean,
                 default: false
             },
+            scrollelement: {
+                type: HTMLElement,
+                default: null
+            },
             start: {
                 type: Number,
                 default: 0
@@ -133,6 +137,11 @@
             itemcount () {
                 this.changeProp = 'itemcount'
                 this.itemModeForceRender()
+            },
+            scrollelement (newScrollelement, oldScrollelement) {
+                if (this.pagemode) return
+                if (oldScrollelement) this.removeScrollListener(oldScrollelement)
+                if (newScrollelement) this.addScrollListener(newScrollelement)
             }
         },
 
@@ -160,7 +169,9 @@
 
         mounted () {
             if (this.pagemode) {
-                window.addEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
+                this.addScrollListener(window)
+            } else if (this.scrollelement) {
+                this.addScrollListener(this.scrollelement)
             }
 
             if (this.start) {
@@ -173,7 +184,9 @@
 
         beforeDestroy () {
             if (this.pagemode) {
-                window.removeEventListener('scroll', this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll, false)
+                this.removeScrollListener(window)
+            } else if (this.scrollelement) {
+                this.removeScrollListener(this.scrollelement)
             }
         },
 
@@ -210,12 +223,32 @@
         },
 
         methods: {
+            // add pagemode/scrollelement scroll event listener
+            addScrollListener (element) {
+                this.scrollHandler = this.debounce ? _debounce(this.onScroll.bind(this), this.debounce) : this.onScroll
+                element.addEventListener('scroll', this.scrollHandler, false)
+            },
+
+            // remove pagemode/scrollelement scroll event listener
+            removeScrollListener (element) {
+                element.removeEventListener('scroll', this.scrollHandler, false)
+            },
+
             onScroll (event) {
                 let delta = this.delta
                 const vsl = this.$refs.vsl
-                const offset = this.pagemode
-                    ? window.pageYOffset
-                    : (vsl.$el || vsl).scrollTop || 0
+                let offset
+
+                if (this.pagemode) {
+                    const elemRect = this.$el.getBoundingClientRect()
+                    offset = -elemRect.top
+                } else if (this.scrollelement) {
+                    const scrollelementRect = this.scrollelement.getBoundingClientRect()
+                    const elemRect = this.$el.getBoundingClientRect()
+                    offset = scrollelementRect.top - elemRect.top
+                } else {
+                    offset = (vsl.$el || vsl).scrollTop || 0
+                }
 
                 delta.direction = offset > delta.scrollTop ? 'D' : 'U'
                 delta.scrollTop = offset
@@ -450,6 +483,8 @@
             setScrollTop (scrollTop) {
                 if (this.pagemode) {
                     window.scrollTo(0, scrollTop)
+                } else if (this.scrollelement) {
+                    this.scrollelement.scrollTo(0, scrollTop)
                 } else {
                     let vsl = this.$refs.vsl
                     if (vsl) {
@@ -492,13 +527,7 @@
                 if (paddingBottom < this.size) {
                     paddingBottom = 0
                 }
-                if (this.pagemode && this.$el && this.$el.parentElement) {
-                    let bodyRect = document.body.getBoundingClientRect()
-                    let elemRect = this.$el.parentElement.getBoundingClientRect()
-                    let offset = elemRect.top - bodyRect.top
-                    paddingTop -= offset
-                    if (paddingTop < 0) paddingTop = 0
-                }
+
                 delta.paddingTop = paddingTop
                 delta.paddingBottom = paddingBottom
                 delta.offsetAll = allHeight - this.size * this.remain
@@ -536,7 +565,7 @@
             }, list)
 
             // page mode just render list, no wraper.
-            if (this.pagemode) {
+            if (this.pagemode || this.scrollelement) {
                 return renderList
             }
 
