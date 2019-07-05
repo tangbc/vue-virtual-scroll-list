@@ -72,7 +72,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         default: false
       },
       scrollelement: {
-        type: HTMLElement,
+        type: typeof window === 'undefined' ? Object : HTMLElement,
         default: null
       },
       start: {

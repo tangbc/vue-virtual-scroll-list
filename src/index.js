@@ -64,7 +64,7 @@
                 default: false
             },
             scrollelement: {
-                type: HTMLElement,
+                type: typeof window === 'undefined' ? Object : HTMLElement,
                 default: null
             },
             start: {
