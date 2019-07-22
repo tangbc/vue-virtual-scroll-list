@@ -125,11 +125,12 @@ This mode can save a considerable amount of memory and performance. Props `item`
         },
         methods: {
             getItemprops (itemIndex) {
-                const itemProps = getItemProp(itemIndex)
+                // <item/> will render with following data object:
+                // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
                 return {
-                    // <item/> will render with itemProps.
-                    // https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
-                    props: itemProps
+                    props: itemProps,
+                    attrs: itemAttrs,
+                    ...
                 }
             }
         },
@@ -261,7 +262,7 @@ Here are some usefull public methods you can call via [`ref`](https://vuejs.org/
 
 ## Contributions
 
-Welcome to improve vue-virtual-scroll-list with any issue, pull request or code review.
+Welcome to improve this vue component with any issue, pull request or code review!
 
 
 ## Changelogs
