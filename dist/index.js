@@ -319,13 +319,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         var isLast = index <= delta.total && index >= lastStart || index > delta.total;
 
         if (isLast) {
-          end = delta.total - 1;
           start = Math.max(0, lastStart);
         } else {
           start = index;
-          end = start + delta.keeps - 1;
         }
 
+        end = start + delta.keeps - 1;
         return {
           end: end,
           start: start,
