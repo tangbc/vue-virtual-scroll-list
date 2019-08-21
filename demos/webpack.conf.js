@@ -14,86 +14,86 @@ console.log('\x1b[36m', `Building demos: [ ${demoDirectorys.join(', ')} ].`, '\x
 
 let multiConfigs = []
 demoDirectorys.forEach((entry) => {
-    const _entry = path.resolve(__dirname, entry)
-    multiConfigs.push({
-        name: entry,
-        entry: `${_entry}/main.js`,
-        output: {
-            filename: 'build.js',
-            path: path.resolve(__dirname, _entry)
-        }
-    })
+  const _entry = path.resolve(__dirname, entry)
+  multiConfigs.push({
+    name: entry,
+    entry: `${_entry}/main.js`,
+    output: {
+      filename: 'build.js',
+      path: path.resolve(__dirname, _entry)
+    }
+  })
 })
 
 module.exports = multiConfigs.map((config) => {
-    return Object.assign(config, {
-        stats: 'minimal',
+  return Object.assign(config, {
+    stats: 'minimal',
 
-        watch: !isProduction,
+    watch: !isProduction,
 
-        performance: {
-            hints: false
+    performance: {
+      hints: false
+    },
+
+    mode: isProduction ? 'production' : 'development',
+
+    resolve: {
+      alias: {
+        'vue$': 'vue/dist/vue.js',
+        'vue-virtual-scroll-list': path.resolve(__dirname, '../src/index.js')
+      }
+    },
+
+    plugins: [
+      new VueLoaderPlugin(),
+      new HtmlWebpackPlugin({
+        title: config.name,
+        template: path.resolve(__dirname, './demo.html')
+      })
+    ],
+
+    devtool: '#source-map',
+
+    module: {
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
         },
-
-        mode: isProduction ? 'production' : 'development',
-
-        resolve: {
-            alias: {
-                'vue$': 'vue/dist/vue.js',
-                'vue-virtual-scroll-list': path.resolve(__dirname, '../src/index.js')
+        {
+          test: /.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
             }
+          }
         },
-
-        plugins: [
-            new VueLoaderPlugin(),
-            new HtmlWebpackPlugin({
-                title: config.name,
-                template: path.resolve(__dirname, './demo.html')
-            })
-        ],
-
-        devtool: '#source-map',
-
-        module: {
-            rules: [
-                {
-                    test: /\.vue$/,
-                    loader: 'vue-loader'
-                },
-                {
-                    test: /.js$/,
-                    exclude: /node_modules/,
-                    use: {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: ['@babel/preset-env']
-                        }
-                    }
-                },
-                {
-                    test: /\.css$/,
-                    use: [
-                        {
-                            loader: 'vue-style-loader'
-                        },
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                modules: true,
-                                localIdentName: '[local]'
-                            }
-                        }
-                    ]
-                },
-                {
-                    test: /\.less$/,
-                    use: [
-                        'vue-style-loader',
-                        'css-loader',
-                        'less-loader'
-                    ]
-                }
-            ]
+        {
+          test: /\.css$/,
+          use: [
+            {
+              loader: 'vue-style-loader'
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                localIdentName: '[local]'
+              }
+            }
+          ]
+        },
+        {
+          test: /\.less$/,
+          use: [
+            'vue-style-loader',
+            'css-loader',
+            'less-loader'
+          ]
         }
-    })
+      ]
+    }
+  })
 })

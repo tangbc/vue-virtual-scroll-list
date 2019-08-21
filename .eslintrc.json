@@ -1,37 +1,36 @@
 {
-    "extends": [
-        "standard",
-        "plugin:vue/recommended"
-    ],
-    "env": {
-        "browser": true,
-        "amd": true
-    },
-    "globals": {
-        "it": "readonly",
-        "expect": "readonly",
-        "describe": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 5,
-        "sourceType": "module"
-    },
-    "rules": {
-        "indent": ["error", 4],
-        "arrow-parens": 0,
-        "generator-star-spacing": 0,
-        "no-trailing-spaces": [ 0, { "skipBlankLines": true } ],
-        "vue/html-indent": ["error", 4, {
-            "baseIndent": 0,
-            "alignAttributesVertically": false
-        }],
-        "vue/script-indent": ["error", 4],
-        "vue/max-attributes-per-line": ["error", {
-            "singleline": 10,
-            "multiline": {
-                "max": 10,
-                "allowFirstLine": true
-            }
-        }]
-    }
+  "extends": [
+    "standard",
+    "plugin:vue/recommended"
+  ],
+  "env": {
+    "browser": true,
+    "amd": true
+  },
+  "globals": {
+    "it": "readonly",
+    "expect": "readonly",
+    "describe": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 5,
+    "sourceType": "module"
+  },
+  "rules": {
+    "arrow-parens": 0,
+    "generator-star-spacing": 0,
+    "no-trailing-spaces": [ 0, { "skipBlankLines": true } ],
+    "vue/html-indent": ["error", 2, {
+      "baseIndent": 0,
+      "alignAttributesVertically": false
+    }],
+    "vue/script-indent": ["error", 2],
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": 10,
+      "multiline": {
+        "max": 10,
+        "allowFirstLine": true
+      }
+    }]
+  }
 }

@@ -1,29 +1,29 @@
 <template>
 <div class="app">
-    <GithubCorner path="/vfor-mode" />
-    <div class="container">
-        <Header title="vfor-mode"
-            :desciption="'Build ' + items.length.toLocaleString() + ' items.'"
-            :start-index="start"
-            :on-data-change="onHeaderDataChange"
+  <GithubCorner path="/vfor-mode" />
+  <div class="container">
+    <Header title="vfor-mode"
+      :desciption="'Build ' + items.length.toLocaleString() + ' items.'"
+      :start-index="start"
+      :on-data-change="onHeaderDataChange"
+    />
+    <div class="main">
+      <virtual-list class="list"
+        :size="size"
+        :remain="remain"
+        :bench="30"
+        :start="start"
+      >
+        <item
+          v-for="item in items"
+          :key="item.index"
+          :index="item.index"
+          :height="size"
+          :info="item.info"
         />
-        <div class="main">
-            <virtual-list class="list"
-                :size="size"
-                :remain="remain"
-                :bench="30"
-                :start="start"
-            >
-                <item
-                    v-for="item in items"
-                    :key="item.index"
-                    :index="item.index"
-                    :height="size"
-                    :info="item.info"
-                />
-            </virtual-list>
-        </div>
+      </virtual-list>
     </div>
+  </div>
 </div>
 </template>
 
@@ -38,37 +38,37 @@ const itemCount = countStorage.get()
 
 let itemList = []
 for (let idx = 0; idx < itemCount; idx++) {
-    itemList.push({
-        index: idx,
-        height: itemSize,
-        info: getRandomUser()
-    })
+  itemList.push({
+    index: idx,
+    height: itemSize,
+    info: getRandomUser()
+  })
 }
 
 export default {
-    name: 'App',
+  name: 'App',
 
-    components: {
-        'item': Item,
-        'virtual-list': VirtualList
-    },
+  components: {
+    'item': Item,
+    'virtual-list': VirtualList
+  },
 
-    data () {
-        return {
-            remain,
-            start: 0,
-            size: itemSize,
-            items: itemList
-        }
-    },
-
-    methods: {
-        onHeaderDataChange (type, value) {
-            if (type === 'start') {
-                this.start = value
-            }
-        }
+  data () {
+    return {
+      remain,
+      start: 0,
+      size: itemSize,
+      items: itemList
     }
+  },
+
+  methods: {
+    onHeaderDataChange (type, value) {
+      if (type === 'start') {
+        this.start = value
+      }
+    }
+  }
 }
 </script>
 

@@ -1,25 +1,25 @@
 <p>
-    <a href="https://travis-ci.org/tangbc/vue-virtual-scroll-list">
-        <img alt="Travis CI Status" src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master"/>
-    </a>
-    <a href="https://codecov.io/gh/tangbc/vue-virtual-scroll-list">
-        <img alt="Code Coverage" src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg"/>
-    </a>
-    <a href="https://npmjs.com/package/vue-virtual-scroll-list">
-        <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
-    </a>
-    <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
-        <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
-    </a>
-    <a href="https://npmjs.com/package/vue-virtual-scroll-list">
-        <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
-    </a>
-    <a href="https://vuejs.org/">
-        <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
-    </a>
-    <a href="https://opensource.org/licenses/MIT">
-        <img alt="License" src="https://img.shields.io/npm/l/vue-virtual-scroll-list.svg">
-    </a>
+  <a href="https://travis-ci.org/tangbc/vue-virtual-scroll-list">
+    <img alt="Travis CI Status" src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master"/>
+  </a>
+  <a href="https://codecov.io/gh/tangbc/vue-virtual-scroll-list">
+    <img alt="Code Coverage" src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg"/>
+  </a>
+  <a href="https://npmjs.com/package/vue-virtual-scroll-list">
+    <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
+  </a>
+  <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
+    <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
+  </a>
+  <a href="https://npmjs.com/package/vue-virtual-scroll-list">
+    <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
+  </a>
+  <a href="https://vuejs.org/">
+    <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="License" src="https://img.shields.io/npm/l/vue-virtual-scroll-list.svg">
+  </a>
 </p>
 
 ## Table of contents
@@ -28,12 +28,12 @@
 * [Live demos](#live-demos)
 * [How it works](#how-it-works)
 * [Simple usage](#simple-usage)
-    * [vfor-mode](#vfor-mode)
-    * [item-mode](#item-mode)
-    * [variable height](#variable-height)
+  * [vfor-mode](#vfor-mode)
+  * [item-mode](#item-mode)
+  * [variable height](#variable-height)
 * [Performance comparison](#performance-comparison)
-    * [Build time wasted](#build-time-wasted)
-    * [Total memory used](#total-memory-used)
+  * [Build time wasted](#build-time-wasted)
+  * [Total memory used](#total-memory-used)
 * [Attentions](#attentions)
 * [**Props type**](#props-type)
 * [Public methods](#public-methods)
@@ -80,23 +80,23 @@ All you need to care about is only data!
 
 ```vue
 <template>
-    <div>
-        <virtual-list :size="40" :remain="8">
-            <item v-for="item of items" :key="item.id" />
-        </virtual-list>
-    </div>
+  <div>
+    <virtual-list :size="40" :remain="8">
+      <item v-for="item of items" :key="item.id" />
+    </virtual-list>
+  </div>
 </template>
 <script>
-    import item from '../item.vue'
-    import virtualList from 'vue-virtual-scroll-list'
-    export default {
-        data () {
-            return {
-                items: [ {id: 1}, {id: 2}, {id: 3}, ... ]
-            }
-        },
-        components: { item, 'virtual-list': virtualList }
-    }
+  import item from '../item.vue'
+  import virtualList from 'vue-virtual-scroll-list'
+  export default {
+    data () {
+      return {
+        items: [ {id: 1}, {id: 2}, {id: 3}, ... ]
+      }
+    },
+    components: { item, 'virtual-list': virtualList }
+  }
 </script>
 ```
 
@@ -106,36 +106,36 @@ This mode can save a considerable amount of memory and performance. Props `item`
 
 ```vue
 <template>
-    <div>
-        <virtual-list :size="40" :remain="8"
-            :item="item"
-            :itemcount="100000"
-            :itemprops="getItemprops"
-        />
-    </div>
+  <div>
+    <virtual-list :size="40" :remain="8"
+      :item="item"
+      :itemcount="100000"
+      :itemprops="getItemprops"
+    />
+  </div>
 </template>
 <script>
-    import itemComponent from '../item.vue'
-    import virtualList from 'vue-virtual-scroll-list'
-    export default {
-        data () {
-            return {
-                item: itemComponent,
-            }
-        },
-        methods: {
-            getItemprops (itemIndex) {
-                // <item/> will render with following data object:
-                // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
-                return {
-                    props: itemProps,
-                    attrs: itemAttrs,
-                    ...
-                }
-            }
-        },
-        components: { 'virtual-list': virtualList }
-    }
+  import itemComponent from '../item.vue'
+  import virtualList from 'vue-virtual-scroll-list'
+  export default {
+    data () {
+      return {
+        item: itemComponent,
+      }
+    },
+    methods: {
+      getItemprops (itemIndex) {
+        // <item/> will render with following data object:
+        // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
+        return {
+          props: itemProps,
+          attrs: itemAttrs,
+          ...
+        }
+      }
+    },
+    components: { 'virtual-list': virtualList }
+  }
 </script>
 
 ```
@@ -149,11 +149,11 @@ Using variable height, props `remain` and `size` is still required. All the inde
 If you assign `variable` as `true`, **do not** set inline style height inside `<item/>` component, you **must** set inline style height on `<item/>` component outside directly, such as:
 ```vue
 <template>
-    <div>
-        <virtual-list :size="40" :remain="8" :variable="true">
-            <item v-for="item of items" :key="item.id" :style="{ height: item.height + 'px' }" />
-        </virtual-list>
-    </div>
+  <div>
+    <virtual-list :size="40" :remain="8" :variable="true">
+      <item v-for="item of items" :key="item.id" :style="{ height: item.height + 'px' }" />
+    </virtual-list>
+  </div>
 </template>
 ```
 

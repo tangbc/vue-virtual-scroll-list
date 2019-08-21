@@ -1,27 +1,27 @@
 <template>
 <div class="app">
-    <GithubCorner path="/variable-height" />
-    <div class="container">
-        <Header title="variable-height"
-            :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
-            :start-index="start"
-            :on-data-change="onHeaderDataChange"
-        />
-        <div class="main">
-            <virtual-list class="list"
-                :size="size"
-                :remain="remain"
-                :bench="30"
-                :start="start"
+  <GithubCorner path="/variable-height" />
+  <div class="container">
+    <Header title="variable-height"
+      :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
+      :start-index="start"
+      :on-data-change="onHeaderDataChange"
+    />
+    <div class="main">
+      <virtual-list class="list"
+        :size="size"
+        :remain="remain"
+        :bench="30"
+        :start="start"
 
-                :variable="getVariableHeight"
+        :variable="getVariableHeight"
 
-                :item="item"
-                :itemcount="itemCount"
-                :itemprops="getItemProps"
-            />
-        </div>
+        :item="item"
+        :itemcount="itemCount"
+        :itemprops="getItemProps"
+      />
     </div>
+  </div>
 </div>
 </template>
 
@@ -36,52 +36,52 @@ const itemCount = countStorage.get()
 
 let userInfoList = []
 for (let i = 0; i < itemCount; i++) {
-    userInfoList.push({
-        info: getRandomUser(),
-        vHeight: getRandomHeight()
-    })
+  userInfoList.push({
+    info: getRandomUser(),
+    vHeight: getRandomHeight()
+  })
 }
 
 export default {
-    name: 'App',
+  name: 'App',
 
-    components: {
-        'virtual-list': VirtualList
-    },
+  components: {
+    'virtual-list': VirtualList
+  },
 
-    data () {
-        return {
-            remain,
-            start: 0,
-            size: itemSize,
-            item: Item,
-            itemCount: itemCount
-        }
-    },
-
-    methods: {
-        getItemProps (itemIndex) {
-            return {
-                key: itemIndex,
-                props: {
-                    variable: true,
-                    index: itemIndex,
-                    height: userInfoList[itemIndex].vHeight,
-                    info: userInfoList[itemIndex].info || {}
-                }
-            }
-        },
-
-        getVariableHeight (itemIndex) {
-            return userInfoList[itemIndex].vHeight
-        },
-
-        onHeaderDataChange (type, value) {
-            if (type === 'start') {
-                this.start = value
-            }
-        }
+  data () {
+    return {
+      remain,
+      start: 0,
+      size: itemSize,
+      item: Item,
+      itemCount: itemCount
     }
+  },
+
+  methods: {
+    getItemProps (itemIndex) {
+      return {
+        key: itemIndex,
+        props: {
+          variable: true,
+          index: itemIndex,
+          height: userInfoList[itemIndex].vHeight,
+          info: userInfoList[itemIndex].info || {}
+        }
+      }
+    },
+
+    getVariableHeight (itemIndex) {
+      return userInfoList[itemIndex].vHeight
+    },
+
+    onHeaderDataChange (type, value) {
+      if (type === 'start') {
+        this.start = value
+      }
+    }
+  }
 }
 </script>
 

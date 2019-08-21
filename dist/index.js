@@ -151,9 +151,17 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         this.itemModeForceRender();
       },
       scrollelement: function scrollelement(newScrollelement, oldScrollelement) {
-        if (this.pagemode) return;
-        if (oldScrollelement) this.removeScrollListener(oldScrollelement);
-        if (newScrollelement) this.addScrollListener(newScrollelement);
+        if (this.pagemode) {
+          return;
+        }
+
+        if (oldScrollelement) {
+          this.removeScrollListener(oldScrollelement);
+        }
+
+        if (newScrollelement) {
+          this.addScrollListener(newScrollelement);
+        }
       }
     },
     created: function created() {
