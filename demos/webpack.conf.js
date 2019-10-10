@@ -8,13 +8,14 @@ const isProduction = process.env.NODE_ENV === 'production'
 const isDirectory = (source) => lstatSync(source).isDirectory()
 const getDirectories = (source) => readdirSync(source).map((name) => path.join(source, name)).filter(isDirectory)
 const isDemoDirectory = (source) => !['dev', 'common'].includes(source)
-const demoDirectorys = getDirectories('demos').map((demo) => demo.split('/').pop()).filter(isDemoDirectory)
+const demoDirectorys = getDirectories('demos').map((demo) => demo.split('/').pop()).filter(isDemoDirectory).filter(v => !v.includes('common'))
 
 console.log('\x1b[36m', `Building demos: [ ${demoDirectorys.join(', ')} ].`, '\x1b[0m')
 
 let multiConfigs = []
 demoDirectorys.forEach((entry) => {
-  const _entry = path.resolve(__dirname, entry)
+  const _entry = path.resolve(__dirname, '../', entry)
+  // console.log('\x1b[36m', `_entry: [ ${_entry} ].`, '\x1b[0m')
   multiConfigs.push({
     name: entry,
     entry: `${_entry}/main.js`,
