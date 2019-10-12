@@ -509,7 +509,7 @@
         const slots = this.$slots.default || []
 
         // item-mode shoud judge from items prop.
-        if (this.item) {
+        if (this.item || this.$scopedSlots.default) {
           delta.total = this.itemcount
           if (delta.keeps > delta.total) {
             delta.end = delta.total - 1
