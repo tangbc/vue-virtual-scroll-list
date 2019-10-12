@@ -545,7 +545,9 @@
         let renders = []
         for (let i = delta.start; i < delta.total && i <= Math.ceil(delta.end); i++) {
           let slot = null
-          if (this.item) {
+          if (this.$scopedSlots.default) {
+            slot = this.$scopedSlots.default(i)
+          } else if (this.item) {
             slot = h(this.item, this.itemprops(i))
           } else {
             slot = slots[i]

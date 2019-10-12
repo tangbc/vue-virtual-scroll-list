@@ -28,16 +28,25 @@
             </thead>
           </table>
         </div>
+        <!-- :item="item"
+          :itemprops="getItemProps" -->
         <virtual-list
           :size="size"
           :remain="remain"
           :bench="30"
           :start="start"
           :isTable="true"
-          :item="item"
           :itemcount="itemCount"
-          :itemprops="getItemProps"
-        />
+        >
+          <template v-slot="targetIndex">
+            <item
+              :key="targetIndex"
+              :height="getItemProps(targetIndex).props.height"
+              :index="getItemProps(targetIndex).props.index"
+              :info="getItemProps(targetIndex).props.info"
+            ></item>
+          </template>
+        </virtual-list>
       </div>
     </div>
   </div>
@@ -91,9 +100,9 @@ const keys = Object.keys(userInfoList[0])
 const columnsLength = keys.length
 export default {
   name: 'App',
-
   components: {
-    'virtual-list': VirtualList
+    'virtual-list': VirtualList,
+    'item': Item,
   },
 
   data() {
