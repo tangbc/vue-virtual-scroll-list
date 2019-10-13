@@ -99,8 +99,12 @@
         type: [Function, Boolean], // Boolean just disable for priviate.
         default: false
       },
+      isTable: {
+        type: Boolean,
+        default: false
+      },
       item: {
-        type: Object,
+        type: [Function, Object],
         default: null
       },
       itemcount: {
@@ -505,7 +509,7 @@
         const slots = this.$slots.default || []
 
         // item-mode shoud judge from items prop.
-        if (this.item) {
+        if (this.item || this.$scopedSlots.default) {
           delta.total = this.itemcount
           if (delta.keeps > delta.total) {
             delta.end = delta.total - 1
@@ -541,7 +545,9 @@
         let renders = []
         for (let i = delta.start; i < delta.total && i <= Math.ceil(delta.end); i++) {
           let slot = null
-          if (this.item) {
+          if (this.$scopedSlots.default) {
+            slot = this.$scopedSlots.default(i)
+          } else if (this.item) {
             slot = h(this.item, this.itemprops(i))
           } else {
             slot = slots[i]
@@ -555,10 +561,16 @@
 
     render (h) {
       const dbc = this.debounce
-      const list = this.filter(h)
+      let list = this.filter(h)
       const { paddingTop, paddingBottom } = this.delta
 
-      const renderList = h(this.wtag, {
+      const isTable = this.isTable
+      const wtag = isTable ? 'div' : this.wtag
+      const rtag = isTable ? 'div' : this.rtag
+      if (isTable) {
+        list = [h('table', [h('tbody', list)])]
+      }
+      const renderList = h(wtag, {
         'style': {
           'display': 'block',
           'padding-top': paddingTop + 'px',
@@ -575,7 +587,7 @@
         return renderList
       }
 
-      return h(this.rtag, {
+      return h(rtag, {
         'ref': 'vsl',
         'style': {
           'display': 'block',
