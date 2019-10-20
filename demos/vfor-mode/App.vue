@@ -36,7 +36,7 @@ const remain = 6
 const itemSize = 80
 const itemCount = countStorage.get()
 
-let itemList = []
+const itemList = []
 for (let idx = 0; idx < itemCount; idx++) {
   itemList.push({
     index: idx,
@@ -49,7 +49,7 @@ export default {
   name: 'App',
 
   components: {
-    'item': Item,
+    item: Item,
     'virtual-list': VirtualList
   },
 

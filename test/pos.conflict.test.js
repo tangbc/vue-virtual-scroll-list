@@ -51,7 +51,7 @@ describe(theme, () => {
     computed: {
       itemStyle () {
         return {
-          'height': this.size + 'px',
+          height: this.size + 'px',
           'line-height': this.size + 'px'
         }
       }

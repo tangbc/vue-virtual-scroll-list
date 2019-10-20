@@ -29,7 +29,7 @@ export default {
 
   computed: {
     url () {
-      return `https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos` + (this.path || '')
+      return 'https://github.com/tangbc/vue-virtual-scroll-list/tree/master/demos' + (this.path || '')
     }
   }
 }

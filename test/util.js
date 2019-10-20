@@ -1,5 +1,5 @@
 export function getIndexList (count) {
-  let list = []
+  const list = []
   for (let i = 0; i < count; i++) {
     list.push('#' + i)
   }
@@ -8,7 +8,7 @@ export function getIndexList (count) {
 
 const vars = [40, 50, 80, 100, 140, 160]
 export function getVariableList (count) {
-  let list = []
+  const list = []
   for (let i = 0; i < count; i++) {
     list.push({
       text: '#' + i,

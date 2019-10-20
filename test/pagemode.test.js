@@ -13,7 +13,7 @@ describe(theme, () => {
   const listCount = 1000
   const spy = sinon.stub()
 
-  let windowScrollTo = window.scrollTo
+  const windowScrollTo = window.scrollTo
 
   const wrapper = mount({
     template: `

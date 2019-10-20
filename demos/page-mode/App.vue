@@ -31,7 +31,7 @@ const remain = 17
 const itemSize = 80
 const itemCount = countStorage.get()
 
-let userInfoList = []
+const userInfoList = []
 for (let i = 0; i < itemCount; i++) {
   userInfoList.push(getRandomUser())
 }
