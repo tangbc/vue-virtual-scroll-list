@@ -62,7 +62,7 @@ export default {
   computed: {
     itemStyle () {
       return {
-        'height': `${this.height}px`,
+        height: `${this.height}px`,
         'line-height': `${this.height}px`
       }
     }

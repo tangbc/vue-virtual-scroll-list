@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "standard",
-    "plugin:vue/recommended"
-  ],
+  "extends": ["standard", "plugin:vue/recommended"],
   "env": {
     "browser": true,
     "amd": true
@@ -13,24 +10,31 @@
     "describe": "readonly"
   },
   "parserOptions": {
-    "ecmaVersion": 5,
+    "ecmaVersion": 6,
     "sourceType": "module"
   },
   "rules": {
     "arrow-parens": 0,
     "generator-star-spacing": 0,
-    "no-trailing-spaces": [ 0, { "skipBlankLines": true } ],
-    "vue/html-indent": ["error", 2, {
-      "baseIndent": 0,
-      "alignAttributesVertically": false
-    }],
-    "vue/script-indent": ["error", 2],
-    "vue/max-attributes-per-line": ["error", {
-      "singleline": 10,
-      "multiline": {
-        "max": 10,
-        "allowFirstLine": true
+    "no-trailing-spaces": [0, { "skipBlankLines": true }],
+    "vue/html-indent": [
+      "error",
+      2,
+      {
+        "baseIndent": 0,
+        "alignAttributesVertically": false
       }
-    }]
+    ],
+    "vue/script-indent": ["error", 2],
+    "vue/max-attributes-per-line": [
+      "error",
+      {
+        "singleline": 10,
+        "multiline": {
+          "max": 10,
+          "allowFirstLine": true
+        }
+      }
+    ]
   }
 }

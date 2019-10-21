@@ -11,12 +11,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   } else if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object') {
     exports[namespace] = factory(namespace, require('vue'));
   } else {
-    root[namespace] = factory(namespace, root['Vue']);
+    root[namespace] = factory(namespace, root.Vue);
   }
 })(this, function (namespace, Vue) {
   /* istanbul ignore next */
-  if (_typeof(Vue) === 'object' && typeof Vue.default === 'function') {
-    Vue = Vue.default;
+  if (_typeof(Vue) === 'object' && typeof Vue["default"] === 'function') {
+    Vue = Vue["default"];
   }
   /* istanbul ignore next */
 
@@ -57,73 +57,73 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       rtag: {
         type: String,
-        default: 'div'
+        "default": 'div'
       },
       wtag: {
         type: String,
-        default: 'div'
+        "default": 'div'
       },
       wclass: {
         type: String,
-        default: ''
+        "default": ''
       },
       pagemode: {
         type: Boolean,
-        default: false
+        "default": false
       },
       scrollelement: {
         type: typeof window === 'undefined' ? Object : HTMLElement,
-        default: null
+        "default": null
       },
       start: {
         type: Number,
-        default: 0
+        "default": 0
       },
       offset: {
         type: Number,
-        default: 0
+        "default": 0
       },
       variable: {
         type: [Function, Boolean],
-        default: false
+        "default": false
       },
       bench: {
         type: Number,
-        default: 0 // also equal to remain
+        "default": 0 // also equal to remain
 
       },
       debounce: {
         type: Number,
-        default: 0
+        "default": 0
       },
       totop: {
         type: [Function, Boolean],
         // Boolean just disable for priviate.
-        default: false
+        "default": false
       },
       tobottom: {
         type: [Function, Boolean],
         // Boolean just disable for priviate.
-        default: false
+        "default": false
       },
       onscroll: {
         type: [Function, Boolean],
         // Boolean just disable for priviate.
-        default: false
+        "default": false
       },
       item: {
         type: Object,
-        default: null
+        "default": null
       },
       itemcount: {
         type: Number,
-        default: 0
+        "default": 0
       },
       itemprops: {
         type: Function,
 
         /* istanbul ignore next */
-        default: function _default() {}
+        "default": function _default() {}
       }
     },
     // use changeProp to identify which prop change.
@@ -319,7 +319,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       // return the right zone info base on `start/index`.
       getZone: function getZone(index) {
-        var start, end;
+        var start;
         var delta = this.delta;
         index = parseInt(index, 10);
         index = Math.max(0, index);
@@ -332,9 +332,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           start = index;
         }
 
-        end = start + delta.keeps - 1;
         return {
-          end: end,
+          end: start + delta.keeps - 1,
           start: start,
           isLast: isLast
         };
@@ -418,7 +417,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         } else {
           // when using item, it can only get current components height,
           // need to be enhanced, or consider using variable-function instead
-          var slot = this.item ? this.$children[index] ? this.$children[index].$vnode : null : this.$slots.default[index];
+          var slot = this.item ? this.$children[index] ? this.$children[index].$vnode : null : this.$slots["default"][index];
           var style = slot && slot.data && slot.data.style;
 
           if (style && style.height) {
@@ -487,7 +486,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       // filter the shown items base on `start` and `end`.
       filter: function filter(h) {
         var delta = this.delta;
-        var slots = this.$slots.default || []; // item-mode shoud judge from items prop.
+        var slots = this.$slots["default"] || []; // item-mode shoud judge from items prop.
 
         if (this.item) {
           delta.total = this.itemcount;
@@ -547,14 +546,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           paddingTop = _this$delta.paddingTop,
           paddingBottom = _this$delta.paddingBottom;
       var renderList = h(this.wtag, {
-        'style': {
-          'display': 'block',
+        style: {
+          display: 'block',
           'padding-top': paddingTop + 'px',
           'padding-bottom': paddingBottom + 'px'
         },
-        'class': this.wclass,
-        'attrs': {
-          'role': 'group'
+        "class": this.wclass,
+        attrs: {
+          role: 'group'
         }
       }, list); // page mode just render list, no wraper.
 
@@ -563,13 +562,13 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       return h(this.rtag, {
-        'ref': 'vsl',
-        'style': {
-          'display': 'block',
-          'overflow-y': 'auto',
-          'height': this.size * this.remain + 'px'
+        ref: 'vsl',
+        style: {
+          display: 'block',
+          'overflow-y': this.size >= this.remain ? 'auto' : 'inital',
+          height: this.size * this.remain + 'px'
         },
-        'on': {
+        on: {
           '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
         }
       }, [renderList]);
