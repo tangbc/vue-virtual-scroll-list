@@ -8,7 +8,7 @@
   } else if (typeof exports === 'object') {
     exports[namespace] = factory(namespace, require('vue'))
   } else {
-    root[namespace] = factory(namespace, root['Vue'])
+    root[namespace] = factory(namespace, root.Vue)
   }
 })(this, function (namespace, Vue) {
   /* istanbul ignore next */
@@ -159,7 +159,7 @@
       const start = this.start >= this.remain ? this.start : 0
       const keeps = this.remain + (this.bench || this.remain)
 
-      let delta = Object.create(null)
+      const delta = Object.create(null)
 
       delta.direction = '' // current scroll direction, D: down, U: up.
       delta.scrollTop = 0 // current scroll top, use to direction.
@@ -202,7 +202,7 @@
 
     // check if delta should update when props change.
     beforeUpdate () {
-      let delta = this.delta
+      const delta = this.delta
       delta.keeps = this.remain + (this.bench || this.remain)
 
       const calcstart = this.changeProp === 'start' ? this.start : delta.start
@@ -245,7 +245,7 @@
       },
 
       onScroll (event) {
-        let delta = this.delta
+        const delta = this.delta
         const vsl = this.$refs.vsl
         let offset
 
@@ -271,7 +271,7 @@
 
         const offsetAll = delta.offsetAll
         if (this.onscroll) {
-          let param = Object.create(null)
+          const param = Object.create(null)
           param.offset = offset
           param.offsetAll = offsetAll
           param.start = delta.start
@@ -290,7 +290,7 @@
 
       // update render zone by scroll offset.
       updateZone (offset) {
-        let delta = this.delta
+        const delta = this.delta
         let overs = this.variable
           ? this.getVarOvers(offset)
           : Math.floor(offset / this.size)
@@ -328,7 +328,7 @@
 
       // return the right zone info base on `start/index`.
       getZone (index) {
-        let start, end
+        let start
         const delta = this.delta
 
         index = parseInt(index, 10)
@@ -336,16 +336,15 @@
 
         const lastStart = delta.total - delta.keeps
         const isLast = (index <= delta.total && index >= lastStart) || (index > delta.total)
+
         if (isLast) {
           start = Math.max(0, lastStart)
         } else {
           start = index
         }
 
-        end = start + delta.keeps - 1
-
         return {
-          end,
+          end: start + delta.keeps - 1,
           start,
           isLast
         }
@@ -371,7 +370,7 @@
         let low = 0
         let middle = 0
         let middleOffset = 0
-        let delta = this.delta
+        const delta = this.delta
         let high = delta.total
 
         while (low <= high) {
@@ -397,7 +396,7 @@
 
       // return a variable scroll offset from given index.
       getVarOffset (index, nocache) {
-        let delta = this.delta
+        const delta = this.delta
         const cache = delta.varCache[index]
 
         if (!nocache && cache) {
@@ -496,7 +495,7 @@
         } else if (this.scrollelement) {
           this.scrollelement.scrollTo(0, scrollTop)
         } else {
-          let vsl = this.$refs.vsl
+          const vsl = this.$refs.vsl
           if (vsl) {
             (vsl.$el || vsl).scrollTop = scrollTop
           }
@@ -505,7 +504,7 @@
 
       // filter the shown items base on `start` and `end`.
       filter (h) {
-        let delta = this.delta
+        const delta = this.delta
         const slots = this.$slots.default || []
 
         // item-mode shoud judge from items prop.
@@ -542,7 +541,7 @@
         delta.paddingBottom = paddingBottom
         delta.offsetAll = allHeight - this.size * this.remain
 
-        let renders = []
+        const renders = []
         for (let i = delta.start; i < delta.total && i <= Math.ceil(delta.end); i++) {
           let slot = null
           if (this.$scopedSlots.default) {
@@ -576,9 +575,9 @@
           'padding-top': paddingTop + 'px',
           'padding-bottom': paddingBottom + 'px'
         },
-        'class': this.wclass,
-        'attrs': {
-          'role': 'group'
+        class: this.wclass,
+        attrs: {
+          role: 'group'
         }
       }, list)
 
@@ -594,7 +593,7 @@
           'overflow-y': 'auto',
           'height': this.size * this.remain + 'px'
         },
-        'on': {
+        on: {
           '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
         }
       }, [

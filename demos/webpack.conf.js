@@ -12,7 +12,8 @@ const demoDirectorys = getDirectories('demos').map((demo) => demo.split('/').pop
 
 console.log('\x1b[36m', `Building demos: [ ${demoDirectorys.join(', ')} ].`, '\x1b[0m')
 
-let multiConfigs = []
+const multiConfigs = []
+
 demoDirectorys.forEach((entry) => {
   const _entry = path.resolve(__dirname, entry)
   multiConfigs.push({
@@ -39,7 +40,7 @@ module.exports = multiConfigs.map((config) => {
 
     resolve: {
       alias: {
-        'vue$': 'vue/dist/vue.js',
+        vue$: 'vue/dist/vue.js',
         'vue-virtual-scroll-list': path.resolve(__dirname, '../src/index.js')
       }
     },
@@ -79,8 +80,9 @@ module.exports = multiConfigs.map((config) => {
             {
               loader: 'css-loader',
               options: {
-                modules: true,
-                localIdentName: '[local]'
+                modules: {
+                  localIdentName: '[local]'
+                }
               }
             }
           ]

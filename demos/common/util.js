@@ -159,7 +159,7 @@ const skinColorArr = [
 
 export const getRandomAvatar = () => {
   return 'https://avataaars.io/?' + [
-    `avatarStyle=Transparent`,
+    'avatarStyle=Transparent',
     `topType=${Random.pick(topTypeArr)}`,
     `accessoriesType=${Random.pick(accessoriesTypeArr)}`,
     `hatColor=${Random.pick(facialHairTypeArr)}`,
