@@ -587,11 +587,11 @@
       }
 
       return h(rtag, {
-        'ref': 'vsl',
-        'style': {
-          'display': 'block',
-          'overflow-y': 'auto',
-          'height': this.size * this.remain + 'px'
+        ref: 'vsl',
+        style: {
+          display: 'block',
+          'overflow-y': this.size >= this.remain ? 'auto' : 'inital',
+          height: this.size * this.remain + 'px'
         },
         on: {
           '&scroll': dbc ? _debounce(this.onScroll.bind(this), dbc) : this.onScroll
