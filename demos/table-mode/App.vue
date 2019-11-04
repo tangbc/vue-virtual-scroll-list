@@ -39,7 +39,7 @@
           :isTable="true"
           :itemcount="itemCount"
         >
-          <template v-slot="targetIndex">
+          <template v-slot:item="targetIndex">
             <item
               :key="targetIndex"
               :height="getItemProps(targetIndex).props.height"
