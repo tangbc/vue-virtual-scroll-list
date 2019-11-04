@@ -111,8 +111,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         // Boolean just disable for priviate.
         "default": false
       },
+      isTable: {
+        type: Boolean,
+        "default": false
+      },
       item: {
-        type: Object,
+        type: [Function, Object],
         "default": null
       },
       itemcount: {
@@ -488,7 +492,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         var delta = this.delta;
         var slots = this.$slots["default"] || []; // item-mode shoud judge from items prop.
 
-        if (this.item) {
+        if (this.item || this.$scopedSlots.item) {
           delta.total = this.itemcount;
 
           if (delta.keeps > delta.total) {
@@ -527,7 +531,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         for (var i = delta.start; i < delta.total && i <= Math.ceil(delta.end); i++) {
           var slot = null;
 
-          if (this.item) {
+          if (this.$scopedSlots.item) {
+            slot = this.$scopedSlots.item(i);
+          } else if (this.item) {
             slot = h(this.item, this.itemprops(i));
           } else {
             slot = slots[i];
@@ -545,7 +551,15 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var _this$delta = this.delta,
           paddingTop = _this$delta.paddingTop,
           paddingBottom = _this$delta.paddingBottom;
-      var renderList = h(this.wtag, {
+      var isTable = this.isTable;
+      var wtag = isTable ? 'div' : this.wtag;
+      var rtag = isTable ? 'div' : this.rtag;
+
+      if (isTable) {
+        list = [h('table', [h('tbody', list)])];
+      }
+
+      var renderList = h(wtag, {
         style: {
           display: 'block',
           'padding-top': paddingTop + 'px',
@@ -561,7 +575,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         return renderList;
       }
 
-      return h(this.rtag, {
+      return h(rtag, {
         ref: 'vsl',
         style: {
           display: 'block',
