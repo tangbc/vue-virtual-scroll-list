@@ -38,7 +38,7 @@
         :remain="remain"
         :bench="30"
         :start="start"
-        :is-table="true"
+        :istable="true"
         :itemcount="itemCount"
       >
         <template v-slot:item="targetIndex">
