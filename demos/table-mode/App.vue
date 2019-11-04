@@ -1,63 +1,64 @@
 <template>
-  <div class="app">
-    <GithubCorner path="/item-mode" />
-    <div class="container">
-      <Header
-        title="table-mode"
-        :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
-        :start-index="start"
-        :on-data-change="onHeaderDataChange"
-      />
-      <div class="main my-table">
-        <div>
-          <table
-            cellspacing="0"
-            cellpadding="0"
-          >
-            <colgroup>
-              <col :span="columnsLength" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th
-                  v-for="key in keys"
-                  :key="key"
-                  :title="key"
-                >{{key}}</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <!-- old item mode usage -->
-        <!-- :item="item"
-          :itemprops="getItemProps" -->
-        <virtual-list
-          :size="size"
-          :remain="remain"
-          :bench="30"
-          :start="start"
-          :isTable="true"
-          :itemcount="itemCount"
+<div class="app">
+  <GithubCorner path="/item-mode" />
+  <div class="container">
+    <Header
+      title="table-mode"
+      :desciption="'Build ' + itemCount.toLocaleString() + ' items.'"
+      :start-index="start"
+      :on-data-change="onHeaderDataChange"
+    />
+    <div class="main my-table">
+      <div>
+        <table
+          cellspacing="0"
+          cellpadding="0"
         >
-          <template v-slot:item="targetIndex">
-            <item
-              :key="targetIndex"
-              :height="getItemProps(targetIndex).props.height"
-              :index="getItemProps(targetIndex).props.index"
-              :info="getItemProps(targetIndex).props.info"
-            ></item>
-          </template>
-        </virtual-list>
+          <colgroup>
+            <col :span="columnsLength">
+          </colgroup>
+          <thead>
+            <tr>
+              <th
+                v-for="key in keys"
+                :key="key"
+                :title="key"
+              >
+                {{ key }}
+              </th>
+            </tr>
+          </thead>
+        </table>
       </div>
+      <!-- old item mode usage -->
+      <!-- :item="item"
+          :itemprops="getItemProps" -->
+      <virtual-list
+        :size="size"
+        :remain="remain"
+        :bench="30"
+        :start="start"
+        :is-table="true"
+        :itemcount="itemCount"
+      >
+        <template v-slot:item="targetIndex">
+          <item
+            :key="targetIndex"
+            :height="getItemProps(targetIndex).props.height"
+            :index="getItemProps(targetIndex).props.index"
+            :info="getItemProps(targetIndex).props.info"
+          />
+        </template>
+      </virtual-list>
     </div>
   </div>
+</div>
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from 'vue'
 import VirtualList from 'vue-virtual-scroll-list'
 import { countStorage, getRandomUser } from '../common/util'
-
 
 const Item = Vue.extend({
   props: {
@@ -72,18 +73,18 @@ const Item = Vue.extend({
     height: {
       type: Number,
       default: 0
-    },
+    }
   },
   computed: {
-    itemStyle() {
+    itemStyle () {
       return {
-        'height': `${this.height}px`,
+        height: `${this.height}px`,
         'line-height': `${this.height}px`
       }
     }
   },
-  render(h) {
-    const { info, index, itemStyle } = this;
+  render (h) {
+    const { info, index, itemStyle } = this
     const tds = Object.values(info).map(v => h('td', `(${index})--${v}`))
     return h('tr', { style: itemStyle }, tds)
   }
@@ -93,7 +94,7 @@ const remain = 20
 const itemSize = 20
 const itemCount = countStorage.get()
 
-let userInfoList = []
+const userInfoList = []
 for (let i = 0; i < itemCount; i++) {
   userInfoList.push(getRandomUser())
 }
@@ -103,10 +104,10 @@ export default {
   name: 'App',
   components: {
     'virtual-list': VirtualList,
-    'item': Item,
+    item: Item
   },
 
-  data() {
+  data () {
     return {
       remain,
       start: 0,
@@ -119,7 +120,7 @@ export default {
   },
 
   methods: {
-    getItemProps(itemIndex) {
+    getItemProps (itemIndex) {
       return {
         key: itemIndex,
         props: {
@@ -130,7 +131,7 @@ export default {
       }
     },
 
-    onHeaderDataChange(type, value) {
+    onHeaderDataChange (type, value) {
       if (type === 'start') {
         this.start = value
       }

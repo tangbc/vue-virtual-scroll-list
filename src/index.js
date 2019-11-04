@@ -570,8 +570,8 @@
         list = [h('table', [h('tbody', list)])]
       }
       const renderList = h(wtag, {
-        'style': {
-          'display': 'block',
+        style: {
+          display: 'block',
           'padding-top': paddingTop + 'px',
           'padding-bottom': paddingBottom + 'px'
         },
