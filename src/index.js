@@ -99,7 +99,7 @@
         type: [Function, Boolean], // Boolean just disable for priviate.
         default: false
       },
-      isTable: {
+      istable: {
         type: Boolean,
         default: false
       },
@@ -563,10 +563,10 @@
       let list = this.filter(h)
       const { paddingTop, paddingBottom } = this.delta
 
-      const isTable = this.isTable
-      const wtag = isTable ? 'div' : this.wtag
-      const rtag = isTable ? 'div' : this.rtag
-      if (isTable) {
+      const istable = this.istable
+      const wtag = istable ? 'div' : this.wtag
+      const rtag = istable ? 'div' : this.rtag
+      if (istable) {
         list = [h('table', [h('tbody', list)])]
       }
       const renderList = h(wtag, {

@@ -111,7 +111,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         // Boolean just disable for priviate.
         "default": false
       },
-      isTable: {
+      istable: {
         type: Boolean,
         "default": false
       },
@@ -551,11 +551,11 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var _this$delta = this.delta,
           paddingTop = _this$delta.paddingTop,
           paddingBottom = _this$delta.paddingBottom;
-      var isTable = this.isTable;
-      var wtag = isTable ? 'div' : this.wtag;
-      var rtag = isTable ? 'div' : this.rtag;
+      var istable = this.istable;
+      var wtag = istable ? 'div' : this.wtag;
+      var rtag = istable ? 'div' : this.rtag;
 
-      if (isTable) {
+      if (istable) {
         list = [h('table', [h('tbody', list)])];
       }
 
