@@ -88,15 +88,15 @@
         default: 0
       },
       totop: {
-        type: [Function, Boolean], // Boolean just disable for priviate.
+        type: [Function, Boolean],
         default: false
       },
       tobottom: {
-        type: [Function, Boolean], // Boolean just disable for priviate.
+        type: [Function, Boolean],
         default: false
       },
       onscroll: {
-        type: [Function, Boolean], // Boolean just disable for priviate.
+        type: [Function, Boolean], // Boolean disables default behavior
         default: false
       },
       istable: {
@@ -118,7 +118,7 @@
       }
     },
 
-    // use changeProp to identify which prop change.
+    // use changeProp to identify the prop change.
     watch: {
       size () {
         this.changeProp = 'size'
@@ -303,8 +303,8 @@
         const zone = this.getZone(overs)
         const bench = this.bench || this.remain
 
-        // for better performance, if scroll pass items within now bench, do not update.
-        // and if overs is going to reach last item, we should render next zone immediately.
+        // for better performance, if scroll passes items within the bench, do not update.
+        // and if it's close to the last item, render next zone immediately.
         const shouldRenderNextZone = Math.abs(overs - delta.start - bench) === 1
         if (
           !shouldRenderNextZone &&
@@ -314,7 +314,7 @@
           return
         }
 
-        // we'd better make sure forceRender calls as less as possible.
+        // make sure forceRender calls as less as possible.
         if (
           shouldRenderNextZone ||
           zone.start !== delta.start ||
@@ -326,7 +326,7 @@
         }
       },
 
-      // return the right zone info base on `start/index`.
+      // return the right zone info based on `start/index`.
       getZone (index) {
         let start
         const delta = this.delta
@@ -350,8 +350,8 @@
         }
       },
 
-      // public method, force render ui list if we needed.
-      // call this before the next repaint to get better performance.
+      // public method, force render ui list if needed.
+      // call this before the next rerender to get better performance.
       forceRender () {
         window.requestAnimationFrame(() => {
           this.$forceUpdate()
@@ -365,7 +365,7 @@
         }
       },
 
-      // return the scroll passed items count in variable.
+      // return the scroll of passed items count in variable.
       getVarOvers (offset) {
         let low = 0
         let middle = 0
@@ -444,7 +444,7 @@
         return 0
       },
 
-      // return the variable paddingTop base current zone.
+      // return the variable paddingTop based on current zone.
       // @todo: if set a large `start` before variable was calculated,
       // here will also case too much offset calculate when list is very large,
       // consider use estimate paddingTop in this case just like `getVarPaddingBottom`.
@@ -452,20 +452,20 @@
         return this.getVarOffset(this.delta.start)
       },
 
-      // return the variable paddingBottom base current zone.
+      // return the variable paddingBottom based on the current zone.
       getVarPaddingBottom () {
         const delta = this.delta
         const last = delta.total - 1
         if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === last) {
           return this.getVarOffset(last) - this.getVarOffset(delta.end)
         } else {
-          // if unreached last zone or uncalculate real behind offset
-          // return the estimate paddingBottom avoid too much calculate.
+          // if unreached last zone or uncalculated real behind offset
+          // return the estimate paddingBottom and avoid too much calculations.
           return (delta.total - delta.end) * (delta.varAverSize || this.size)
         }
       },
 
-      // retun the variable all heights use to judge reach bottom.
+      // return the variable all heights use to judge reach bottom.
       getVarAllHeight () {
         const delta = this.delta
         if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === delta.total - 1) {
@@ -477,7 +477,7 @@
 
       // public method, allow the parent update variable by index.
       updateVariable (index) {
-        // clear/update all the offfsets and heights ahead of index.
+        // clear/update all the offsets and heights ahead of index.
         this.getVarOffset(index, true)
       },
 
@@ -502,12 +502,12 @@
         }
       },
 
-      // filter the shown items base on `start` and `end`.
+      // filter the shown items based on `start` and `end`.
       filter (h) {
         const delta = this.delta
         const slots = this.$slots.default || []
 
-        // item-mode shoud judge from items prop.
+        // item-mode should be decided from items prop.
         if (this.item || this.$scopedSlots.item) {
           delta.total = this.itemcount
           if (delta.keeps > delta.total) {
@@ -573,7 +573,7 @@
         style: {
           display: 'block',
           'padding-top': paddingTop + 'px',
-          'padding-bottom': paddingBottom + 'px'
+          'padding-bottom': paddingBottom + 'px',
         },
         class: this.wclass,
         attrs: {
@@ -581,7 +581,7 @@
         }
       }, list)
 
-      // page mode just render list, no wraper.
+      // page mode just render list, no wrapper.
       if (this.pagemode || this.scrollelement) {
         return renderList
       }
@@ -590,7 +590,7 @@
         ref: 'vsl',
         style: {
           display: 'block',
-          'overflow-y': this.size >= this.remain ? 'auto' : 'inital',
+          'overflow-y': this.size >= this.remain ? 'auto' : 'initial',
           height: this.size * this.remain + 'px'
         },
         on: {
