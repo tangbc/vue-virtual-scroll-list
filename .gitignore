@@ -5,3 +5,5 @@ coverage
 demos/dev/
 demos/dev*/
 demos/**/*.map
+.idea
+.vscode
