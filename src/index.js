@@ -59,6 +59,10 @@
         type: String,
         default: ''
       },
+      wstyle: {
+        type: Object,
+        default: () => ({})
+      },
       pagemode: {
         type: Boolean,
         default: false
@@ -574,6 +578,7 @@
           display: 'block',
           'padding-top': paddingTop + 'px',
           'padding-bottom': paddingBottom + 'px',
+          ...this.wstyle
         },
         class: this.wclass,
         attrs: {
