@@ -220,6 +220,7 @@ According to the demos above, here are lists of approximate statistics:
 | rtag          | String              | *        | Default value is `div`, virtual-list root element tag name, in all cases it's style is set to `display: block;`                                                                                                                                                                           |
 | wtag          | String              | *        | Default value is `div`, virtual-list item wrapper element tag name, in all cases it's style is set to `display: block;`                                                                                                                                                                   |
 | wclass        | String              | *        | Default is no classname, virtual-list item wrapper element class, if assign this prop, you better **not** to change it's [CSS box model](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model).                                               |
+| wstyle        | Object              | *        | Default value is `{}`, though you can add your own styles for a child element except `display` and `padding` because they are used by the library                                                                                                                                         |
 
 > Props of scroll mode:
 
