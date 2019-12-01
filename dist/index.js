@@ -67,6 +67,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         type: String,
         "default": ''
       },
+      wstyle: {
+        type: Object,
+        "default": function _default() {
+          return {};
+        }
+      },
       pagemode: {
         type: Boolean,
         "default": false
@@ -98,17 +104,15 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       totop: {
         type: [Function, Boolean],
-        // Boolean just disable for priviate.
         "default": false
       },
       tobottom: {
         type: [Function, Boolean],
-        // Boolean just disable for priviate.
         "default": false
       },
       onscroll: {
         type: [Function, Boolean],
-        // Boolean just disable for priviate.
+        // Boolean disables default behavior
         "default": false
       },
       istable: {
@@ -130,7 +134,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         "default": function _default() {}
       }
     },
-    // use changeProp to identify which prop change.
+    // use changeProp to identify the prop change.
     watch: {
       size: function size() {
         this.changeProp = 'size';
@@ -305,14 +309,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }
 
         var zone = this.getZone(overs);
-        var bench = this.bench || this.remain; // for better performance, if scroll pass items within now bench, do not update.
-        // and if overs is going to reach last item, we should render next zone immediately.
+        var bench = this.bench || this.remain; // for better performance, if scroll passes items within the bench, do not update.
+        // and if it's close to the last item, render next zone immediately.
 
         var shouldRenderNextZone = Math.abs(overs - delta.start - bench) === 1;
 
         if (!shouldRenderNextZone && overs - delta.start <= bench && !zone.isLast && overs > delta.start) {
           return;
-        } // we'd better make sure forceRender calls as less as possible.
+        } // make sure forceRender calls as less as possible.
 
 
         if (shouldRenderNextZone || zone.start !== delta.start || zone.end !== delta.end) {
@@ -321,7 +325,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           this.forceRender();
         }
       },
-      // return the right zone info base on `start/index`.
+      // return the right zone info based on `start/index`.
       getZone: function getZone(index) {
         var start;
         var delta = this.delta;
@@ -342,8 +346,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           isLast: isLast
         };
       },
-      // public method, force render ui list if we needed.
-      // call this before the next repaint to get better performance.
+      // public method, force render ui list if needed.
+      // call this before the next rerender to get better performance.
       forceRender: function forceRender() {
         var _this = this;
 
@@ -357,7 +361,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           this.forceRender();
         }
       },
-      // return the scroll passed items count in variable.
+      // return the scroll of passed items count in variable.
       getVarOvers: function getVarOvers(offset) {
         var low = 0;
         var middle = 0;
@@ -432,14 +436,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
         return 0;
       },
-      // return the variable paddingTop base current zone.
+      // return the variable paddingTop based on current zone.
       // @todo: if set a large `start` before variable was calculated,
       // here will also case too much offset calculate when list is very large,
       // consider use estimate paddingTop in this case just like `getVarPaddingBottom`.
       getVarPaddingTop: function getVarPaddingTop() {
         return this.getVarOffset(this.delta.start);
       },
-      // return the variable paddingBottom base current zone.
+      // return the variable paddingBottom based on the current zone.
       getVarPaddingBottom: function getVarPaddingBottom() {
         var delta = this.delta;
         var last = delta.total - 1;
@@ -447,12 +451,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         if (delta.total - delta.end <= delta.keeps || delta.varLastCalcIndex === last) {
           return this.getVarOffset(last) - this.getVarOffset(delta.end);
         } else {
-          // if unreached last zone or uncalculate real behind offset
-          // return the estimate paddingBottom avoid too much calculate.
+          // if unreached last zone or uncalculated real behind offset
+          // return the estimate paddingBottom and avoid too much calculations.
           return (delta.total - delta.end) * (delta.varAverSize || this.size);
         }
       },
-      // retun the variable all heights use to judge reach bottom.
+      // return the variable all heights use to judge reach bottom.
       getVarAllHeight: function getVarAllHeight() {
         var delta = this.delta;
 
@@ -464,7 +468,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       // public method, allow the parent update variable by index.
       updateVariable: function updateVariable(index) {
-        // clear/update all the offfsets and heights ahead of index.
+        // clear/update all the offsets and heights ahead of index.
         this.getVarOffset(index, true);
       },
       // trigger a props event on parent.
@@ -487,10 +491,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           }
         }
       },
-      // filter the shown items base on `start` and `end`.
+      // filter the shown items based on `start` and `end`.
       filter: function filter(h) {
         var delta = this.delta;
-        var slots = this.$slots["default"] || []; // item-mode shoud judge from items prop.
+        var slots = this.$slots["default"] || []; // item-mode should be decided from items prop.
 
         if (this.item || this.$scopedSlots.item) {
           delta.total = this.itemcount;
@@ -560,16 +564,16 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       var renderList = h(wtag, {
-        style: {
+        style: Object.assign({
           display: 'block',
           'padding-top': paddingTop + 'px',
           'padding-bottom': paddingBottom + 'px'
-        },
+        }, this.wstyle),
         "class": this.wclass,
         attrs: {
           role: 'group'
         }
-      }, list); // page mode just render list, no wraper.
+      }, list); // page mode just render list, no wrapper.
 
       if (this.pagemode || this.scrollelement) {
         return renderList;
@@ -579,7 +583,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         ref: 'vsl',
         style: {
           display: 'block',
-          'overflow-y': this.size >= this.remain ? 'auto' : 'inital',
+          'overflow-y': this.size >= this.remain ? 'auto' : 'initial',
           height: this.size * this.remain + 'px'
         },
         on: {

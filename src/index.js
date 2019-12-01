@@ -574,12 +574,11 @@
         list = [h('table', [h('tbody', list)])]
       }
       const renderList = h(wtag, {
-        style: {
+        style: Object.assign({
           display: 'block',
           'padding-top': paddingTop + 'px',
-          'padding-bottom': paddingBottom + 'px',
-          ...this.wstyle
-        },
+          'padding-bottom': paddingBottom + 'px'
+        }, this.wstyle),
         class: this.wclass,
         attrs: {
           role: 'group'
