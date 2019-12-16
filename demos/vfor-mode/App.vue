@@ -14,6 +14,11 @@
         :bench="30"
         :start="start"
       >
+        <template slot="before">
+          <div class="slot-before">
+            <h2>Slot before list</h2>
+          </div>
+        </template>
         <item
           v-for="item in items"
           :key="item.index"
@@ -21,6 +26,11 @@
           :height="size"
           :info="item.info"
         />
+        <template slot="after">
+          <div class="slot-after">
+            <h2>Slot after list</h2>
+          </div>
+        </template>
       </virtual-list>
     </div>
   </div>

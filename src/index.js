@@ -583,7 +583,11 @@
         attrs: {
           role: 'group'
         }
-      }, list)
+      }, [
+        this.$slots.before,
+        list,
+        this.$slots.after
+      ])
 
       // page mode just render list, no wrapper.
       if (this.pagemode || this.scrollelement) {

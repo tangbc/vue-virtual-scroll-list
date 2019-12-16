@@ -573,7 +573,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         attrs: {
           role: 'group'
         }
-      }, list); // page mode just render list, no wrapper.
+      }, [this.$slots.before, list, this.$slots.after]); // page mode just render list, no wrapper.
 
       if (this.pagemode || this.scrollelement) {
         return renderList;
@@ -593,3 +593,4 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }
   });
 });
+//# sourceMappingURL=index.js.map
