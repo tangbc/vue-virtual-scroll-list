@@ -36,6 +36,7 @@
   * [Total memory used](#total-memory-used)
 * [Attentions](#attentions)
 * [**Props type**](#props-type)
+* [Slots](#slots)
 * [Public methods](#public-methods)
 * [Contributions](#contributions)
 * [Changelogs](#changelogs)
@@ -250,6 +251,23 @@ According to the demos above, here are lists of approximate statistics:
 | item          | Component           | *        | List item vue component or vNode.                                                                                                                                                                                                                                                         |
 | itemcount     | Number              | *        | List total count, you should update this prop when source data changed.                                                                                                                                                                                                                   |
 | itemprops     | Function            | *        | A function call when each item is going to be rendered, you can assign props or data to each item component in this function.                                                                                                                                                             |
+
+
+## Slots
+In order to render static elements (e.g. heading, footer) inside the virtual list without being
+removed due to scrolling, you should use slots `before` and `after` the iterated items:
+
+```vue
+<virtual-list :size="size" :remain="remain">
+  <template slot="before">
+    <h2>Slot before list</h2>
+  </template>
+  <item v-for="item in items" :key="item.id"/>
+  <template slot="after">
+    <h2>Slot after list</h2>
+  </template>
+</virtual-list>
+```
 
 
 ## Public methods
