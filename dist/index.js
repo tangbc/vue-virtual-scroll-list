@@ -342,7 +342,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
         end = start + delta.keeps - 1;
 
-        if (end > delta.total) {
+        if (delta.total && end > delta.total) {
           end = delta.total - 1;
         }
 

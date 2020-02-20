@@ -347,7 +347,7 @@
           start = index
         }
         end = start + delta.keeps - 1
-        if (end > delta.total) {
+        if (delta.total && end > delta.total) {
           end = delta.total - 1
         }
 
