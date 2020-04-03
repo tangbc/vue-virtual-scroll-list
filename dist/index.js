@@ -268,7 +268,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
           offset = scrollelementRect.top - _elemRect.top;
         } else {
-          offset = (vsl.$el || vsl).scrollTop || 0;
+          offset = vsl && (vsl.$el || vsl).scrollTop || 0;
         }
 
         delta.direction = offset > delta.scrollTop ? 'D' : 'U';

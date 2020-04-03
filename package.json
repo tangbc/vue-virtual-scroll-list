@@ -1,6 +1,6 @@
 {
   "name": "vue-virtual-scroll-list",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "A vue component support big amount data list with high scroll performance.",
   "main": "dist/index.js",
   "files": [
@@ -12,7 +12,7 @@
     "lint": "eslint src test demos --ext .js,.vue",
     "lint:fix": "eslint --fix src test demos --ext .js,.vue",
     "build": "npm run src:build && npm run demo:build",
-    "ci": "npm run lint && npm run test && npm run src:build",
+    "ci": "npm run lint && npm run test && npm run build",
     "src:build": "rm -rf dist && babel src --out-dir dist --source-type script",
     "src:dev": "rm -rf dist && babel src --out-dir dist --source-type script --watch --source-maps",
     "demo:build": "cross-env NODE_ENV=production webpack --config ./demos/webpack.conf.js",
