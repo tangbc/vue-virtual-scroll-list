@@ -1,0 +1,49 @@
+{
+  "name": "vue-virtual-scroll-list",
+  "version": "2.0.0",
+  "description": "A vue component support big amount data list with high scroll performance.",
+  "main": "dist/index.js",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint src --ext .js,.vue",
+    "lint:fix": "eslint --fix src --ext .js,.vue",
+    "build": "rollup --config ./scripts/rollup.config.js",
+    "dev": "rollup --config ./scripts/rollup.config.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tangbc/vue-virtual-scroll-list.git"
+  },
+  "keywords": [
+    "vue",
+    "big-data",
+    "big-list",
+    "scroll-list",
+    "virtual-list"
+  ],
+  "author": "tangbc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tangbc/vue-virtual-scroll-list/issues"
+  },
+  "homepage": "https://github.com/tangbc/vue-virtual-scroll-list#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-loader": "^4.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "rollup": "^2.1.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "vue": "^2.6.11"
+  }
+}
