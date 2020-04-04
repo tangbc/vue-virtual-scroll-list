@@ -8,8 +8,7 @@ export default {
     format: 'umd',
     file: './dist/index.js',
     name: 'VirtualList',
-    // exports: 'named',
-    sourcemap: true,
+    sourcemap: false,
     globals: {
       vue: 'Vue',
     },

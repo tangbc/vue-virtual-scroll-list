@@ -10,8 +10,8 @@
   "scripts": {
     "lint": "eslint src --ext .js,.vue",
     "lint:fix": "eslint --fix src --ext .js,.vue",
-    "build": "rollup --config ./scripts/rollup.config.js",
-    "dev": "rollup --config ./scripts/rollup.config.js --watch"
+    "build": "rollup --config ./scripts/rollup.production.js",
+    "dev": "rollup --config ./scripts/rollup.development.js --watch"
   },
   "repository": {
     "type": "git",

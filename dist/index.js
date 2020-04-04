@@ -108,7 +108,7 @@
       },
       // tell parent current size identify by unqiue key.
       dispatchToParent: function dispatchToParent(event) {
-        this.$parent.$emit.call(this.$parent, event, this.key, this.getCurrentSize());
+        this.$parent.$emit(event, this.key, this.getCurrentSize());
       }
     },
     render: function render(h) {
@@ -221,6 +221,7 @@
 
         this.__bsearchCalls = 0;
         this.__getIndexOffsetCalls = 0;
+        this.__getIndexOffsetCacheHits = 0;
       }
     }, {
       key: "destroy",
@@ -314,20 +315,40 @@
         }
 
         return low > 0 ? --low : 0;
-      }
+      } // return a scroll offset from given index.
+
     }, {
       key: "getIndexOffset",
-      value: function getIndexOffset(index) {
-        // remember last calculate index.
-        this.lastCalculatedIndex = Math.max(this.lastCalculatedIndex, index - 1);
-        this.lastCalculatedIndex = Math.min(this.lastCalculatedIndex, this.getLastIndex());
-        var offset = 0;
+      value: function getIndexOffset(givenIndex) {
+        // we know this!
+        if (!givenIndex) {
+          this.__getIndexOffsetCacheHits++;
+          return 0;
+        } // get from cache avoid too much calculate.
 
-        while (index--) {
-          this.__getIndexOffsetCalls++;
-          offset = offset + (this.sizes[this.param.uniqueIds[index]] || this.getEstimateSize());
+
+        if (givenIndex in this.offsetCaches) {
+          this.__getIndexOffsetCacheHits++;
+          return this.offsetCaches[givenIndex];
         }
 
+        var offset = 0;
+        var indexOffset = 0;
+
+        for (var index = 0; index <= givenIndex; index++) {
+          this.__getIndexOffsetCalls++; // cache last index index offset if exist.
+
+          if (index && indexOffset) {
+            this.offsetCaches[index] = offset;
+          }
+
+          indexOffset = this.sizes[this.param.uniqueIds[index]];
+          offset = offset + (indexOffset || this.getEstimateSize());
+        } // remember last calculate index.
+
+
+        this.lastCalculatedIndex = Math.max(this.lastCalculatedIndex, givenIndex - 1);
+        this.lastCalculatedIndex = Math.min(this.lastCalculatedIndex, this.getLastIndex());
         return offset;
       }
     }, {
@@ -466,4 +487,3 @@
   return VirtualList;
 
 })));
-//# sourceMappingURL=index.js.map
