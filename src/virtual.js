@@ -29,6 +29,7 @@ export default class Virtual {
     // benchmark data
     this.__bsearchCalls = 0
     this.__getIndexOffsetCalls = 0
+    this.__getIndexOffsetCacheHits = 0
   }
 
   destroy () {
@@ -118,16 +119,38 @@ export default class Virtual {
     return low > 0 ? --low : 0
   }
 
-  getIndexOffset (index) {
-    // remember last calculate index.
-    this.lastCalculatedIndex = Math.max(this.lastCalculatedIndex, index - 1)
-    this.lastCalculatedIndex = Math.min(this.lastCalculatedIndex, this.getLastIndex())
+  // return a scroll offset from given index.
+  getIndexOffset (givenIndex) {
+    // we know this!
+    if (!givenIndex) {
+      this.__getIndexOffsetCacheHits++
+      return 0
+    }
+
+    // get from cache avoid too much calculate.
+    if (givenIndex in this.offsetCaches) {
+      this.__getIndexOffsetCacheHits++
+      return this.offsetCaches[givenIndex]
+    }
 
     let offset = 0
-    while (index--) {
+    let indexOffset = 0
+    for (let index = 0; index <= givenIndex; index++) {
       this.__getIndexOffsetCalls++
-      offset = offset + (this.sizes[this.param.uniqueIds[index]] || this.getEstimateSize())
+
+      // cache last index index offset if exist.
+      if (index && indexOffset) {
+        this.offsetCaches[index] = offset
+      }
+
+      indexOffset = this.sizes[this.param.uniqueIds[index]]
+      offset = offset + (indexOffset || this.getEstimateSize())
     }
+
+    // remember last calculate index.
+    this.lastCalculatedIndex = Math.max(this.lastCalculatedIndex, givenIndex - 1)
+    this.lastCalculatedIndex = Math.min(this.lastCalculatedIndex, this.getLastIndex())
+
     return offset
   }
 
