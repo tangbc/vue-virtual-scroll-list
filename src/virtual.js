@@ -5,28 +5,28 @@ export default class Virtual {
   }
 
   init (param, updateHook) {
-    // param data
+    // param data.
     this.param = param || {}
     this.updateHook = updateHook
 
-    // size data
+    // size data.
     this.sizes = Object.create(null)
     this.totalSize = 0
     this.averageSize = 0
     this.lastCalculatedIndex = 0
     this.offsetCaches = Object.create(null)
 
-    // scroll data
+    // scroll data.
     this.offset = 0
     this.direction = ''
 
-    // range data
+    // range data.
     this.range = Object.create(null)
     if (this.param && !this.param.disabled) {
       this.updateRange(0, param.keeps - 1)
     }
 
-    // benchmark data
+    // benchmark test data.
     this.__bsearchCalls = 0
     this.__getIndexOffsetCalls = 0
     this.__getIndexOffsetCacheHits = 0
@@ -54,6 +54,7 @@ export default class Virtual {
     }
   }
 
+  // save each size map by id.
   saveSize (id, size) {
     if (!this.param.uniqueIds.includes(id)) {
       return
@@ -95,6 +96,7 @@ export default class Virtual {
     this.updateRange(start, end)
   }
 
+  // return current scroll offset pass over items.
   getScrollOvers () {
     let low = 0
     let middle = 0
@@ -121,9 +123,8 @@ export default class Virtual {
 
   // return a scroll offset from given index.
   getIndexOffset (givenIndex) {
-    // we know this!
+    // we know this without calculate!
     if (!givenIndex) {
-      this.__getIndexOffsetCacheHits++
       return 0
     }
 
@@ -138,7 +139,7 @@ export default class Virtual {
     for (let index = 0; index <= givenIndex; index++) {
       this.__getIndexOffsetCalls++
 
-      // cache last index index offset if exist.
+      // cache last index offset if exist.
       if (index && indexOffset) {
         this.offsetCaches[index] = offset
       }
@@ -164,6 +165,7 @@ export default class Virtual {
       this.range.end = end
       this.range.padFront = this.getPadFront()
       this.range.padBehind = this.getPadBehind()
+
       this.callUpdateHook()
     }
   }
@@ -191,7 +193,7 @@ export default class Virtual {
     }
   }
 
-  // get estimate size for one component.
+  // get estimate size for one.
   getEstimateSize () {
     return this.averageSize || this.param.estimateSize
   }

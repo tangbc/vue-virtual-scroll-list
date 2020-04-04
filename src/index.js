@@ -33,18 +33,13 @@ const VirtualList = Vue.component('virtual-list', {
     this.virtual.destroy()
   },
 
-  mounted () {
-    // console.log(this)
-  },
+  mounted () {},
 
-  updated () {
-    // console.log('xx updated')
-  },
+  updated () {},
 
   methods: {
-    onItemResized (itemId, itemSize) {
-      // console.log('onItemResized', itemId, itemSize)
-      this.virtual.saveSize(itemId, itemSize)
+    onItemResized (id, size) {
+      this.virtual.saveSize(id, size)
     },
 
     onRangeChange (range) {
@@ -56,6 +51,7 @@ const VirtualList = Vue.component('virtual-list', {
       this.virtual.handleScroll(rootEl.scrollTop)
     },
 
+    // get the render slots based on start and end.
     getRenderSlots (h) {
       const slots = []
       const start = this.disabled ? 0 : this.range.start
