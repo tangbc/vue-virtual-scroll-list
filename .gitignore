@@ -1,9 +1,5 @@
-dev
-node_modules
-npm-debug.log
-coverage
-demos/dev/
-demos/dev*/
-demos/**/*.map
 .idea
 .vscode
+dist/*.map
+issues
+node_modules
