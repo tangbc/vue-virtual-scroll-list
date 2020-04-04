@@ -135,17 +135,17 @@ export default class Virtual {
     }
 
     let offset = 0
-    let indexOffset = 0
+    let indexSize = 0
     for (let index = 0; index <= givenIndex; index++) {
       this.__getIndexOffsetCalls++
 
       // cache last index offset if exist.
-      if (index && indexOffset) {
+      if (index && indexSize) {
         this.offsetCaches[index] = offset
       }
 
-      indexOffset = this.sizes[this.param.uniqueIds[index]]
-      offset = offset + (indexOffset || this.getEstimateSize())
+      indexSize = this.sizes[this.param.uniqueIds[index]]
+      offset = offset + (indexSize || this.getEstimateSize())
     }
 
     // remember last calculate index.
