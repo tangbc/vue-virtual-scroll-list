@@ -21,7 +21,7 @@ export const defaultProps = {
   },
   direction: {
     type: String,
-    default: 'vertical' // the other value is `horizontal`.
+    default: 'vertical' // the other value is horizontal.
   },
   estimateSize: {
     type: Number

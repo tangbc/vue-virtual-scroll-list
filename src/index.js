@@ -61,7 +61,6 @@ const VirtualList = Vue.component('virtual-list', {
     // emit event at special position.
     emitEvent (offset) {
       const { root } = this.$refs
-      // if use `offsetWidth` offsetShape will become a little bigger? even case by border-width?
       const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
       const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
 
@@ -75,7 +74,7 @@ const VirtualList = Vue.component('virtual-list', {
       }
     },
 
-    // get the render slots based on `star`t and `end`.
+    // get the render slots based on start and end.
     getRenderSlots (h) {
       const slots = []
       const start = this.disabled ? 0 : this.range.start

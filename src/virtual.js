@@ -180,12 +180,12 @@ export default class Virtual {
   correctRange (start, end) {
     const total = this.param.uniqueIds.length
 
-    // datas less than `keeps`, just render all.
+    // datas less than keeps, just render all.
     if (total <= this.param.keeps) {
       start = 0
       end = this.getLastIndex()
     } else if (end - start < this.param.keeps - 1) {
-      // if range length is less than keeps, corrent it base on `end`.
+      // if range length is less than keeps, corrent it base on end.
       start = end - this.param.keeps + 1
     }
 
