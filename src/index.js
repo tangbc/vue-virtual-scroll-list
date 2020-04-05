@@ -61,7 +61,7 @@ const VirtualList = Vue.component('virtual-list', {
     // emit event at special position.
     emitEvent (offset) {
       const { root } = this.$refs
-      // if use offsetWidth offsetShape will become a little bigger? even case by border-width?
+      // if use `offsetWidth` offsetShape will become a little bigger? even case by border-width?
       const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
       const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
 
@@ -75,7 +75,7 @@ const VirtualList = Vue.component('virtual-list', {
       }
     },
 
-    // get the render slots based on start and end.
+    // get the render slots based on `star`t and `end`.
     getRenderSlots (h) {
       const slots = []
       const start = this.disabled ? 0 : this.range.start
@@ -99,9 +99,9 @@ const VirtualList = Vue.component('virtual-list', {
   // render function, a closer-to-the-compiler alternative to templates.
   // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
   render (h) {
-    const padding = this.isHorizontal ?
-      `0px ${this.range.padBehind}px 0px ${this.range.padFront}px` :
-      `${this.range.padFront}px 0px ${this.range.padBehind}px`
+    const padding = this.isHorizontal
+      ? `0px ${this.range.padBehind}px 0px ${this.range.padFront}px`
+      : `${this.range.padFront}px 0px ${this.range.padBehind}px`
 
     return h(this.rootTag, {
       ref: 'root',

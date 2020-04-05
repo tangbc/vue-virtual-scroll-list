@@ -36,10 +36,16 @@ export default class Virtual {
     this.init(null, null)
   }
 
+  // return actually render range.
   getRange () {
     return {
       ...this.range
     }
+  }
+
+  // return start index offset.
+  getOffset (start) {
+    return this.getIndexOffset(start)
   }
 
   updateParam (key, value) {
@@ -158,14 +164,32 @@ export default class Virtual {
   }
 
   updateRange (start, end) {
-    if (this.range.start !== start) {
-      this.range.start = start
-      this.range.end = end
+    const cRange = this.correctRange(start, end)
+
+    if (this.range.start !== cRange.start) {
+      this.range.start = cRange.start
+      this.range.end = cRange.end
       this.range.padFront = this.getPadFront()
       this.range.padBehind = this.getPadBehind()
 
       this.callUpdateHook()
     }
+  }
+
+  // corrent range to exactly, some conditions break.
+  correctRange (start, end) {
+    const total = this.param.uniqueIds.length
+
+    // datas less than `keeps`, just render all.
+    if (total <= this.param.keeps) {
+      start = 0
+      end = this.getLastIndex()
+    } else if (end - start < this.param.keeps - 1) {
+      // if range length is less than keeps, corrent it base on `end`.
+      start = end - this.param.keeps + 1
+    }
+
+    return { start, end }
   }
 
   callUpdateHook () {
