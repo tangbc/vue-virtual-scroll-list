@@ -37,7 +37,14 @@ const VirtualList = Vue.component('virtual-list', {
     this.virtual.destroy()
   },
 
-  mounted () {},
+  mounted () {
+    // handling position set.
+    if (this.start) {
+      this.setScrollOffset(this.virtual.getOffset(this.start))
+    } else if (this.offset) {
+      this.setScrollOffset(this.offset)
+    }
+  },
 
   updated () {},
 
@@ -52,14 +59,27 @@ const VirtualList = Vue.component('virtual-list', {
 
     onScroll () {
       const { root } = this.$refs
+      if (!root) {
+        return
+      }
+
       const offset = root[this.directionKey]
 
       this.emitEvent(offset)
       this.virtual.handleScroll(offset)
     },
 
+    // set current scroll position to a expectant offset.
+    setScrollOffset (offset) {
+      const { root } = this.$refs
+      if (root) {
+        root[this.directionKey] = offset || 0
+      }
+    },
+
     // emit event at special position.
     emitEvent (offset) {
+      // ref element is definitely available here.
       const { root } = this.$refs
       const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
       const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']

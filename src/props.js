@@ -23,6 +23,14 @@ export const defaultProps = {
     type: String,
     default: 'vertical' // the other value is horizontal.
   },
+  start: {
+    type: Number,
+    default: 0
+  },
+  offset: {
+    type: Number,
+    default: 0
+  },
   estimateSize: {
     type: Number
   },
