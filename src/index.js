@@ -90,6 +90,9 @@ const VirtualList = Vue.component('virtual-list', {
     }, [
       h(this.wrapTag, {
         class: this.wrapClass,
+        attrs: {
+          role: 'group'
+        },
         style: {
           margin: '0px',
           padding: padding
