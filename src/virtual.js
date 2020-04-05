@@ -42,12 +42,6 @@ export default class Virtual {
     }
   }
 
-  callUpdateHook () {
-    if (!this.param.disabled) {
-      this.updateHook(this.getRange())
-    }
-  }
-
   updateParam (key, value) {
     if (key in this.param) {
       this.param[key] = value
@@ -75,8 +69,8 @@ export default class Virtual {
       return
     }
 
-    // FRONT: scroll left or up
-    // BEHIND: scroll right or down
+    // FRONT: scroll left or up.
+    // BEHIND: scroll right or down.
     this.direction = offset < this.offset ? 'FRONT' : 'BEHIND'
     this.offset = offset
 
@@ -86,6 +80,8 @@ export default class Virtual {
       this.handleBehind()
     }
   }
+
+  // ----------- public method end. -----------
 
   handleFront () {
     this.handleBehind()
@@ -169,6 +165,12 @@ export default class Virtual {
       this.range.padBehind = this.getPadBehind()
 
       this.callUpdateHook()
+    }
+  }
+
+  callUpdateHook () {
+    if (!this.param.disabled) {
+      this.updateHook(this.getRange())
     }
   }
 

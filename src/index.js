@@ -24,11 +24,12 @@ const VirtualList = Vue.component('virtual-list', {
       uniqueIds: this.dataSources.map((dataSource) => dataSource[this.dataKey])
     }, this.onRangeChange)
 
-    this.range = this.virtual.getRange()
-
     // just for debug
     window.virtual = this.virtual
 
+    // also need sync initial range first.
+    this.range = this.virtual.getRange()
+    // listen item size changing.
     this.$on('itemResized', this.onItemResized)
   },
 
@@ -50,8 +51,28 @@ const VirtualList = Vue.component('virtual-list', {
     },
 
     onScroll () {
-      const { rootEl } = this.$refs
-      this.virtual.handleScroll(rootEl[this.directionKey])
+      const { root } = this.$refs
+      const offset = root[this.directionKey]
+
+      this.emitEvent(offset)
+      this.virtual.handleScroll(offset)
+    },
+
+    // emit event at special position.
+    emitEvent (offset) {
+      const { root } = this.$refs
+      // if use offsetWidth offsetShape will become a little bigger? even case by border-width?
+      const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
+      const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
+
+      // only non-empty & offset === 0 calls totop.
+      if (!!this.dataSources.length && !offset) {
+        this.$emit('totop')
+      } else if (offset + offsetShape >= scrollShape) {
+        this.$emit('tobottom')
+      } else {
+        this.$emit('onscroll', offset)
+      }
     },
 
     // get the render slots based on start and end.
@@ -83,7 +104,7 @@ const VirtualList = Vue.component('virtual-list', {
       `${this.range.padFront}px 0px ${this.range.padBehind}px`
 
     return h(this.rootTag, {
-      ref: 'rootEl',
+      ref: 'root',
       on: {
         '&scroll': this.onScroll
       }
