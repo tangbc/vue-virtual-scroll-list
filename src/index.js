@@ -8,7 +8,7 @@ const VirtualList = Vue.component('virtual-list', {
 
   data () {
     return {
-      range: {}
+      range: null
     }
   },
 
@@ -22,7 +22,7 @@ const VirtualList = Vue.component('virtual-list', {
       disabled: this.disabled,
       estimateSize: this.estimateSize,
       uniqueIds: this.dataSources.map((dataSource) => dataSource[this.dataKey])
-    }, this.onRangeChange)
+    }, this.onRangeChanged)
 
     // just for debug
     window.virtual = this.virtual
@@ -46,7 +46,7 @@ const VirtualList = Vue.component('virtual-list', {
       this.virtual.saveSize(id, size)
     },
 
-    onRangeChange (range) {
+    onRangeChanged (range) {
       this.range = range
     },
 
