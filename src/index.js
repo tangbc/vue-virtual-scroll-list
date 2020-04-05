@@ -13,6 +13,9 @@ const VirtualList = Vue.component('virtual-list', {
   },
 
   created () {
+    this.isHorizontal = this.direction === 'horizontal'
+    this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
+
     this.virtual = new Virtual({
       buffer: 0,
       keeps: this.keeps,
@@ -48,7 +51,7 @@ const VirtualList = Vue.component('virtual-list', {
 
     onScroll () {
       const { rootEl } = this.$refs
-      this.virtual.handleScroll(rootEl.scrollTop)
+      this.virtual.handleScroll(rootEl[this.directionKey])
     },
 
     // get the render slots based on start and end.
@@ -61,6 +64,7 @@ const VirtualList = Vue.component('virtual-list', {
           class: this.itemClass,
           props: {
             tag: this.itemTag,
+            horizontal: this.isHorizontal,
             key: this.dataSources[index][this.dataKey],
             source: this.dataSources[index],
             component: this.dataComponent
@@ -74,6 +78,10 @@ const VirtualList = Vue.component('virtual-list', {
   // render function, a closer-to-the-compiler alternative to templates.
   // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
   render (h) {
+    const padding = this.isHorizontal ?
+      `0px ${this.range.padBehind}px 0px ${this.range.padFront}px` :
+      `${this.range.padFront}px 0px ${this.range.padBehind}px`
+
     return h(this.rootTag, {
       ref: 'rootEl',
       on: {
@@ -84,7 +92,7 @@ const VirtualList = Vue.component('virtual-list', {
         class: this.wrapClass,
         style: {
           margin: '0px',
-          padding: `${this.range.padFront}px 0px ${this.range.padBehind}px`
+          padding: padding
         }
       }, this.getRenderSlots(h))
     ])

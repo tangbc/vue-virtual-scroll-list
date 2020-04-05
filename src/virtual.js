@@ -75,21 +75,23 @@ export default class Virtual {
       return
     }
 
-    this.direction = offset < this.offset ? 'UP' : 'DOWN'
+    // FRONT: scroll left or up
+    // BEHIND: scroll right or down
+    this.direction = offset < this.offset ? 'FRONT' : 'BEHIND'
     this.offset = offset
 
-    if (this.direction === 'UP') {
-      this.handleUp()
-    } else if (this.direction === 'DOWN') {
-      this.handleDown()
+    if (this.direction === 'FRONT') {
+      this.handleFront()
+    } else if (this.direction === 'BEHIND') {
+      this.handleBehind()
     }
   }
 
-  handleUp () {
-    this.handleDown()
+  handleFront () {
+    this.handleBehind()
   }
 
-  handleDown () {
+  handleBehind () {
     const overs = this.getScrollOvers()
     const start = overs
     const end = this.getEndByStart(start)

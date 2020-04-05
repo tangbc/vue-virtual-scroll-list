@@ -19,6 +19,10 @@ export const defaultProps = {
     type: String,
     default: ''
   },
+  direction: {
+    type: String,
+    default: 'vertical' // the other value is `horizontal`.
+  },
   estimateSize: {
     type: Number
   },
@@ -47,6 +51,9 @@ export const defaultProps = {
 export const ItemProps = {
   key: {
     type: String
+  },
+  horizontal: {
+    type: Boolean
   },
   source: {
     type: Object

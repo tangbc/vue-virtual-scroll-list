@@ -8,6 +8,7 @@ export default Vue.component('virtual-list-item', {
 
   created () {
     this.hasInitial = false
+    this.shapeKey = this.horizontal ? 'offsetWidth' : 'offsetHeight'
   },
 
   mounted () {
@@ -36,7 +37,7 @@ export default Vue.component('virtual-list-item', {
 
   methods: {
     getCurrentSize () {
-      return this.$el ? this.$el.offsetHeight : 0
+      return this.$el ? this.$el[this.shapeKey] : 0
     },
 
     // tell parent current size identify by unqiue key.
