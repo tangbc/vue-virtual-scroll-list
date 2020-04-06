@@ -1,6 +1,6 @@
-# examples
+# vue-virtual-scroll-list example.
 
-## Project setup
+## Example setup
 ```
 npm install
 ```
