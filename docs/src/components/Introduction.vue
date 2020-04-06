@@ -1,7 +1,5 @@
 <template>
-  <div class="introduction">
-    {{ description }}
-  </div>
+  <div class="introduction" v-html="description"></div>
 </template>
 
 <script>
@@ -21,7 +19,7 @@ export default {
 .introduction {
   font-size: 16px;
   padding: .5em 1em;
-  border-radius: 5px;
-  background-color: papayawhip;
+  border-radius: 3px;
+  background-color: ghostwhite;
 }
 </style>

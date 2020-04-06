@@ -1,17 +1,22 @@
 <template>
   <div class="example">
-    <Introduction description="example here" />
+    <Introduction description="Every item's size is equal." />
 
     <div class="example-content">
-      <VirtualList class="list"
-        :keeps="30"
-        :estimate-size="60"
-        :item-class="'list-item'"
+      <Tab v-on:tab-change="onTabChange"></Tab>
+      <div class="view" v-show="isShowView">
+        <VirtualList class="list"
+          :keeps="30"
+          :estimate-size="60"
+          :item-class="'list-item'"
 
-        :data-key="'id'"
-        :data-sources="items"
-        :data-component="itemComponent"
-      />
+          :data-key="'id'"
+          :data-sources="items"
+          :data-component="itemComponent"
+        />
+      </div>
+
+      <div class="code" v-show="!isShowView">code here</div>
     </div>
   </div>
 </template>
@@ -19,8 +24,8 @@
 <script>
 import Item from './Item'
 import { Random } from '../../common/mock'
-import { TOTAL_COUNT } from '../../common/config'
 import genUniqueId from '../../common/gen-unique-id'
+import { TOTAL_COUNT, TAB_TYPE } from '../../common/const'
 
 const DataUsers = []
 let count = TOTAL_COUNT
@@ -39,7 +44,15 @@ export default {
   data () {
     return {
       items: DataUsers,
-      itemComponent: Item
+      itemComponent: Item,
+      isShowView: true
+    }
+  },
+
+  methods: {
+    onTabChange (type) {
+      console.log(type)
+      this.isShowView = type === TAB_TYPE.VIEW
     }
   }
 }
@@ -50,7 +63,7 @@ export default {
   width: 100%;
   height: 500px;
   border: 2px solid;
-  border-radius: 5px;
+  border-radius: 3px;
   overflow-y: auto;
   border-color: dimgray;
 

@@ -14,7 +14,7 @@ body {
 }
 
 #app {
-  padding: 1em 2em;
+  padding: 0 2em;
   width: 776px;
 }
 
@@ -26,14 +26,17 @@ body {
   .router-link-exact-active,
   .router-link-exact-active:hover {
     color: inherit;
-    font-weight: 500;
     cursor: default;
-    text-decoration: underline;
+    border-bottom: 1px solid;
+    border-color: #606c76;
   }
 }
 
 .example-content {
-  margin-top: 2em;
+  margin-top: 1em;
   background-color: #fff;
+}
+code {
+  background-color: gold !important;
 }
 </style>
