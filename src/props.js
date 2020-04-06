@@ -16,7 +16,7 @@ export const defaultProps = {
     require: true
   },
   dataComponent: {
-    type: Function,
+    type: Object,
     require: true
   },
 
@@ -62,7 +62,7 @@ export const defaultProps = {
 }
 
 export const ItemProps = {
-  key: {
+  uniqueKey: {
     type: String
   },
   horizontal: {
@@ -72,7 +72,7 @@ export const ItemProps = {
     type: Object
   },
   component: {
-    type: Function
+    type: Object
   },
   tag: {
     type: String

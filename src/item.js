@@ -42,7 +42,7 @@ export default Vue.component('virtual-list-item', {
 
     // tell parent current size identify by unqiue key.
     dispatchToParent (event) {
-      this.$parent.$emit(event, this.key, this.getCurrentSize())
+      this.$parent.$emit(event, this.uniqueKey, this.getCurrentSize())
     }
   },
 

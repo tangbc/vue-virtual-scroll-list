@@ -105,7 +105,7 @@ const VirtualList = Vue.component('virtual-list', {
           props: {
             tag: this.itemTag,
             horizontal: this.isHorizontal,
-            key: this.dataSources[index][this.dataKey],
+            uniqueKey: this.dataSources[index][this.dataKey],
             source: this.dataSources[index],
             component: this.dataComponent
           }
