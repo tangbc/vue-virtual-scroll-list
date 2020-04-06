@@ -6,6 +6,6 @@ export default Object.assign({}, ProductionConfig, {
     ...ProductionConfig.output,
     file: './dev/index.js',
     sourcemap: true,
-    banner: null
+    banner: '/* eslint-disable */' // disable eslint when bundle with docs.
   }
 })
