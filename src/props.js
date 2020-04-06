@@ -58,7 +58,7 @@ export const defaultProps = {
   disabled: {
     type: Boolean,
     default: false
-  },
+  }
 }
 
 export const ItemProps = {
