@@ -1,3 +1,7 @@
+const DIRECTION_TYPE = {
+  FRONT: 1, // scroll up or left.
+  BEHIND: 2 // scroll down or right.
+}
 
 export default class Virtual {
   constructor (param, updateHook) {
@@ -75,14 +79,12 @@ export default class Virtual {
       return
     }
 
-    // FRONT: scroll left or up.
-    // BEHIND: scroll right or down.
-    this.direction = offset < this.offset ? 'FRONT' : 'BEHIND'
+    this.direction = offset < this.offset ? DIRECTION_TYPE.FRONT : DIRECTION_TYPE.BEHIND
     this.offset = offset
 
-    if (this.direction === 'FRONT') {
+    if (this.direction === DIRECTION_TYPE.FRONT) {
       this.handleFront()
-    } else if (this.direction === 'BEHIND') {
+    } else if (this.direction === DIRECTION_TYPE.BEHIND) {
       this.handleBehind()
     }
   }
@@ -90,14 +92,25 @@ export default class Virtual {
   // ----------- public method end. -----------
 
   handleFront () {
-    this.handleBehind()
+    const overs = this.getScrollOvers()
+    // should not change range if start doesn't exceed overs.
+    if (overs > this.range.start) {
+      return
+    }
+
+    // move up start by a buffer length.
+    const start = Math.max(overs - this.param.buffer, 0)
+    this.updateRange(start, this.getEndByStart(start))
   }
 
   handleBehind () {
     const overs = this.getScrollOvers()
-    const start = overs
-    const end = this.getEndByStart(start)
-    this.updateRange(start, end)
+    // range should not change if scroll overs within buffer.
+    if (overs < this.range.start + this.param.buffer) {
+      return
+    }
+
+    this.updateRange(overs, this.getEndByStart(overs))
   }
 
   // return current scroll offset pass over items.
@@ -126,6 +139,7 @@ export default class Virtual {
   }
 
   // return a scroll offset from given index.
+  // @todo can efficiency be improved more here?
   getIndexOffset (givenIndex) {
     // we know this without calculate!
     if (!givenIndex) {
@@ -176,17 +190,18 @@ export default class Virtual {
     }
   }
 
-  // corrent range to exactly, some conditions break.
+  // in some conditions range will break, we need correct it.
   correctRange (start, end) {
+    const keeps = this.param.keeps
     const total = this.param.uniqueIds.length
 
-    // datas less than keeps, just render all.
-    if (total <= this.param.keeps) {
+    // datas less than keeps, render all.
+    if (total <= keeps) {
       start = 0
       end = this.getLastIndex()
-    } else if (end - start < this.param.keeps - 1) {
+    } else if (end - start < keeps - 1) {
       // if range length is less than keeps, corrent it base on end.
-      start = end - this.param.keeps + 1
+      start = end - keeps + 1
     }
 
     return { start, end }

@@ -3,37 +3,10 @@ export const defaultProps = {
     type: Number,
     require: true
   },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  rootTag: {
-    type: String,
-    default: 'div'
-  },
-  wrapTag: {
-    type: String,
-    default: 'div'
-  },
-  wrapClass: {
-    type: String,
-    default: ''
-  },
-  direction: {
-    type: String,
-    default: 'vertical' // the other value is horizontal.
-  },
-  start: {
-    type: Number,
-    default: 0
-  },
-  offset: {
-    type: Number,
-    default: 0
-  },
   estimateSize: {
     type: Number
   },
+
   dataKey: {
     type: String,
     require: true
@@ -46,6 +19,33 @@ export const defaultProps = {
     type: Function,
     require: true
   },
+
+  rootTag: {
+    type: String,
+    default: 'div'
+  },
+  wrapTag: {
+    type: String,
+    default: 'div'
+  },
+  wrapClass: {
+    type: String,
+    default: ''
+  },
+
+  direction: {
+    type: String,
+    default: 'vertical' // the other value is horizontal.
+  },
+  start: {
+    type: Number,
+    default: 0
+  },
+  offset: {
+    type: Number,
+    default: 0
+  },
+
   itemTag: {
     type: String,
     default: 'div'
@@ -53,7 +53,12 @@ export const defaultProps = {
   itemClass: {
     type: String,
     default: ''
-  }
+  },
+
+  disabled: {
+    type: Boolean,
+    default: false
+  },
 }
 
 export const ItemProps = {
