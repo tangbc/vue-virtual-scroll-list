@@ -1,7 +1,8 @@
 <template>
   <div class="tab">
-    <div v-on:click="eventClickView" class="tab-item view" v-bind:class="{active: isView}">View</div>
-    <div v-on:click="eventClickCode" class="tab-item code" v-bind:class="{active: !isView}">Code</div>
+    <div v-on:click="eventClickView" class="tab-item view" v-bind:class="{active: isView}">VIEW</div>
+    <div v-on:click="eventClickCode" class="tab-item code" v-bind:class="{active: !isView}">CODE</div>
+    <a v-show="!isView" class="complete-code" href="completeUrl">COMPLETE CODE</a>
   </div>
 </template>
 
@@ -14,6 +15,7 @@ export default {
   data () {
     return {
       active: TAB_TYPE.VIEW,
+      completeUrl: 'http://github.com/tangbc/vue-virtual-scroll-list'
     }
   },
 
@@ -47,10 +49,11 @@ export default {
   width: 100%;
   display: flex;
   margin-bottom: 1em;
+  position: relative;
   .tab-item {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
-    width: 90px;
+    width: 85px;
     margin-right: .5em;
     height: 35px;
     display: flex;
@@ -73,6 +76,13 @@ export default {
     &.code {
       background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg t='1586181965771' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='3774' xmlns:xlink='http://www.w3.org/1999/xlink' width='200' height='200'%3E%3Cdefs%3E%3Cstyle type='text/css'%3E%3C/style%3E%3C/defs%3E%3Cpath d='M549.973333 128a42.453333 42.453333 0 0 0-42.154666 37.76l-75.904 683.136a42.325333 42.325333 0 1 0 84.266666 9.386667l75.904-683.178667A42.325333 42.325333 0 0 0 550.016 128zM243.541333 286.165333A42.538667 42.538667 0 0 0 213.333333 298.666667L30.165333 481.834667a42.624 42.624 0 0 0 0 60.330666L213.333333 725.333333a42.666667 42.666667 0 0 0 60.330667-60.330666L120.661333 512l153.002667-153.002667a42.624 42.624 0 0 0-30.165333-72.832z m537.002667 0a42.666667 42.666667 0 0 0-30.165333 72.832L903.338667 512l-153.002667 153.002667A42.666667 42.666667 0 0 0 810.666667 725.333333l183.168-183.168a42.624 42.624 0 0 0 0-60.330666L810.666667 298.666667a42.538667 42.538667 0 0 0-30.165334-12.501334z' p-id='3775'%3E%3C/path%3E%3C/svg%3E");
     }
+  }
+  .complete-code {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
   }
 }
 </style>

@@ -4,7 +4,8 @@
 
     <div class="example-content">
       <Tab v-on:tab-change="onTabChange"></Tab>
-      <div class="view" v-show="isShowView">
+
+      <div v-show="isShowView">
         <VirtualList class="list"
           :keeps="30"
           :estimate-size="60"
@@ -16,21 +17,18 @@
         />
       </div>
 
-      <div class="code" v-show="!isShowView">
-        <CodeHighLight type="html" :code="html" />
-        <CodeHighLight type="js" :code="js" />
-      </div>
+      <Code v-show="!isShowView"></Code>
     </div>
   </div>
 </template>
 
 <script>
 import Item from './Item'
+import Code from './Code'
+
 import { Random } from '../../common/mock'
 import genUniqueId from '../../common/gen-unique-id'
 import { TOTAL_COUNT, TAB_TYPE } from '../../common/const'
-
-import { html, js } from './code'
 
 const DataUsers = []
 let count = TOTAL_COUNT
@@ -46,19 +44,20 @@ while (count--) {
 export default {
   name: 'Example-fix-size',
 
+  components: {
+    Code
+  },
+
   data () {
     return {
       items: DataUsers,
       itemComponent: Item,
       isShowView: true,
-      html,
-      js
     }
   },
 
   methods: {
     onTabChange (type) {
-      console.log(type)
       this.isShowView = type === TAB_TYPE.VIEW
     }
   }

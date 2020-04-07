@@ -1,17 +1,23 @@
-export const html =
+<template>
+  <div>
+    <CodeHighLight type="html" :code="html" />
+    <CodeHighLight type="js" :code="js" />
+  </div>
+</template>
+
+<script>
+const html =
 `
 <VirtualList class="list"
+  :size="60"
   :keeps="30"
-  :estimate-size="60"
-  :item-class="'list-item'"
-
   :data-key="'id'"
   :data-sources="items"
   :data-component="itemComponent"
 />
 `
 
-export const js =
+const js =
 `
 import Item from './Item'
 const items = [
@@ -33,3 +39,13 @@ export default {
   ...
 }
 `
+
+export default {
+  name: 'CodeFixSize',
+
+  data () {
+    return { html, js }
+  }
+}
+</script>
+
