@@ -49,7 +49,7 @@ export default {
   margin-bottom: 1em;
   .tab-item {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 400;
     width: 90px;
     margin-right: .5em;
     height: 35px;

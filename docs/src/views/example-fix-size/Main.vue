@@ -16,7 +16,10 @@
         />
       </div>
 
-      <div class="code" v-show="!isShowView">code here</div>
+      <div class="code" v-show="!isShowView">
+        <CodeHighLight type="html" :code="html" />
+        <CodeHighLight type="js" :code="js" />
+      </div>
     </div>
   </div>
 </template>
@@ -26,6 +29,8 @@ import Item from './Item'
 import { Random } from '../../common/mock'
 import genUniqueId from '../../common/gen-unique-id'
 import { TOTAL_COUNT, TAB_TYPE } from '../../common/const'
+
+import { html, js } from './code'
 
 const DataUsers = []
 let count = TOTAL_COUNT
@@ -45,7 +50,9 @@ export default {
     return {
       items: DataUsers,
       itemComponent: Item,
-      isShowView: true
+      isShowView: true,
+      html,
+      js
     }
   },
 
