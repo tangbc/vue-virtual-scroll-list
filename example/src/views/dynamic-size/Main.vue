@@ -6,7 +6,7 @@
       <Tab v-on:tab-change="onTabChange"></Tab>
 
       <div v-show="isShowView">
-        <VirtualList class="list"
+        <VirtualList class="list-dynamic"
           :size="80"
           :keeps="30"
           :item-class="'list-item-dynamic'"
@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style lang="less">
-.list {
+.list-dynamic {
   width: 100%;
   height: 500px;
   border: 2px solid;
