@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { TAB_TYPE } from '../common/const'
+import { TAB_TYPE, DEFAULT_TAB } from '../common/const'
 
 const baseUrl = 'https://github.com/tangbc/vue-virtual-scroll-list/tree/master/example/views'
 
@@ -17,7 +17,7 @@ export default {
   data () {
     return {
       completeCodeUrl: '',
-      active: TAB_TYPE.VIEW
+      active: DEFAULT_TAB
     }
   },
 

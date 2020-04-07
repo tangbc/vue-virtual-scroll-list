@@ -28,7 +28,7 @@ import Code from './Code'
 
 import { Random } from '../../common/mock'
 import genUniqueId from '../../common/gen-unique-id'
-import { TOTAL_COUNT, TAB_TYPE } from '../../common/const'
+import { TOTAL_COUNT, TAB_TYPE, DEFAULT_TAB } from '../../common/const'
 
 const DataUsers = []
 let count = TOTAL_COUNT
@@ -52,7 +52,7 @@ export default {
     return {
       items: DataUsers,
       itemComponent: Item,
-      isShowView: true,
+      isShowView: DEFAULT_TAB === TAB_TYPE.VIEW
     }
   },
 
