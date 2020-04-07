@@ -7,8 +7,8 @@
 
       <div v-show="isShowView">
         <VirtualList class="list"
+          :size="60"
           :keeps="30"
-          :estimate-size="60"
           :item-class="'list-item'"
 
           :data-key="'id'"
