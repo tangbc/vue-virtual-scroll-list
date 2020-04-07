@@ -10,7 +10,7 @@ export default class Virtual {
 
   init (param, updateHook) {
     // param data.
-    this.param = param || {}
+    this.param = param
     this.updateHook = updateHook
 
     // size data.
