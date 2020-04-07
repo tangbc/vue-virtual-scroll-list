@@ -11,7 +11,7 @@
 <script>
 
 export default {
-  name: 'FixSizeItem',
+  name: 'DynamicSizeItem',
 
   props: {
     index: {

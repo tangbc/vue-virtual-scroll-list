@@ -19,6 +19,11 @@ Vue.use(VueRouter)
     path: '/dynamic-size',
     name: 'dynamic-size',
     component: () => import(/* webpackChunkName: "dynamic-size" */ '../views/dynamic-size/Main.vue')
+  },
+  {
+    path: '/horizontal',
+    name: 'horizontal',
+    component: () => import(/* webpackChunkName: "horizontal" */ '../views/horizontal/Main.vue')
   }
 ]
 

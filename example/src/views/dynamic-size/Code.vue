@@ -41,7 +41,7 @@ export default {
 `
 
 export default {
-  name: 'CodeFixSize',
+  name: 'CodeDynamicSize',
 
   data () {
     return { html, js }

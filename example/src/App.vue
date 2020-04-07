@@ -4,6 +4,7 @@
       <router-link to="/">documentation</router-link>
       <router-link to="/fixed-size">fixed size</router-link>
       <router-link to="/dynamic-size">dynamic size</router-link>
+      <router-link to="/horizontal">horizontal</router-link>
     </div>
     <router-view/>
   </div>
