@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">documentation</router-link>
-      <router-link to="/example-fix-size">example fix size</router-link>
+      <router-link to="/fixed-size">fixed size</router-link>
     </div>
     <router-view/>
   </div>

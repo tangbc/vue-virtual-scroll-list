@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Index from '../views/Index/Main.vue'
+import Index from '../views/index/Main.vue'
 
 Vue.use(VueRouter)
 
@@ -11,9 +11,9 @@ Vue.use(VueRouter)
     component: Index
   },
   {
-    path: '/example-fix-size',
-    name: 'Example-fix-size',
-    component: () => import(/* webpackChunkName: "example-fix-size" */ '../views/example-fix-size/Main.vue')
+    path: '/fixed-size',
+    name: 'fixed-size',
+    component: () => import(/* webpackChunkName: "fixed-size" */ '../views/fixed-size/Main.vue')
   }
 ]
 
