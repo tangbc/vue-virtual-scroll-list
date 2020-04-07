@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
-import VirtualList from '../../dev/index'
+import VirtualList from '../../src/index'
 import Introduction from './components/Introduction'
 import Tab from './components/Tab'
 import CodeHighLight from './components/CodeHighLight'

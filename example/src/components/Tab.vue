@@ -2,20 +2,22 @@
   <div class="tab">
     <div v-on:click="eventClickView" class="tab-item view" v-bind:class="{active: isView}">VIEW</div>
     <div v-on:click="eventClickCode" class="tab-item code" v-bind:class="{active: !isView}">CODE</div>
-    <a v-show="!isView" class="complete-code" href="completeUrl">COMPLETE CODE</a>
+    <a v-show="!isView" class="complete-code" target="_blank" v-bind:href="completeCodeUrl">COMPLETE CODE</a>
   </div>
 </template>
 
 <script>
 import { TAB_TYPE } from '../common/const'
 
+const baseUrl = 'https://github.com/tangbc/vue-virtual-scroll-list/tree/master/example/views'
+
 export default {
   name: 'Tab',
 
   data () {
     return {
-      active: TAB_TYPE.VIEW,
-      completeUrl: 'http://github.com/tangbc/vue-virtual-scroll-list'
+      completeCodeUrl: '',
+      active: TAB_TYPE.VIEW
     }
   },
 
@@ -23,6 +25,11 @@ export default {
     isView () {
       return this.active === TAB_TYPE.VIEW
     }
+  },
+
+  mounted () {
+    const hashValue = (location.hash || '').substr(2)
+    this.completeCodeUrl = `${baseUrl}/${hashValue}/Main.vue`
   },
 
   methods: {
