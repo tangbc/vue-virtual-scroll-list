@@ -8,8 +8,8 @@
 <script>
 const html =
 `
-<VirtualList class="list"
-  :size="80"
+<VirtualList class="list-horizontal"
+  :size="110"
   :keeps="30"
   :direction="'horizontal'"
   :wrap-class="'wrapper'"
