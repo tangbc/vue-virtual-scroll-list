@@ -1,10 +1,10 @@
 export const defaultProps = {
+  size: {
+    type: Number
+  },
   keeps: {
     type: Number,
     require: true
-  },
-  estimateSize: {
-    type: Number
   },
 
   dataKey: {
@@ -78,5 +78,3 @@ export const ItemProps = {
     type: String
   }
 }
-
-export default { defaultProps, ItemProps }

@@ -238,6 +238,6 @@ export default class Virtual {
 
   // get estimate size for one.
   getEstimateSize () {
-    return this.averageSize || this.param.estimateSize
+    return this.averageSize || this.param.size
   }
 }

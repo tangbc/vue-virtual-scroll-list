@@ -17,9 +17,9 @@ const VirtualList = Vue.component('virtual-list', {
     this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
 
     this.virtual = new Virtual({
+      size: this.size, // also could be estimate.
       keeps: this.keeps,
       disabled: this.disabled,
-      estimateSize: this.estimateSize,
       buffer: Math.round(this.keeps / 3), // recommend for a third of keeps.
       uniqueIds: this.dataSources.map((dataSource) => dataSource[this.dataKey])
     }, this.onRangeChanged)
