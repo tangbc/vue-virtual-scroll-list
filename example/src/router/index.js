@@ -14,6 +14,11 @@ Vue.use(VueRouter)
     path: '/fixed-size',
     name: 'fixed-size',
     component: () => import(/* webpackChunkName: "fixed-size" */ '../views/fixed-size/Main.vue')
+  },
+  {
+    path: '/dynamic-size',
+    name: 'dynamic-size',
+    component: () => import(/* webpackChunkName: "dynamic-size" */ '../views/dynamic-size/Main.vue')
   }
 ]
 

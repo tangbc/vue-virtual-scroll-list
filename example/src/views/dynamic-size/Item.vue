@@ -1,7 +1,10 @@
 <template>
   <div class="item-inner">
-    <span># {{ index }}</span>
-    <span>{{ name }}</span>
+    <div class="head">
+      <span># {{ index }}</span>
+      <span>{{ name }}</span>
+    </div>
+    <div class="desc">{{ desc }}</div>
   </div>
 </template>
 
@@ -16,6 +19,9 @@ export default {
     },
     name: {
       type: String
+    },
+    desc: {
+      type: String
     }
   }
 }
@@ -23,8 +29,14 @@ export default {
 
 <style lang="less" scoped>
 .item-inner {
+  .head {
+    font-weight: 500;
+  }
   span:first-child {
     margin-right: 1em;
+  }
+  .desc {
+    text-align: justify;
   }
 }
 </style>

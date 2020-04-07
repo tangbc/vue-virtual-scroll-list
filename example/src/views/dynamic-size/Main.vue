@@ -1,15 +1,15 @@
 <template>
   <div class="example">
-    <Introduction description="The size of each item is equal." />
+    <Introduction description="The size of each item is dynamic." />
 
     <div class="example-content">
       <Tab v-on:tab-change="onTabChange"></Tab>
 
       <div v-show="isShowView">
         <VirtualList class="list"
-          :size="60"
+          :size="80"
           :keeps="30"
-          :item-class="'list-item-fixed'"
+          :item-class="'list-item-dynamic'"
 
           :data-key="'id'"
           :data-sources="items"
@@ -38,11 +38,12 @@ while (count--) {
     index,
     name: Random.name(),
     id: genUniqueId(index),
+    desc: Random.paragraph(Random.integer(0, 3))
   })
 }
 
 export default {
-  name: 'fix-size',
+  name: 'dynamic-size',
 
   components: {
     Code
@@ -73,11 +74,10 @@ export default {
   overflow-y: auto;
   border-color: dimgray;
 
-  .list-item-fixed {
+  .list-item-dynamic {
     display: flex;
     align-items: center;
-    padding: 0 1em;
-    height: 60px;
+    padding: 1em;
     border-bottom: 1px solid;
     border-color: lightgray;
   }
