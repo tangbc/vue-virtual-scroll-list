@@ -11,12 +11,8 @@ export default {
   name: 'FixSizeItem',
 
   props: {
-    index: {
-      type: Number
-    },
-    name: {
-      type: String
-    }
+    index: Number,
+    name: String
   }
 }
 </script>

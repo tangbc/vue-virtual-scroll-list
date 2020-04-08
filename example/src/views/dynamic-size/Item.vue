@@ -14,15 +14,9 @@ export default {
   name: 'DynamicSizeItem',
 
   props: {
-    index: {
-      type: Number
-    },
-    name: {
-      type: String
-    },
-    desc: {
-      type: String
-    }
+    index: Number,
+    name: String,
+    desc: String
   }
 }
 </script>

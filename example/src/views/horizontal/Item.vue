@@ -11,15 +11,9 @@ export default {
   name: 'HorizontalItem',
 
   props: {
-    index: {
-      type: Number
-    },
-    name: {
-      type: String
-    },
-    size: {
-      type: Number
-    }
+    index: Number,
+    name: String,
+    size: Number
   }
 }
 </script>
