@@ -12,6 +12,15 @@ const VirtualList = Vue.component('virtual-list', {
     }
   },
 
+  watch: {
+    dataSources (newValue, oldValue) {
+      if (newValue.length !== oldValue.length) {
+        this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources())
+        this.virtual.handleDataSourcesLengthChange()
+      }
+    }
+  },
+
   created () {
     this.isHorizontal = this.direction === 'horizontal'
     this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
@@ -21,7 +30,7 @@ const VirtualList = Vue.component('virtual-list', {
       keeps: this.keeps,
       disabled: this.disabled,
       buffer: Math.round(this.keeps / 3), // recommend for a third of keeps.
-      uniqueIds: this.dataSources.map((dataSource) => dataSource[this.dataKey])
+      uniqueIds: this.getUniqueIdFromDataSources()
     }, this.onRangeChanged)
 
     // just for debug
@@ -46,8 +55,6 @@ const VirtualList = Vue.component('virtual-list', {
     }
   },
 
-  updated () {},
-
   methods: {
     onItemResized (id, size) {
       this.virtual.saveSize(id, size)
@@ -67,6 +74,10 @@ const VirtualList = Vue.component('virtual-list', {
 
       this.emitEvent(offset)
       this.virtual.handleScroll(offset)
+    },
+
+    getUniqueIdFromDataSources () {
+      return this.dataSources.map((dataSource) => dataSource[this.dataKey])
     },
 
     // set current scroll position to a expectant offset.

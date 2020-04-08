@@ -27,7 +27,7 @@ export default class Virtual {
     // range data.
     this.range = Object.create(null)
     if (this.param && !this.param.disabled) {
-      this.updateRange(0, param.keeps - 1)
+      this.checkRange(0, param.keeps - 1)
     }
 
     // benchmark test data.
@@ -53,7 +53,7 @@ export default class Virtual {
   }
 
   updateParam (key, value) {
-    if (key in this.param) {
+    if (this.param && (key in this.param)) {
       this.param[key] = value
     }
   }
@@ -74,6 +74,13 @@ export default class Virtual {
     this.averageSize = Math.round(this.totalSize / Object.keys(this.sizes).length)
   }
 
+  // when dataSources length change, we need to force update
+  // just keep the same range and recalculate pad front and pad behind.
+  handleDataSourcesLengthChange () {
+    this.updateRange(this.range.start, this.range.end)
+  }
+
+  // calculating range on scroll.
   handleScroll (offset) {
     if (this.param.disabled) {
       return
@@ -100,7 +107,7 @@ export default class Virtual {
 
     // move up start by a buffer length.
     const start = Math.max(overs - this.param.buffer, 0)
-    this.updateRange(start, this.getEndByStart(start))
+    this.checkRange(start, this.getEndByStart(start))
   }
 
   handleBehind () {
@@ -110,7 +117,7 @@ export default class Virtual {
       return
     }
 
-    this.updateRange(overs, this.getEndByStart(overs))
+    this.checkRange(overs, this.getEndByStart(overs))
   }
 
   // return current scroll offset pass over items.
@@ -173,25 +180,14 @@ export default class Virtual {
     return offset
   }
 
+  // return the current real last index.
   getLastIndex () {
     return this.param.uniqueIds.length - 1
   }
 
-  updateRange (start, end) {
-    const cRange = this.correctRange(start, end)
-
-    if (this.range.start !== cRange.start) {
-      this.range.start = cRange.start
-      this.range.end = cRange.end
-      this.range.padFront = this.getPadFront()
-      this.range.padBehind = this.getPadBehind()
-
-      this.callUpdateHook()
-    }
-  }
-
-  // in some conditions range will break, we need correct it.
-  correctRange (start, end) {
+  // in some conditions range will break, we need check and correct it
+  // and then decide whether needs to update range.
+  checkRange (start, end) {
     const keeps = this.param.keeps
     const total = this.param.uniqueIds.length
 
@@ -204,15 +200,24 @@ export default class Virtual {
       start = end - keeps + 1
     }
 
-    return { start, end }
+    if (this.range.start !== start) {
+      this.updateRange(start, end)
+    }
   }
 
-  callUpdateHook () {
+  // call updating to a new range
+  updateRange (start, end) {
+    this.range.start = start
+    this.range.end = end
+    this.range.padFront = this.getPadFront()
+    this.range.padBehind = this.getPadBehind()
+
     if (!this.param.disabled) {
       this.updateHook(this.getRange())
     }
   }
 
+  // return end base on start into a new range.
   getEndByStart (start) {
     const theoryEnd = start + this.param.keeps - 1
     const truelyEnd = Math.min(theoryEnd, this.getLastIndex())
