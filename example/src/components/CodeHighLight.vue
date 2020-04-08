@@ -18,7 +18,7 @@ export default {
   },
 
   mounted () {
-    if (typeof window.hljs !== 'undefined') {
+    if (typeof window.hljs !== 'undefined' && this.$el.textContent) {
       window.hljs.highlightBlock(this.$el)
     }
   },

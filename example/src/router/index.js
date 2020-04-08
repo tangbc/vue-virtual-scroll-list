@@ -24,6 +24,11 @@ Vue.use(VueRouter)
     path: '/horizontal',
     name: 'horizontal',
     component: () => import(/* webpackChunkName: "horizontal" */ '../views/horizontal/Main.vue')
+  },
+  {
+    path: '/infinite-loading',
+    name: 'infinite-loading',
+    component: () => import(/* webpackChunkName: "infinite-loading" */ '../views/infinite-loading/Main.vue')
   }
 ]
 

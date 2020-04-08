@@ -5,6 +5,7 @@
       <router-link to="/fixed-size">fixed size</router-link>
       <router-link to="/dynamic-size">dynamic size</router-link>
       <router-link to="/horizontal">horizontal</router-link>
+      <router-link to="/infinite-loading">infinite loading</router-link>
     </div>
     <router-view/>
   </div>
