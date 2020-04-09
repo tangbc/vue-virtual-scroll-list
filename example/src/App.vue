@@ -6,6 +6,7 @@
       <router-link to="/dynamic-size">dynamic size</router-link>
       <router-link to="/horizontal">horizontal</router-link>
       <router-link to="/infinite-loading">infinite loading</router-link>
+      <router-link to="/keep-state">keep state</router-link>
     </div>
     <router-view/>
   </div>
@@ -24,7 +25,9 @@ body {
 #nav {
   padding: 1em 0;
   a {
-    margin-right: 2em;
+    margin-right: 1.5em;
+    margin-bottom: .5em;
+    display: inline-block;
   }
   .router-link-exact-active,
   .router-link-exact-active:hover {
@@ -39,6 +42,7 @@ body {
   margin-top: 1em;
   background-color: #fff;
 }
+
 code {
   background-color: gold !important;
 }

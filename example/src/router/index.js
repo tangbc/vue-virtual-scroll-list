@@ -29,6 +29,11 @@ Vue.use(VueRouter)
     path: '/infinite-loading',
     name: 'infinite-loading',
     component: () => import(/* webpackChunkName: "infinite-loading" */ '../views/infinite-loading/Main.vue')
+  },
+  {
+    path: '/keep-state',
+    name: 'keep-state',
+    component: () => import(/* webpackChunkName: "keep-state" */ '../views/keep-state/Main.vue')
   }
 ]
 
