@@ -7,7 +7,7 @@ const DIRECTION_TYPE = {
   BEHIND: 'BEHIND' // scroll down or right.
 }
 
-const SIZE_TYPE = {
+const CALC_TYPE = {
   INIT: 'INIT',
   FIXED: 'FIXED',
   DYNAMIC: 'DYNAMIC'
@@ -28,9 +28,9 @@ export default class Virtual {
     this.caches = new Map()
     this.firstRangeTotalSize = 0
     this.firstRangeAverageSize = 0
-    this.lastCalculatedIndex = 0
-    this.sizeType = SIZE_TYPE.INIT
-    this.sizeTypeValue = 0
+    this.lastCalcIndex = 0
+    this.fixedSizeValue = 0
+    this.calcType = CALC_TYPE.INIT
 
     // scroll data.
     this.offset = 0
@@ -80,13 +80,13 @@ export default class Virtual {
     // we assume size type is fixed at the beginning and remember first size value
     // if there is no size value different from this at next comming saving
     // we think it's a fixed size list, otherwise is dynamic size list.
-    if (this.sizeType === SIZE_TYPE.INIT) {
-      this.sizeTypeValue = size
-      this.sizeType = SIZE_TYPE.FIXED
-    } else if (this.sizeType === SIZE_TYPE.FIXED && this.sizeTypeValue !== size) {
-      this.sizeType = SIZE_TYPE.DYNAMIC
+    if (this.calcType === CALC_TYPE.INIT) {
+      this.fixedSizeValue = size
+      this.calcType = CALC_TYPE.FIXED
+    } else if (this.calcType === CALC_TYPE.FIXED && this.fixedSizeValue !== size) {
+      this.calcType = CALC_TYPE.DYNAMIC
       // it's no use at all.
-      delete this.sizeTypeValue
+      delete this.fixedSizeValue
     }
 
     // calculate the average size only in the first range.
@@ -128,10 +128,6 @@ export default class Virtual {
 
   // ----------- public method end. -----------
 
-  isFixedSize () {
-    return this.sizeType === SIZE_TYPE.FIXED
-  }
-
   handleFront () {
     const overs = this.getScrollOvers()
     // should not change range if start doesn't exceed overs.
@@ -163,8 +159,8 @@ export default class Virtual {
     }
 
     // if this list is fixed size, that can be easily.
-    if (this.isFixedSize()) {
-      return Math.floor(offset / this.sizeTypeValue)
+    if (this.isFixedType()) {
+      return Math.floor(offset / this.fixedSizeValue)
     }
 
     let low = 0
@@ -219,10 +215,14 @@ export default class Virtual {
     }
 
     // remember last calculate index.
-    this.lastCalculatedIndex = Math.max(this.lastCalculatedIndex, givenIndex - 1)
-    this.lastCalculatedIndex = Math.min(this.lastCalculatedIndex, this.getLastIndex())
+    this.lastCalcIndex = Math.max(this.lastCalcIndex, givenIndex - 1)
+    this.lastCalcIndex = Math.min(this.lastCalcIndex, this.getLastIndex())
 
     return offset
+  }
+
+  isFixedType () {
+    return this.calcType === CALC_TYPE.FIXED
   }
 
   // return the real last index.
@@ -271,8 +271,8 @@ export default class Virtual {
 
   // return total front offset.
   getPadFront () {
-    if (this.isFixedSize()) {
-      return this.sizeTypeValue * this.range.start
+    if (this.isFixedType()) {
+      return this.fixedSizeValue * this.range.start
     } else {
       return this.getIndexOffset(this.range.start)
     }
@@ -284,20 +284,20 @@ export default class Virtual {
     const end = this.range.end
     const lastIndex = this.getLastIndex()
 
-    if (this.isFixedSize()) {
-      return (lastIndex - end) * this.sizeTypeValue
+    if (this.isFixedType()) {
+      return (lastIndex - end) * this.fixedSizeValue
     }
 
-    // if already calculate all, return the exactly padding.
-    if (this.lastCalculatedIndex === lastIndex) {
+    // if calculated all already, return the exactly offset.
+    if (this.lastCalcIndex === lastIndex) {
       return this.getIndexOffset(lastIndex) - this.getIndexOffset(end)
     } else {
-      // if not, return a estimate padding.
+      // if not, return a estimate offset.
       return (lastIndex - end) * this.getEstimateSize()
     }
   }
 
-  // get estimate size for one item.
+  // get estimate size for one item, get from param.size at first range.
   getEstimateSize () {
     return this.firstRangeAverageSize || this.param.size
   }
