@@ -43,9 +43,10 @@
     BEHIND: 'BEHIND' // scroll down or right.
 
   };
-
-  var createObject = function createObject() {
-    return Object.create(null);
+  var SIZE_TYPE = {
+    INIT: 'INIT',
+    FIXED: 'FIXED',
+    DYNAMIC: 'DYNAMIC'
   };
 
   var Virtual = /*#__PURE__*/function () {
@@ -64,14 +65,16 @@
 
         this.sizes = new Map();
         this.caches = new Map();
-        this.totalSize = 0;
-        this.averageSize = 0;
-        this.lastCalculatedIndex = 0; // scroll data.
+        this.firstRangeTotalSize = 0;
+        this.firstRangeAverageSize = 0;
+        this.lastCalculatedIndex = 0;
+        this.sizeType = SIZE_TYPE.INIT;
+        this.sizeTypeValue = 0; // scroll data.
 
         this.offset = 0;
         this.direction = ''; // range data.
 
-        this.range = createObject();
+        this.range = Object.create(null);
 
         if (this.param && !this.param.disabled) {
           this.checkRange(0, param.keeps - 1);
@@ -91,7 +94,7 @@
     }, {
       key: "getRange",
       value: function getRange() {
-        var range = createObject();
+        var range = Object.create(null);
         range.start = this.range.start;
         range.end = this.range.end;
         range.padFront = this.range.padFront;
@@ -115,14 +118,27 @@
     }, {
       key: "saveSize",
       value: function saveSize(id, size) {
-        if (this.sizes.has(id)) {
-          this.totalSize = this.totalSize + (size - this.sizes.get(id));
-        } else {
-          this.totalSize = this.totalSize + size;
-        }
+        this.sizes.set(id, size); // we assume size type is fixed at the beginning and remember first size value
+        // if there is no size value different from this at next comming saving
+        // we think it's a fixed size list, otherwise is dynamic size list.
 
-        this.sizes.set(id, size);
-        this.averageSize = Math.round(this.totalSize / this.sizes.size);
+        if (this.sizeType === SIZE_TYPE.INIT) {
+          this.sizeTypeValue = size;
+          this.sizeType = SIZE_TYPE.FIXED;
+        } else if (this.sizeType === SIZE_TYPE.FIXED && this.sizeTypeValue !== size) {
+          this.sizeType = SIZE_TYPE.DYNAMIC; // it's no use at all.
+
+          delete this.sizeTypeValue;
+        } // calculate the average size only in the first range.
+
+
+        if (this.sizes.size <= this.param.keeps) {
+          this.firstRangeTotalSize = this.firstRangeTotalSize + size;
+          this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size);
+        } else {
+          // it's done using.
+          delete this.firstRangeTotalSize;
+        }
       } // when dataSources length change, we need to force update
       // just keep the same range and recalculate pad front and behind.
 
@@ -156,6 +172,11 @@
       } // ----------- public method end. -----------
 
     }, {
+      key: "isFixedSize",
+      value: function isFixedSize() {
+        return this.sizeType === SIZE_TYPE.FIXED;
+      }
+    }, {
       key: "handleFront",
       value: function handleFront() {
         var overs = this.getScrollOvers(); // should not change range if start doesn't exceed overs.
@@ -183,16 +204,22 @@
     }, {
       key: "getScrollOvers",
       value: function getScrollOvers() {
-        var low = 0;
-        var middle = 0;
-        var middleOffset = 0;
-        var high = this.param.uniqueIds.length; // if slot header exist, we need subtract its size.
-
+        // if slot header exist, we need subtract its size.
         var offset = this.offset - this.param.slotHeaderSize;
 
         if (offset <= 0) {
           return 0;
+        } // if this list is fixed size, that can be easily.
+
+
+        if (this.isFixedSize()) {
+          return Math.floor(offset / this.sizeTypeValue);
         }
+
+        var low = 0;
+        var middle = 0;
+        var middleOffset = 0;
+        var high = this.param.uniqueIds.length;
 
         while (low <= high) {
           middle = low + Math.floor((high - low) / 2);
@@ -296,7 +323,11 @@
     }, {
       key: "getPadFront",
       value: function getPadFront() {
-        return this.getIndexOffset(this.range.start);
+        if (this.isFixedSize()) {
+          return this.sizeTypeValue * this.range.start;
+        } else {
+          return this.getIndexOffset(this.range.start);
+        }
       } // return total behind offset.
       // for better performance, use estimated value if a not calculated.
 
@@ -304,7 +335,12 @@
       key: "getPadBehind",
       value: function getPadBehind() {
         var end = this.range.end;
-        var lastIndex = this.getLastIndex(); // if already calculate all, return the exactly padding.
+        var lastIndex = this.getLastIndex();
+
+        if (this.isFixedSize()) {
+          return (lastIndex - end) * this.sizeTypeValue;
+        } // if already calculate all, return the exactly padding.
+
 
         if (this.lastCalculatedIndex === lastIndex) {
           return this.getIndexOffset(lastIndex) - this.getIndexOffset(end);
@@ -317,7 +353,7 @@
     }, {
       key: "getEstimateSize",
       value: function getEstimateSize() {
-        return this.averageSize || this.param.size;
+        return this.firstRangeAverageSize || this.param.size;
       }
     }]);
 

@@ -7,6 +7,12 @@ const DIRECTION_TYPE = {
   BEHIND: 'BEHIND' // scroll down or right.
 }
 
+const SIZE_TYPE = {
+  INIT: 'INIT',
+  FIXED: 'FIXED',
+  DYNAMIC: 'DYNAMIC'
+}
+
 export default class Virtual {
   constructor (param, updateHook) {
     this.init(param, updateHook)
@@ -23,6 +29,8 @@ export default class Virtual {
     this.firstRangeTotalSize = 0
     this.firstRangeAverageSize = 0
     this.lastCalculatedIndex = 0
+    this.sizeType = SIZE_TYPE.INIT
+    this.sizeTypeValue = 0
 
     // scroll data.
     this.offset = 0
@@ -69,6 +77,18 @@ export default class Virtual {
   saveSize (id, size) {
     this.sizes.set(id, size)
 
+    // we assume size type is fixed at the beginning and remember first size value
+    // if there is no size value different from this at next comming saving
+    // we think it's a fixed size list, otherwise is dynamic size list.
+    if (this.sizeType === SIZE_TYPE.INIT) {
+      this.sizeTypeValue = size
+      this.sizeType = SIZE_TYPE.FIXED
+    } else if (this.sizeType === SIZE_TYPE.FIXED && this.sizeTypeValue !== size) {
+      this.sizeType = SIZE_TYPE.DYNAMIC
+      // it's no use at all.
+      delete this.sizeTypeValue
+    }
+
     // calculate the average size only in the first range.
     if (this.sizes.size <= this.param.keeps) {
       this.firstRangeTotalSize = this.firstRangeTotalSize + size
@@ -108,6 +128,10 @@ export default class Virtual {
 
   // ----------- public method end. -----------
 
+  isFixedSize () {
+    return this.sizeType === SIZE_TYPE.FIXED
+  }
+
   handleFront () {
     const overs = this.getScrollOvers()
     // should not change range if start doesn't exceed overs.
@@ -132,16 +156,21 @@ export default class Virtual {
 
   // return the pass over numbers at current scroll offset.
   getScrollOvers () {
-    let low = 0
-    let middle = 0
-    let middleOffset = 0
-    let high = this.param.uniqueIds.length
-
     // if slot header exist, we need subtract its size.
     const offset = this.offset - this.param.slotHeaderSize
     if (offset <= 0) {
       return 0
     }
+
+    // if this list is fixed size, that can be easily.
+    if (this.isFixedSize()) {
+      return Math.floor(offset / this.sizeTypeValue)
+    }
+
+    let low = 0
+    let middle = 0
+    let middleOffset = 0
+    let high = this.param.uniqueIds.length
 
     while (low <= high) {
       middle = low + Math.floor((high - low) / 2)
@@ -242,7 +271,11 @@ export default class Virtual {
 
   // return total front offset.
   getPadFront () {
-    return this.getIndexOffset(this.range.start)
+    if (this.isFixedSize()) {
+      return this.sizeTypeValue * this.range.start
+    } else {
+      return this.getIndexOffset(this.range.start)
+    }
   }
 
   // return total behind offset.
@@ -250,6 +283,10 @@ export default class Virtual {
   getPadBehind () {
     const end = this.range.end
     const lastIndex = this.getLastIndex()
+
+    if (this.isFixedSize()) {
+      return (lastIndex - end) * this.sizeTypeValue
+    }
 
     // if already calculate all, return the exactly padding.
     if (this.lastCalculatedIndex === lastIndex) {
