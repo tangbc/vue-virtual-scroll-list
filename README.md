@@ -118,9 +118,9 @@ More usages or getting start you can refer to these clearly [examples](https://t
 | direction   | String   | 'vertical'  | Scroll direction, available values are: `vertical` and `horizontal`.                  |
 | start       | Number   | 0           | Setting scroll start index.                                                           |
 | offset      | Number   | 0           | Setting scroll offset, if both `start` and `offset` are assigned, start is preferred. |
-| totop       | Function | -           | Called when list is scrolled to top, no param.                                        |
-| tobottom    | Function | -           | Called when list is scrolled to bottom, no param.                                     |
-| onscroll    | Function | -           | Called when list is scrolling, with param: (event, data).                             |
+| totop       | Function | -           | Called when list is scrolled to top, with param: `(event, range)`.                    |
+| tobottom    | Function | -           | Called when list is scrolled to bottom, with param: `(event, range)`.                 |
+| onscroll    | Function | -           | Called when list is scrolling, with param: `(event, range)`.                          |
 | headerTag   | String   | 'div'       | Header slot wrapper element tag name.                                                 |
 | headerClass | String   | -           | Header slot wrapper element class name.                                               |
 | footerTag   | String   | 'div'       | Footer slot wrapper element tag name.                                                 |

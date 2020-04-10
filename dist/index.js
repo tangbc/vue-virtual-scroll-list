@@ -44,6 +44,10 @@
 
   };
 
+  var createObject = function createObject() {
+    return Object.create(null);
+  };
+
   var Virtual = /*#__PURE__*/function () {
     function Virtual(param, updateHook) {
       _classCallCheck(this, Virtual);
@@ -58,16 +62,16 @@
         this.param = param;
         this.updateHook = updateHook; // size data.
 
-        this.sizes = Object.create(null);
+        this.sizes = createObject();
         this.totalSize = 0;
         this.averageSize = 0;
         this.lastCalculatedIndex = 0;
-        this.offsetCaches = Object.create(null); // scroll data.
+        this.offsetCaches = createObject(); // scroll data.
 
         this.offset = 0;
         this.direction = ''; // range data.
 
-        this.range = Object.create(null);
+        this.range = createObject();
 
         if (this.param && !this.param.disabled) {
           this.checkRange(0, param.keeps - 1);
@@ -87,12 +91,12 @@
     }, {
       key: "getRange",
       value: function getRange() {
-        return {
-          start: this.range.start,
-          end: this.range.end,
-          padFront: this.range.padFront,
-          padBehind: this.range.padBehind
-        };
+        var range = createObject();
+        range.start = this.range.start;
+        range.end = this.range.end;
+        range.padFront = this.range.padFront;
+        range.padBehind = this.range.padBehind;
+        return range;
       } // return start index offset.
 
     }, {
@@ -580,7 +584,7 @@
       onRangeChanged: function onRangeChanged(range) {
         this.range = range;
       },
-      onScroll: function onScroll() {
+      onScroll: function onScroll(evt) {
         var root = this.$refs.root;
 
         if (!root) {
@@ -588,7 +592,7 @@
         }
 
         var offset = root[this.directionKey];
-        this.emitEvent(offset);
+        this.emitEvent(offset, evt);
         this.virtual.handleScroll(offset);
       },
       getUniqueIdFromDataSources: function getUniqueIdFromDataSources() {
@@ -607,18 +611,19 @@
         }
       },
       // emit event at special position.
-      emitEvent: function emitEvent(offset) {
+      emitEvent: function emitEvent(offset, evt) {
         // ref element is definitely available here.
         var root = this.$refs.root;
+        var range = this.virtual.getRange();
         var offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight'];
         var scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']; // only non-empty & offset === 0 calls totop.
 
         if (!!this.dataSources.length && !offset) {
-          this.$emit('totop');
+          this.$emit('totop', evt, range);
         } else if (offset + offsetShape >= scrollShape) {
-          this.$emit('tobottom');
+          this.$emit('tobottom', evt, range);
         } else {
-          this.$emit('onscroll', offset);
+          this.$emit('onscroll', evt, range);
         }
       },
       // get the render slots based on start and end.
