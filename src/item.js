@@ -43,7 +43,7 @@ const Wrapper = {
 
     // tell parent current size identify by unqiue key.
     dispatchSizeChange () {
-      this.$parent.$emit(this.event, this.uniqueKey, this.getCurrentSize())
+      this.$parent.$emit(this.event, this.uniqueKey, this.getCurrentSize(), this.hasInitial)
     }
   }
 }
