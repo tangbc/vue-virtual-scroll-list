@@ -8,14 +8,14 @@
   <a href="https://npmjs.com/package/vue-virtual-scroll-list">
     <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
   </a>
-  <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
-    <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
-  </a>
   <a href="https://npmjs.com/package/vue-virtual-scroll-list">
     <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
   </a>
   <a href="https://vuejs.org/">
     <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
+  </a>
+  <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
+    <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
   </a>
   <a href="https://opensource.org/licenses/MIT">
     <img alt="License" src="https://img.shields.io/npm/l/vue-virtual-scroll-list.svg">
@@ -26,6 +26,7 @@
 
 * [Advantages](#advantages)
 * [Live demo](#live-demo)
+* [What's new in v2.0](#whats-new-in-v20)
 * [How it works](#how-it-works)
 * [Performance](#performance)
 * [Simple usage](#simple-usage)
@@ -43,16 +44,15 @@
 
 * You don't need to care about each item size, everything is dynamic.
 
+
 ## Live demo
 
 https://tangbc.github.io/vue-virtual-scroll-list
 
 
-## Performance
+## What's new in v2.0
 
-#### Build time wasted
-
-#### Total memory used
+Here are the details of update information: [release v2.0](). And `v1.x` documentation please see [v1.x.md]().
 
 
 ## Simple usage
@@ -74,6 +74,7 @@ npm install vue-virtual-scroll-list --save
     />
   </div>
 </template>
+
 <script>
   import Item from './Item'
   import VirtualList from 'vue-virtual-scroll-list'
@@ -85,48 +86,53 @@ npm install vue-virtual-scroll-list --save
         items: [ {uid: 'unique_1'}, {uid: 'unique_2'}, {uid: 'unique_3'}, ... ]
       }
     },
-    components: { item, 'virtual-list': VirtualList }
+    components: { 'virtual-list': VirtualList }
   }
 </script>
 ```
 
-**More usages or getting start you can refer to these clearly [examples](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/exampe/src/views).**
+More usages or getting start you can refer to these clearly [examples](https://tangbc.github.com/vue-virtual-scroll-list).
 
 
 ## Props type
 
-### Basic props (required):
+### Required props:
 
-| **Prop**      | **Type**  | **Description**                                                                                          |
-|---------------|-----------|----------------------------------------------------------------------------------------------------------|
-| size          | Number    | Each item size, if you don't know, just assign a estimate value.                                         |
-| keeps         | Number    | How many items should be keep rendering in the real dom tree.                                            |
-| dataKey       | String    | The unique key get from `dataSources` in each data object, it **must** be unique.                        |
-| dataSources   | Array     | The source data array built for list, array item must be object and has a unique key for `dataKey` prop. |
-| dataComponent | Component | Each item component declared by vue, and will render with props from `dataSources` array item.           |
+| **Prop**      | **Type**  | **Description**                                                                                             |
+|---------------|-----------|-------------------------------------------------------------------------------------------------------------|
+| size          | Number    | Each item size, if you don't know, just assign a estimate value.                                            |
+| keeps         | Number    | How many items you're expecting to keep rendering in the real dom.                                          |
+| dataKey       | String    | The unique key get from `dataSources` in each data object, it's value **must** be unique.                   |
+| dataSources   | Array     | The source array built for list, each array data must be an object and has a unique key for `dataKey` prop. |
+| dataComponent | Component | The render item component created by vue, and it will use the data object in `dataSources` as render props. |
 
-### Other props (optional):
+### Optional props:
 
 | **Prop**  | **Type** | **Default** | **Description**                                                                       |
 |-----------|----------|-------------|---------------------------------------------------------------------------------------|
 | rootTag   | String   | 'div'       | Root element tag name.                                                                |
 | wrapTag   | String   | 'div'       | List wrapper element tag name.                                                        |
-| wrapClass | String   | ''          | List wrapper element class name.                                                      |
-| itemTag   | String   | div         | Item wrapper element tag name.                                                        |
-| itemClass | String   | ''          | Item wrapper element class name.                                                      |
+| wrapClass | String   | -           | List wrapper element class name.                                                      |
+| itemTag   | String   | 'div'       | Item wrapper element tag name.                                                        |
+| itemClass | String   | -           | Item wrapper element class name.                                                      |
 | direction | String   | 'vertical'  | Scroll direction, available values are: `vertical` and `horizontal`.                  |
 | start     | Number   | 0           | Setting scroll start index.                                                           |
 | offset    | Number   | 0           | Setting scroll offset, if both `start` and `offset` are assigned, start is preferred. |
+| totop     | Function | -           | Called when list is scrolled to top, no param.                                        |
+| tobottom  | Function | -           | Called when list is scrolled to bottom, no param.                                     |
+| onscroll  | Function | -           | Called when list is scrolling, with param: (event, data).                             |
+
 
 ## Attentions
 
-This component doesn't use with `v-for` and `key` to render list, but use an "in-place patch" strategy. This way achieves the best efficient, but only suitable when your list render output does not rely on item component inner state or temporary DOM state (e.g. form input values).
+This component use an "in-place patch" strategy to render list instead of `v-for` + `:key`. This way achieves the best efficient, but only suitable when your list output does not rely on item component inner state or temporary DOM state (e.g. form input values).
 
-But how to handle these cases? without maintaining inner state, recommend to use props and dispatch (stateless component), here is an example: [keep-state]().
+But how to deal with such a scene? Without maintaining inner state, recommend to use props and dispatch (stateless component), here is an example: [keep-state](https://tangbc.github.com/vue-virtual-scroll-list/#/keep-state).
+
 
 ## Contributions
 
-Welcome to improve this component with any issue, pull request or code review!
+Welcome to improve this component with any issue, pull request or code review.
 
 
 ## Changelogs
