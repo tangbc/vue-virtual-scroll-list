@@ -1,3 +1,7 @@
+/**
+ * virtual list core calculating center.
+ */
+
 const DIRECTION_TYPE = {
   FRONT: 1, // scroll up or left.
   BEHIND: 2 // scroll down or right.
@@ -80,6 +84,11 @@ export default class Virtual {
     this.updateRange(this.range.start, this.range.end)
   }
 
+  // when slot size change, we also need to force update.
+  handleSlotSizeChange () {
+    this.handleDataSourcesLengthChange()
+  }
+
   // calculating range on scroll.
   handleScroll (offset) {
     if (this.param.disabled) {
@@ -127,17 +136,23 @@ export default class Virtual {
     let middleOffset = 0
     let high = this.param.uniqueIds.length
 
+    // if slot header exist, we need subtract its size.
+    const offset = this.offset - this.param.slotHeaderSize
+    if (offset <= 0) {
+      return 0
+    }
+
     while (low <= high) {
       middle = low + Math.floor((high - low) / 2)
       middleOffset = this.getIndexOffset(middle)
 
       this.__bsearchCalls++
 
-      if (middleOffset === this.offset) {
+      if (middleOffset === offset) {
         return middle
-      } else if (middleOffset < this.offset) {
+      } else if (middleOffset < offset) {
         low = middle + 1
-      } else if (middleOffset > this.offset) {
+      } else if (middleOffset > offset) {
         high = middle - 1
       }
     }

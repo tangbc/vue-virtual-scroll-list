@@ -1,11 +1,12 @@
+/**
+ * item and slot component both use similar wrapper
+ * we need to know their size change at any time.
+ */
+
 import Vue from 'vue'
-import { ItemProps } from './props'
+import { ItemProps, SlotProps } from './props'
 
-const SUPPORT_RESIZEOBSERVER = typeof ResizeObserver !== 'undefined'
-
-export default Vue.component('virtual-list-item', {
-  props: ItemProps,
-
+const Wrapper = {
   created () {
     this.hasInitial = false
     this.shapeKey = this.horizontal ? 'offsetWidth' : 'offsetHeight'
@@ -13,13 +14,13 @@ export default Vue.component('virtual-list-item', {
 
   mounted () {
     // dispatch once at initial.
-    this.dispatchToParent('itemResized')
+    this.dispatchSizeChange()
 
-    if (SUPPORT_RESIZEOBSERVER) {
+    if (typeof ResizeObserver !== 'undefined') {
       this.resizeObserver = new ResizeObserver(() => {
         // dispatch when size changed.
         if (this.hasInitial) {
-          this.dispatchToParent('itemResized')
+          this.dispatchSizeChange()
         } else {
           this.hasInitial = true
         }
@@ -41,14 +42,38 @@ export default Vue.component('virtual-list-item', {
     },
 
     // tell parent current size identify by unqiue key.
-    dispatchToParent (event) {
-      this.$parent.$emit(event, this.uniqueKey, this.getCurrentSize())
+    dispatchSizeChange () {
+      this.$parent.$emit(this.event, this.uniqueKey, this.getCurrentSize())
     }
-  },
+  }
+}
+
+// wrapping for item.
+export const Item = Vue.component('virtual-list-item', {
+  mixins: [Wrapper],
+
+  props: ItemProps,
 
   render (h) {
-    return h(this.tag, null, [h(this.component, {
+    return h(this.tag, {
+      role: 'item'
+    }, [h(this.component, {
       props: this.source
     })])
+  }
+})
+
+// wrapping for slot.
+export const Slot = Vue.component('virtual-list-slot', {
+  mixins: [Wrapper],
+
+  props: SlotProps,
+
+  render (h) {
+    return h(this.tag, {
+      attrs: {
+        role: this.uniqueKey
+      }
+    }, this.$slots.default)
   }
 })

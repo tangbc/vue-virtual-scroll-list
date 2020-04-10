@@ -108,19 +108,23 @@ More usages or getting start you can refer to these clearly [examples](https://t
 
 ### Optional props:
 
-| **Prop**  | **Type** | **Default** | **Description**                                                                       |
-|-----------|----------|-------------|---------------------------------------------------------------------------------------|
-| rootTag   | String   | 'div'       | Root element tag name.                                                                |
-| wrapTag   | String   | 'div'       | List wrapper element tag name.                                                        |
-| wrapClass | String   | -           | List wrapper element class name.                                                      |
-| itemTag   | String   | 'div'       | Item wrapper element tag name.                                                        |
-| itemClass | String   | -           | Item wrapper element class name.                                                      |
-| direction | String   | 'vertical'  | Scroll direction, available values are: `vertical` and `horizontal`.                  |
-| start     | Number   | 0           | Setting scroll start index.                                                           |
-| offset    | Number   | 0           | Setting scroll offset, if both `start` and `offset` are assigned, start is preferred. |
-| totop     | Function | -           | Called when list is scrolled to top, no param.                                        |
-| tobottom  | Function | -           | Called when list is scrolled to bottom, no param.                                     |
-| onscroll  | Function | -           | Called when list is scrolling, with param: (event, data).                             |
+| **Prop**  | **Type** | **Default** | **Description**                                                                         |
+|-----------|----------|-------------|-----------------------------------------------------------------------------------------|
+| rootTag     | String   | 'div'       | Root element tag name.                                                                |
+| wrapTag     | String   | 'div'       | List wrapper element tag name.                                                        |
+| wrapClass   | String   | -           | List wrapper element class name.                                                      |
+| itemTag     | String   | 'div'       | Item wrapper element tag name.                                                        |
+| itemClass   | String   | -           | Item wrapper element class name.                                                      |
+| direction   | String   | 'vertical'  | Scroll direction, available values are: `vertical` and `horizontal`.                  |
+| start       | Number   | 0           | Setting scroll start index.                                                           |
+| offset      | Number   | 0           | Setting scroll offset, if both `start` and `offset` are assigned, start is preferred. |
+| totop       | Function | -           | Called when list is scrolled to top, no param.                                        |
+| tobottom    | Function | -           | Called when list is scrolled to bottom, no param.                                     |
+| onscroll    | Function | -           | Called when list is scrolling, with param: (event, data).                             |
+| headerTag   | String   | 'div'       | Header slot wrapper element tag name.                                                 |
+| headerClass | String   | -           | Header slot wrapper element class name.                                               |
+| footerTag   | String   | 'div'       | Footer slot wrapper element tag name.                                                 |
+| footerClass | String   | -           | Footer slot wrapper element class name.                                               |
 
 
 ## Attentions

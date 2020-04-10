@@ -1,10 +1,23 @@
+/**
+ * virtual list default component.
+ */
+
 import Vue from 'vue'
-import Item from './item'
 import Virtual from './virtual'
-import { defaultProps } from './props'
+import { Item, Slot } from './item'
+import { VirtualProps } from './props'
+
+const EVENT_TYPE = {
+  ITEM: 'item_resize',
+  SLOT: 'slot_resize'
+}
+const SLOT_TYPE = {
+  HEADER: 'header',
+  FOOTER: 'footer'
+}
 
 const VirtualList = Vue.component('virtual-list', {
-  props: defaultProps,
+  props: VirtualProps,
 
   data () {
     return {
@@ -26,7 +39,9 @@ const VirtualList = Vue.component('virtual-list', {
     this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
 
     this.virtual = new Virtual({
-      size: this.size, // also could be estimate.
+      size: this.size, // also could be a estimate value.
+      slotHeaderSize: 0,
+      slotFooterSize: 0,
       keeps: this.keeps,
       disabled: this.disabled,
       buffer: Math.round(this.keeps / 3), // recommend for a third of keeps.
@@ -38,8 +53,14 @@ const VirtualList = Vue.component('virtual-list', {
 
     // also need sync initial range first.
     this.range = this.virtual.getRange()
+
     // listen item size changing.
-    this.$on('itemResized', this.onItemResized)
+    this.$on(EVENT_TYPE.ITEM, this.onItemResized)
+
+    // listen slot size changing.
+    if (this.$slots.header || this.$slots.footer) {
+      this.$on(EVENT_TYPE.SLOT, this.onSlotResized)
+    }
   },
 
   beforeDestroy () {
@@ -60,6 +81,16 @@ const VirtualList = Vue.component('virtual-list', {
       this.virtual.saveSize(id, size)
     },
 
+    onSlotResized (type, size) {
+      if (type === SLOT_TYPE.HEADER) {
+        this.virtual.updateParam('slotHeaderSize', size)
+      } else if (type === SLOT_TYPE.FOOTER) {
+        this.virtual.updateParam('slotFooterSize', size)
+      }
+      this.virtual.handleSlotSizeChange()
+    },
+
+    // here is the rerendering entry.
     onRangeChanged (range) {
       this.range = range
     },
@@ -115,6 +146,7 @@ const VirtualList = Vue.component('virtual-list', {
           class: this.itemClass,
           props: {
             tag: this.itemTag,
+            event: EVENT_TYPE.ITEM,
             horizontal: this.isHorizontal,
             uniqueKey: this.dataSources[index][this.dataKey],
             source: this.dataSources[index],
@@ -129,6 +161,7 @@ const VirtualList = Vue.component('virtual-list', {
   // render function, a closer-to-the-compiler alternative to templates.
   // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
   render (h) {
+    const { header, footer } = this.$slots
     const padding = this.isHorizontal
       ? `0px ${this.range.padBehind}px 0px ${this.range.padFront}px`
       : `${this.range.padFront}px 0px ${this.range.padBehind}px`
@@ -139,16 +172,36 @@ const VirtualList = Vue.component('virtual-list', {
         '&scroll': this.onScroll
       }
     }, [
+      // header slot.
+      header ? h(Slot, {
+        class: this.headerClass,
+        props: {
+          tag: this.headerTag,
+          event: EVENT_TYPE.SLOT,
+          uniqueKey: SLOT_TYPE.HEADER
+        }
+      }, header) : null,
+
+      // main list.
       h(this.wrapTag, {
         class: this.wrapClass,
         attrs: {
           role: 'group'
         },
         style: {
-          margin: '0px',
           padding: padding
         }
-      }, this.getRenderSlots(h))
+      }, this.getRenderSlots(h)),
+
+      // footer slot.
+      footer ? h(Slot, {
+        class: this.footerClass,
+        props: {
+          tag: this.footerTag,
+          event: EVENT_TYPE.SLOT,
+          uniqueKey: SLOT_TYPE.FOOTER
+        }
+      }, footer) : null
     ])
   }
 })

@@ -1,4 +1,8 @@
-export const defaultProps = {
+/**
+ * props declaration for default, item and slot component.
+ */
+
+export const VirtualProps = {
   size: {
     type: Number
   },
@@ -55,6 +59,23 @@ export const defaultProps = {
     default: ''
   },
 
+  headerTag: {
+    type: String,
+    default: 'div'
+  },
+  headerClass: {
+    type: String,
+    default: ''
+  },
+  footerTag: {
+    type: String,
+    default: 'div'
+  },
+  footerClass: {
+    type: String,
+    default: 'div'
+  },
+
   disabled: {
     type: Boolean,
     default: false
@@ -62,7 +83,10 @@ export const defaultProps = {
 }
 
 export const ItemProps = {
-  uniqueKey: {
+  event: {
+    type: String
+  },
+  tag: {
     type: String
   },
   horizontal: {
@@ -74,7 +98,22 @@ export const ItemProps = {
   component: {
     type: Object
   },
+  uniqueKey: {
+    type: String
+  }
+}
+
+export const SlotProps = {
+  event: {
+    type: String
+  },
+  uniqueKey: {
+    String
+  },
   tag: {
     type: String
+  },
+  horizontal: {
+    type: Boolean
   }
 }
