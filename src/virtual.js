@@ -7,6 +7,8 @@ const DIRECTION_TYPE = {
   BEHIND: 2 // scroll down or right.
 }
 
+const createObject = () => Object.create(null)
+
 export default class Virtual {
   constructor (param, updateHook) {
     this.init(param, updateHook)
@@ -18,18 +20,18 @@ export default class Virtual {
     this.updateHook = updateHook
 
     // size data.
-    this.sizes = Object.create(null)
+    this.sizes = createObject()
     this.totalSize = 0
     this.averageSize = 0
     this.lastCalculatedIndex = 0
-    this.offsetCaches = Object.create(null)
+    this.offsetCaches = createObject()
 
     // scroll data.
     this.offset = 0
     this.direction = ''
 
     // range data.
-    this.range = Object.create(null)
+    this.range = createObject()
     if (this.param && !this.param.disabled) {
       this.checkRange(0, param.keeps - 1)
     }
@@ -46,12 +48,12 @@ export default class Virtual {
 
   // return actually render range.
   getRange () {
-    return {
-      start: this.range.start,
-      end: this.range.end,
-      padFront: this.range.padFront,
-      padBehind: this.range.padBehind
-    }
+    const range = createObject()
+    range.start = this.range.start
+    range.end = this.range.end
+    range.padFront = this.range.padFront
+    range.padBehind = this.range.padBehind
+    return range
   }
 
   // return start index offset.
