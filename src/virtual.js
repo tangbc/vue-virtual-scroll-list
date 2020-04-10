@@ -3,8 +3,8 @@
  */
 
 const DIRECTION_TYPE = {
-  FRONT: 1, // scroll up or left.
-  BEHIND: 2 // scroll down or right.
+  FRONT: 'FRONT', // scroll up or left.
+  BEHIND: 'BEHIND' // scroll down or right.
 }
 
 const createObject = () => Object.create(null)
@@ -84,12 +84,12 @@ export default class Virtual {
   }
 
   // when dataSources length change, we need to force update
-  // just keep the same range and recalculate pad front and pad behind.
+  // just keep the same range and recalculate pad front and behind.
   handleDataSourcesLengthChange () {
     this.updateRange(this.range.start, this.range.end)
   }
 
-  // when slot size change, we also need to force update.
+  // when slot size change, we also need force update.
   handleSlotSizeChange () {
     this.handleDataSourcesLengthChange()
   }
@@ -134,7 +134,7 @@ export default class Virtual {
     this.checkRange(overs, this.getEndByStart(overs))
   }
 
-  // return current scroll offset pass over items.
+  // return the pass over numbers at current scroll offset.
   getScrollOvers () {
     let low = 0
     let middle = 0
@@ -173,7 +173,7 @@ export default class Virtual {
       return 0
     }
 
-    // get from cache avoid too much calculate.
+    // get from cache if possible.
     if (givenIndex in this.offsetCaches) {
       this.__getIndexOffsetCacheHits++
       return this.offsetCaches[givenIndex]
@@ -200,13 +200,13 @@ export default class Virtual {
     return offset
   }
 
-  // return the current real last index.
+  // return the real last index.
   getLastIndex () {
     return this.param.uniqueIds.length - 1
   }
 
   // in some conditions range will break, we need check and correct it
-  // and then decide whether needs to update range.
+  // and then decide whether need update to next range.
   checkRange (start, end) {
     const keeps = this.param.keeps
     const total = this.param.uniqueIds.length
@@ -225,7 +225,7 @@ export default class Virtual {
     }
   }
 
-  // call updating to a new range
+  // call updating to a new range and rerender.
   updateRange (start, end) {
     this.range.start = start
     this.range.end = end
@@ -237,17 +237,20 @@ export default class Virtual {
     }
   }
 
-  // return end base on start into a new range.
+  // return end base on start when going to a new range.
   getEndByStart (start) {
     const theoryEnd = start + this.param.keeps - 1
     const truelyEnd = Math.min(theoryEnd, this.getLastIndex())
     return truelyEnd
   }
 
+  // return total front offset.
   getPadFront () {
     return this.getIndexOffset(this.range.start)
   }
 
+  // return total behind offset.
+  // for better performance, use estimated value if a not calculated.
   getPadBehind () {
     const end = this.range.end
     const lastIndex = this.getLastIndex()
@@ -261,7 +264,7 @@ export default class Virtual {
     }
   }
 
-  // get estimate size for one.
+  // get estimate size for one item.
   getEstimateSize () {
     return this.averageSize || this.param.size
   }

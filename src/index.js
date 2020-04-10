@@ -12,7 +12,7 @@ const EVENT_TYPE = {
   SLOT: 'slot_resize'
 }
 const SLOT_TYPE = {
-  HEADER: 'header',
+  HEADER: 'header', // string value also use for aria role attribute.
   FOOTER: 'footer'
 }
 
@@ -68,7 +68,7 @@ const VirtualList = Vue.component('virtual-list', {
   },
 
   mounted () {
-    // handling position set.
+    // set position.
     if (this.start) {
       this.setScrollOffset(this.virtual.getOffset(this.start))
     } else if (this.offset) {
@@ -77,10 +77,12 @@ const VirtualList = Vue.component('virtual-list', {
   },
 
   methods: {
+    // event called when every item mounted or size changed.
     onItemResized (id, size) {
       this.virtual.saveSize(id, size)
     },
 
+    // event called when slot mounted or size changed.
     onSlotResized (type, size) {
       if (type === SLOT_TYPE.HEADER) {
         this.virtual.updateParam('slotHeaderSize', size)
@@ -119,7 +121,7 @@ const VirtualList = Vue.component('virtual-list', {
       }
     },
 
-    // emit event at special position.
+    // emit event in special position.
     emitEvent (offset, evt) {
       // ref element is definitely available here.
       const { root } = this.$refs
@@ -137,11 +139,12 @@ const VirtualList = Vue.component('virtual-list', {
       }
     },
 
-    // get the render slots based on start and end.
+    // get the real render slots based on range data.
     getRenderSlots (h) {
       const slots = []
       const start = this.disabled ? 0 : this.range.start
       const end = this.disabled ? this.dataSources.length - 1 : this.range.end
+
       for (let index = start; index <= end; index++) {
         slots.push(h(Item, {
           class: this.itemClass,
@@ -155,6 +158,7 @@ const VirtualList = Vue.component('virtual-list', {
           }
         }))
       }
+
       return slots
     }
   },

@@ -38,9 +38,9 @@
    * virtual list core calculating center.
    */
   var DIRECTION_TYPE = {
-    FRONT: 1,
+    FRONT: 'FRONT',
     // scroll up or left.
-    BEHIND: 2 // scroll down or right.
+    BEHIND: 'BEHIND' // scroll down or right.
 
   };
 
@@ -128,13 +128,13 @@
         this.sizes[id] = size;
         this.averageSize = Math.round(this.totalSize / Object.keys(this.sizes).length);
       } // when dataSources length change, we need to force update
-      // just keep the same range and recalculate pad front and pad behind.
+      // just keep the same range and recalculate pad front and behind.
 
     }, {
       key: "handleDataSourcesLengthChange",
       value: function handleDataSourcesLengthChange() {
         this.updateRange(this.range.start, this.range.end);
-      } // when slot size change, we also need to force update.
+      } // when slot size change, we also need force update.
 
     }, {
       key: "handleSlotSizeChange",
@@ -182,7 +182,7 @@
         }
 
         this.checkRange(overs, this.getEndByStart(overs));
-      } // return current scroll offset pass over items.
+      } // return the pass over numbers at current scroll offset.
 
     }, {
       key: "getScrollOvers",
@@ -222,7 +222,7 @@
         // we know this without calculate!
         if (!givenIndex) {
           return 0;
-        } // get from cache avoid too much calculate.
+        } // get from cache if possible.
 
 
         if (givenIndex in this.offsetCaches) {
@@ -248,14 +248,14 @@
         this.lastCalculatedIndex = Math.max(this.lastCalculatedIndex, givenIndex - 1);
         this.lastCalculatedIndex = Math.min(this.lastCalculatedIndex, this.getLastIndex());
         return offset;
-      } // return the current real last index.
+      } // return the real last index.
 
     }, {
       key: "getLastIndex",
       value: function getLastIndex() {
         return this.param.uniqueIds.length - 1;
       } // in some conditions range will break, we need check and correct it
-      // and then decide whether needs to update range.
+      // and then decide whether need update to next range.
 
     }, {
       key: "checkRange",
@@ -274,7 +274,7 @@
         if (this.range.start !== start) {
           this.updateRange(start, end);
         }
-      } // call updating to a new range
+      } // call updating to a new range and rerender.
 
     }, {
       key: "updateRange",
@@ -287,7 +287,7 @@
         if (!this.param.disabled) {
           this.updateHook(this.getRange());
         }
-      } // return end base on start into a new range.
+      } // return end base on start when going to a new range.
 
     }, {
       key: "getEndByStart",
@@ -295,12 +295,15 @@
         var theoryEnd = start + this.param.keeps - 1;
         var truelyEnd = Math.min(theoryEnd, this.getLastIndex());
         return truelyEnd;
-      }
+      } // return total front offset.
+
     }, {
       key: "getPadFront",
       value: function getPadFront() {
         return this.getIndexOffset(this.range.start);
-      }
+      } // return total behind offset.
+      // for better performance, use estimated value if a not calculated.
+
     }, {
       key: "getPadBehind",
       value: function getPadBehind() {
@@ -313,7 +316,7 @@
           // if not, return a estimate padding.
           return (lastIndex - end) * this.getEstimateSize();
         }
-      } // get estimate size for one.
+      } // get estimate size for one item.
 
     }, {
       key: "getEstimateSize",
@@ -514,6 +517,7 @@
   };
   var SLOT_TYPE = {
     HEADER: 'header',
+    // string value also use for aria role attribute.
     FOOTER: 'footer'
   };
   var VirtualList = Vue.component('virtual-list', {
@@ -560,7 +564,7 @@
       this.virtual.destroy();
     },
     mounted: function mounted() {
-      // handling position set.
+      // set position.
       if (this.start) {
         this.setScrollOffset(this.virtual.getOffset(this.start));
       } else if (this.offset) {
@@ -568,9 +572,11 @@
       }
     },
     methods: {
+      // event called when every item mounted or size changed.
       onItemResized: function onItemResized(id, size) {
         this.virtual.saveSize(id, size);
       },
+      // event called when slot mounted or size changed.
       onSlotResized: function onSlotResized(type, size) {
         if (type === SLOT_TYPE.HEADER) {
           this.virtual.updateParam('slotHeaderSize', size);
@@ -610,7 +616,7 @@
           root[this.directionKey] = offset || 0;
         }
       },
-      // emit event at special position.
+      // emit event in special position.
       emitEvent: function emitEvent(offset, evt) {
         // ref element is definitely available here.
         var root = this.$refs.root;
@@ -626,7 +632,7 @@
           this.$emit('onscroll', evt, range);
         }
       },
-      // get the render slots based on start and end.
+      // get the real render slots based on range data.
       getRenderSlots: function getRenderSlots(h) {
         var slots = [];
         var start = this.disabled ? 0 : this.range.start;
