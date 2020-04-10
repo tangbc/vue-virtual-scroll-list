@@ -20,11 +20,11 @@ export default class Virtual {
     this.updateHook = updateHook
 
     // size data.
-    this.sizes = createObject()
+    this.sizes = new Map()
+    this.caches = new Map()
     this.totalSize = 0
     this.averageSize = 0
     this.lastCalculatedIndex = 0
-    this.offsetCaches = createObject()
 
     // scroll data.
     this.offset = 0
@@ -69,18 +69,14 @@ export default class Virtual {
 
   // save each size map by id.
   saveSize (id, size) {
-    if (!this.param.uniqueIds.includes(id)) {
-      return
-    }
-
-    if (id in this.sizes) {
-      this.totalSize = this.totalSize + (size - this.sizes[id])
+    if (this.sizes.has(id)) {
+      this.totalSize = this.totalSize + (size - this.sizes.get(id))
     } else {
       this.totalSize = this.totalSize + size
     }
 
-    this.sizes[id] = size
-    this.averageSize = Math.round(this.totalSize / Object.keys(this.sizes).length)
+    this.sizes.set(id, size)
+    this.averageSize = Math.round(this.totalSize / this.sizes.size)
   }
 
   // when dataSources length change, we need to force update
@@ -174,9 +170,9 @@ export default class Virtual {
     }
 
     // get from cache if possible.
-    if (givenIndex in this.offsetCaches) {
+    if (this.caches.has(givenIndex)) {
       this.__getIndexOffsetCacheHits++
-      return this.offsetCaches[givenIndex]
+      return this.caches.get(givenIndex)
     }
 
     let offset = 0
@@ -186,10 +182,10 @@ export default class Virtual {
 
       // cache last index offset if exist.
       if (index && indexSize) {
-        this.offsetCaches[index] = offset
+        this.caches.set(index, offset)
       }
 
-      indexSize = this.sizes[this.param.uniqueIds[index]]
+      indexSize = this.sizes.get(this.param.uniqueIds[index])
       offset = offset + (indexSize || this.getEstimateSize())
     }
 
