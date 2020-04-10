@@ -7,8 +7,6 @@ const DIRECTION_TYPE = {
   BEHIND: 'BEHIND' // scroll down or right.
 }
 
-const createObject = () => Object.create(null)
-
 export default class Virtual {
   constructor (param, updateHook) {
     this.init(param, updateHook)
@@ -22,8 +20,8 @@ export default class Virtual {
     // size data.
     this.sizes = new Map()
     this.caches = new Map()
-    this.totalSize = 0
-    this.averageSize = 0
+    this.firstRangeTotalSize = 0
+    this.firstRangeAverageSize = 0
     this.lastCalculatedIndex = 0
 
     // scroll data.
@@ -31,7 +29,7 @@ export default class Virtual {
     this.direction = ''
 
     // range data.
-    this.range = createObject()
+    this.range = Object.create(null)
     if (this.param && !this.param.disabled) {
       this.checkRange(0, param.keeps - 1)
     }
@@ -48,7 +46,7 @@ export default class Virtual {
 
   // return actually render range.
   getRange () {
-    const range = createObject()
+    const range = Object.create(null)
     range.start = this.range.start
     range.end = this.range.end
     range.padFront = this.range.padFront
@@ -69,14 +67,16 @@ export default class Virtual {
 
   // save each size map by id.
   saveSize (id, size) {
-    if (this.sizes.has(id)) {
-      this.totalSize = this.totalSize + (size - this.sizes.get(id))
-    } else {
-      this.totalSize = this.totalSize + size
-    }
-
     this.sizes.set(id, size)
-    this.averageSize = Math.round(this.totalSize / this.sizes.size)
+
+    // calculate the average size only in the first range.
+    if (this.sizes.size <= this.param.keeps) {
+      this.firstRangeTotalSize = this.firstRangeTotalSize + size
+      this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size)
+    } else {
+      // it's done using.
+      delete this.firstRangeTotalSize
+    }
   }
 
   // when dataSources length change, we need to force update
@@ -262,6 +262,6 @@ export default class Virtual {
 
   // get estimate size for one item.
   getEstimateSize () {
-    return this.averageSize || this.param.size
+    return this.firstRangeAverageSize || this.param.size
   }
 }
