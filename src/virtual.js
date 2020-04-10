@@ -47,7 +47,10 @@ export default class Virtual {
   // return actually render range.
   getRange () {
     return {
-      ...this.range
+      start: this.range.start,
+      end: this.range.end,
+      padFront: this.range.padFront,
+      padBehind: this.range.padBehind
     }
   }
 
