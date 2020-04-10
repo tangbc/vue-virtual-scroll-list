@@ -16,7 +16,9 @@ const SLOT_TYPE = {
   FOOTER: 'footer'
 }
 
-const VirtualList = Vue.component('virtual-list', {
+const NAME = 'virtual-list'
+
+const VirtualList = Vue.component(NAME, {
   props: VirtualProps,
 
   data () {
@@ -83,13 +85,16 @@ const VirtualList = Vue.component('virtual-list', {
     },
 
     // event called when slot mounted or size changed.
-    onSlotResized (type, size) {
+    onSlotResized (type, size, hasInit) {
       if (type === SLOT_TYPE.HEADER) {
         this.virtual.updateParam('slotHeaderSize', size)
       } else if (type === SLOT_TYPE.FOOTER) {
         this.virtual.updateParam('slotFooterSize', size)
       }
-      this.virtual.handleSlotSizeChange()
+
+      if (hasInit) {
+        this.virtual.handleSlotSizeChange()
+      }
     },
 
     // here is the rerendering entry.
@@ -146,17 +151,22 @@ const VirtualList = Vue.component('virtual-list', {
       const end = this.disabled ? this.dataSources.length - 1 : this.range.end
 
       for (let index = start; index <= end; index++) {
-        slots.push(h(Item, {
-          class: this.itemClass,
-          props: {
-            tag: this.itemTag,
-            event: EVENT_TYPE.ITEM,
-            horizontal: this.isHorizontal,
-            uniqueKey: this.dataSources[index][this.dataKey],
-            source: this.dataSources[index],
-            component: this.dataComponent
-          }
-        }))
+        const dataSource = this.dataSources[index]
+        if (dataSource) {
+          slots.push(h(Item, {
+            class: this.itemClass,
+            props: {
+              tag: this.itemTag,
+              event: EVENT_TYPE.ITEM,
+              horizontal: this.isHorizontal,
+              uniqueKey: dataSource[this.dataKey],
+              source: dataSource,
+              component: this.dataComponent
+            }
+          }))
+        } else {
+          console.warn(`[${NAME}]: cannot get the index ${index} from data-sources.`)
+        }
       }
 
       return slots
