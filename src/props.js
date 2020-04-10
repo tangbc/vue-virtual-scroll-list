@@ -73,7 +73,7 @@ export const VirtualProps = {
   },
   footerClass: {
     type: String,
-    default: 'div'
+    default: ''
   },
 
   disabled: {
