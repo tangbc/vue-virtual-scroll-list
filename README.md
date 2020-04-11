@@ -27,7 +27,6 @@
 * [Advantages](#advantages)
 * [Live demo](#live-demo)
 * [What's new in v2.0](#whats-new-in-v20)
-* [Performance](#performance)
 * [Simple usage](#simple-usage)
 * [**Props type**](#props-type)
 * [Attentions](#attentions)
