@@ -41,6 +41,14 @@ export const VirtualProps = {
     type: String,
     default: 'vertical' // the other value is horizontal.
   },
+  upperThreshold: {
+    type: Number,
+    default: 0
+  },
+  lowerThreshold: {
+    type: Number,
+    default: 0
+  },
   start: {
     type: Number,
     default: 0

@@ -62,6 +62,14 @@ export default class Virtual {
     return range
   }
 
+  isLower () {
+    return this.direction === DIRECTION_TYPE.BEHIND
+  }
+
+  isUpper () {
+    return this.direction === DIRECTION_TYPE.FRONT
+  }
+
   // return start index offset.
   getOffset (start) {
     return this.getIndexOffset(start)

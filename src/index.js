@@ -109,9 +109,8 @@ const VirtualList = Vue.component(NAME, {
       }
 
       const offset = root[this.directionKey]
-
-      this.emitEvent(offset, evt)
       this.virtual.handleScroll(offset)
+      this.emitEvent(offset, evt)
     },
 
     getUniqueIdFromDataSources () {
@@ -131,16 +130,17 @@ const VirtualList = Vue.component(NAME, {
       // ref element is definitely available here.
       const { root } = this.$refs
       const range = this.virtual.getRange()
+      const isLower = this.virtual.isUpper()
+      const isUpper = this.virtual.isLower()
       const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
       const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
 
-      // only non-empty & offset === 0 calls totop.
-      if (!!this.dataSources.length && !offset) {
-        this.$emit('totop', evt, range)
-      } else if (offset + offsetShape >= scrollShape) {
-        this.$emit('tobottom', evt, range)
+      if (isLower && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
+        this.$emit('toupper', evt, range)
+      } else if (isUpper && offset + offsetShape + this.lowerThreshold >= scrollShape) {
+        this.$emit('tolower', evt, range)
       } else {
-        this.$emit('onscroll', evt, range)
+        this.$emit('scroll', evt, range)
       }
     },
 
