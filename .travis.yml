@@ -2,9 +2,9 @@ language: node_js
 node_js:
   - 8
 script:
-  - npm run ci
+  - npm run lint
 branches:
   only:
     - master
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  # - bash <(curl -s https://codecov.io/bash)
