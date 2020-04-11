@@ -1,11 +1,12 @@
 <template>
   <div class="index">
+    <github-corner />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Index',
+  name: 'index',
 
   data() {
     return {

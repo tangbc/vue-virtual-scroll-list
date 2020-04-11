@@ -11,7 +11,7 @@
 <script>
 
 export default {
-  name: 'DynamicSizeItem',
+  name: 'dynamic-size-item',
 
   props: {
     index: Number,

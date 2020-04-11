@@ -1,13 +1,13 @@
 <template>
   <div class="example">
-    <Corner />
-    <Introduction description="The size of each item is equal." />
+    <github-corner />
+    <introduction description="The size of each item is equal." />
 
     <div class="example-content">
-      <Tab v-on:tab-change="onTabChange"></Tab>
+      <tab v-on:tab-change="onTabChange" />
 
       <div v-show="isShowView">
-        <VirtualList class="list"
+        <virtual-list class="list"
           :size="50"
           :keeps="30"
           :item-class="'list-item-fixed'"
@@ -18,7 +18,7 @@
         />
       </div>
 
-      <Code v-show="!isShowView"></Code>
+      <codeblock v-show="!isShowView" />
     </div>
   </div>
 </template>
@@ -46,7 +46,7 @@ export default {
   name: 'fix-size',
 
   components: {
-    Code
+    codeblock: Code
   },
 
   data () {

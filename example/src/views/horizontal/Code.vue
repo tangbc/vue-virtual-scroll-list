@@ -1,14 +1,14 @@
 <template>
   <div>
-    <CodeHighLight type="html" v-if="!!html" :code="html" />
-    <CodeHighLight type="js" v-if="!!js" :code="js" />
+    <code-high-light type="html" v-if="!!html" :code="html" />
+    <code-high-light type="js" v-if="!!js" :code="js" />
   </div>
 </template>
 
 <script>
 const html =
 `
-<VirtualList class="list-horizontal"
+<virtual-list class="list-horizontal"
   :size="110"
   :keeps="30"
   :direction="'horizontal'"
@@ -25,7 +25,7 @@ const js =
 ``
 
 export default {
-  name: 'CodeHorizontal',
+  name: 'horizontal-code',
 
   data () {
     return { html, js }

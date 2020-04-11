@@ -1,12 +1,13 @@
 <template>
   <div class="example">
-    <Introduction description="The size of each item is dynamic." />
+    <github-corner />
+    <introduction description="The size of each item is dynamic." />
 
     <div class="example-content">
-      <Tab v-on:tab-change="onTabChange"></Tab>
+      <tab v-on:tab-change="onTabChange" />
 
       <div v-show="isShowView">
-        <VirtualList class="list-horizontal"
+        <virtual-list class="list-horizontal"
           :size="110"
           :keeps="30"
           :direction="'horizontal'"
@@ -19,7 +20,7 @@
         />
       </div>
 
-      <Code v-show="!isShowView"></Code>
+      <codeblock v-show="!isShowView" />
     </div>
   </div>
 </template>
@@ -49,7 +50,7 @@ export default {
   name: 'horizontal',
 
   components: {
-    Code
+    codeblock: Code
   },
 
   data () {

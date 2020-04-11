@@ -8,7 +8,7 @@
 <script>
 
 export default {
-  name: 'HorizontalItem',
+  name: 'horizontal-item',
 
   props: {
     index: Number,

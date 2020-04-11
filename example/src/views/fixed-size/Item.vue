@@ -8,7 +8,7 @@
 <script>
 
 export default {
-  name: 'FixSizeItem',
+  name: 'fix-size-item',
 
   props: {
     index: Number,

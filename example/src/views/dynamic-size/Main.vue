@@ -1,12 +1,13 @@
 <template>
   <div class="example">
-    <Introduction description="The size of each item is dynamic." />
+    <github-corner />
+    <introduction description="The size of each item is dynamic." />
 
     <div class="example-content">
-      <Tab v-on:tab-change="onTabChange"></Tab>
+      <tab v-on:tab-change="onTabChange" />
 
       <div v-show="isShowView">
-        <VirtualList class="list-dynamic"
+        <virtual-list class="list-dynamic"
           :size="80"
           :keeps="30"
           :item-class="'list-item-dynamic'"
@@ -17,7 +18,7 @@
         />
       </div>
 
-      <Code v-show="!isShowView"></Code>
+      <codeblock v-show="!isShowView" />
     </div>
   </div>
 </template>
@@ -46,7 +47,7 @@ export default {
   name: 'dynamic-size',
 
   components: {
-    Code
+    codeblock: Code
   },
 
   data () {

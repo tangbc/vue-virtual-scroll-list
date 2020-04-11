@@ -1,14 +1,15 @@
 <template>
   <div class="example">
-    <Introduction description="The size of each item is equal." />
+    <github-corner />
+    <introduction description="The size of each item is equal." />
 
     <div class="example-content">
-      <Tab v-on:tab-change="onTabChange"></Tab>
+      <tab v-on:tab-change="onTabChange" />
 
       <div class="selects" v-show="isShowView">{{ selectNames }}</div>
 
       <div v-show="isShowView">
-        <VirtualList class="list-keep"
+        <virtual-list class="list-keep"
           :size="60"
           :keeps="30"
           :item-class="'list-item-keep'"
@@ -19,7 +20,7 @@
         />
       </div>
 
-      <Code v-show="!isShowView"></Code>
+      <codeblock v-show="!isShowView" />
     </div>
   </div>
 </template>
@@ -45,10 +46,10 @@ while (count--) {
 }
 
 export default {
-  name: 'KeepStateMain',
+  name: 'keep-state',
 
   components: {
-    Code
+    codeblock: Code
   },
 
   data () {

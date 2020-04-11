@@ -5,7 +5,7 @@
 <script>
 
 export default {
-  name: 'Introduction',
+  name: 'introduction',
 
   props: {
     description: {

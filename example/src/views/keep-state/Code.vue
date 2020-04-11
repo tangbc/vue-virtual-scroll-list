@@ -9,7 +9,7 @@
 import getCodeUrl from '../../common/get-code-url'
 
 export default {
-  name: 'CodeKeepState',
+  name: 'keep-state-code',
 
   data () {
     return { href: '' }

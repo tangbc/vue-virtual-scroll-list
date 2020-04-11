@@ -1,14 +1,14 @@
 <template>
   <div>
-    <CodeHighLight type="html" :code="html" />
-    <CodeHighLight type="js" :code="js" />
+    <code-high-light type="html" :code="html" />
+    <code-high-light type="js" :code="js" />
   </div>
 </template>
 
 <script>
 const html =
 `
-<VirtualList class="list"
+<virtual-list class="list"
   :size="80" // Just pass a estimate size.
   :keeps="30"
   :data-key="'id'"
@@ -41,7 +41,7 @@ export default {
 `
 
 export default {
-  name: 'CodeDynamicSize',
+  name: 'dynamic-size-code',
 
   data () {
     return { html, js }

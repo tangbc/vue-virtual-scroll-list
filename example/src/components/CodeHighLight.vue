@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'CodeHightLight',
+  name: 'code-high-light',
 
   props: {
     type: {

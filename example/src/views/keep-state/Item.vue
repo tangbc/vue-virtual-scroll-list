@@ -10,7 +10,7 @@
 import mixins from '../../mixins'
 
 export default {
-  name: 'KeepStateItem',
+  name: 'keep-state-item',
 
   mixins: [mixins],
 

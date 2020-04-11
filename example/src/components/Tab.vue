@@ -12,7 +12,7 @@ import { TAB_TYPE, DEFAULT_TAB } from '../common/const'
 
 
 export default {
-  name: 'Tab',
+  name: 'tab',
 
   data () {
     return {

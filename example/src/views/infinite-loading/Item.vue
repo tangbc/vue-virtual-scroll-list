@@ -11,7 +11,7 @@
 <script>
 
 export default {
-  name: 'InfiniteLoadingItem',
+  name: 'infinite-loading-item',
 
   props: {
     index: Number,

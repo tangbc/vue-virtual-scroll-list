@@ -1,14 +1,15 @@
 <template>
   <div class="example">
-    <Introduction description="The size of each item is dynamic." />
+    <github-corner />
+    <introduction description="The size of each item is dynamic." />
 
     <div class="example-content">
-      <Tab v-on:tab-change="onTabChange"></Tab>
+      <tab v-on:tab-change="onTabChange" />
 
       <div class="result">Items count: {{ items.length }}.</div>
 
       <div v-show="isShowView">
-        <VirtualList class="list-infinite"
+        <virtual-list class="list-infinite"
           :size="70"
           :keeps="30"
           :item-class="'list-item-infinite'"
@@ -24,10 +25,10 @@
           :lower-threshold="50"
         >
           <div slot="footer" v-show="showLoading" class="loader"></div>
-        </VirtualList>
+        </virtual-list>
       </div>
 
-      <Code v-show="!isShowView"></Code>
+      <codeblock v-show="!isShowView" />
     </div>
   </div>
 </template>
@@ -60,7 +61,7 @@ export default {
   name: 'infinite-loading',
 
   components: {
-    Code
+    codeblock: Code
   },
 
   data () {

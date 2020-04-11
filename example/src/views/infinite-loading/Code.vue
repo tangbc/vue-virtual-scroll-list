@@ -1,14 +1,14 @@
 <template>
   <div>
-    <CodeHighLight type="html" :code="html" />
-    <CodeHighLight type="js" :code="js" />
+    <code-high-light type="html" :code="html" />
+    <code-high-light type="js" :code="js" />
   </div>
 </template>
 
 <script>
 const html =
 `
-<VirtualList
+<virtual-list
   :size="70"
   :keeps="30"
   :data-key="'id'"
@@ -37,7 +37,7 @@ export default {
 `
 
 export default {
-  name: 'InfiniteLoadingCode',
+  name: 'infinite-loading-code',
 
   data () {
     return { html, js }
