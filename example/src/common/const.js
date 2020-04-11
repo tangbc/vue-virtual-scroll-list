@@ -1,6 +1,6 @@
 // config and constants.
 
-export const TOTAL_COUNT = 1000
+export const TOTAL_COUNT = 10000
 
 export const TAB_TYPE = {
   VIEW: 1,
