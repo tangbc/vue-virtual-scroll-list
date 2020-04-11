@@ -6,12 +6,12 @@ const DIRECTION_TYPE = {
   FRONT: 'FRONT', // scroll up or left.
   BEHIND: 'BEHIND' // scroll down or right.
 }
-
 const CALC_TYPE = {
   INIT: 'INIT',
   FIXED: 'FIXED',
   DYNAMIC: 'DYNAMIC'
 }
+const LEADING_BUFFER = 1
 
 export default class Virtual {
   constructor (param, updateHook) {
@@ -99,15 +99,25 @@ export default class Virtual {
     }
   }
 
-  // when dataSources length change, we need to force update
-  // just keep the same range and recalculate pad front and behind.
-  handleDataSourcesLengthChange () {
-    this.updateRange(this.range.start, this.range.end)
+  // in some special situation (e.g. length change) we need to update in a row
+  // try goiong to render next range by a leading buffer according to current direction.
+  handleDataSourcesChange () {
+    let start = this.range.start
+
+    if (this.direction === DIRECTION_TYPE.FRONT) {
+      start = start - LEADING_BUFFER
+    } else if (this.direction === DIRECTION_TYPE.BEHIND) {
+      start = start + LEADING_BUFFER
+    }
+
+    start = Math.max(start, 0)
+
+    this.updateRange(start, this.getEndByStart(start))
   }
 
   // when slot size change, we also need force update.
   handleSlotSizeChange () {
-    this.handleDataSourcesLengthChange()
+    this.handleDataSourcesChange()
   }
 
   // calculating range on scroll.
@@ -135,7 +145,7 @@ export default class Virtual {
       return
     }
 
-    // move up start by a buffer length.
+    // move up start by a buffer length, and make sure its safety.
     const start = Math.max(overs - this.param.buffer, 0)
     this.checkRange(start, this.getEndByStart(start))
   }

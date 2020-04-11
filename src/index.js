@@ -31,7 +31,7 @@ const VirtualList = Vue.component(NAME, {
     dataSources (newValue, oldValue) {
       if (newValue.length !== oldValue.length) {
         this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources())
-        this.virtual.handleDataSourcesLengthChange()
+        this.virtual.handleDataSourcesChange()
       }
     }
   },
