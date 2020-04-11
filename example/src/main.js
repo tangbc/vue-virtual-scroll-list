@@ -5,11 +5,13 @@ import router from './router'
 import VirtualList from '../../src/index'
 import Introduction from './components/Introduction'
 import CodeHighLight from './components/CodeHighLight'
+import Corner from './components/Corner'
 import Tab from './components/Tab'
 
 Vue.component('VirtualList', VirtualList)
 Vue.component('Introduction', Introduction)
 Vue.component('CodeHighLight', CodeHighLight)
+Vue.component('Corner', Corner)
 Vue.component('Tab', Tab)
 
 Vue.config.devtools = false

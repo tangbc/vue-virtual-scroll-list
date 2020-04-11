@@ -18,6 +18,7 @@ body {
 }
 
 #app {
+  margin: 0 auto;
   padding: 0 2em;
   width: 776px;
 }

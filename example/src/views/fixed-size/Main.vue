@@ -1,5 +1,6 @@
 <template>
   <div class="example">
+    <Corner />
     <Introduction description="The size of each item is equal." />
 
     <div class="example-content">
@@ -7,7 +8,7 @@
 
       <div v-show="isShowView">
         <VirtualList class="list"
-          :size="60"
+          :size="50"
           :keeps="30"
           :item-class="'list-item-fixed'"
 

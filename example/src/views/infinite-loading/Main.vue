@@ -5,18 +5,26 @@
     <div class="example-content">
       <Tab v-on:tab-change="onTabChange"></Tab>
 
+      <div class="result">Items count: {{ items.length }}.</div>
+
       <div v-show="isShowView">
         <VirtualList class="list-infinite"
           :size="70"
           :keeps="30"
           :item-class="'list-item-infinite'"
+          :footer-class="'loader-wrapper'"
 
           :data-key="'id'"
           :data-sources="items"
           :data-component="itemComponent"
 
-          v-on:tobottom="onScrollToBottom"
-        />
+          v-on:toupper="onScrollToUpper"
+          :upper-threshold="50"
+          v-on:tolower="onScrollToLower"
+          :lower-threshold="50"
+        >
+          <div slot="footer" v-show="showLoading" class="loader"></div>
+        </VirtualList>
       </div>
 
       <Code v-show="!isShowView"></Code>
@@ -59,7 +67,8 @@ export default {
     return {
       items: getPageData(pageSize, 0),
       itemComponent: Item,
-      isShowView: DEFAULT_TAB === TAB_TYPE.VIEW
+      isShowView: DEFAULT_TAB === TAB_TYPE.VIEW,
+      showLoading: false
     }
   },
 
@@ -68,14 +77,30 @@ export default {
       this.isShowView = type === TAB_TYPE.VIEW
     },
 
-    onScrollToBottom () {
-      this.items = this.items.concat(getPageData(pageSize, this.items.length))
+    onScrollToUpper () {
+      console.log('to upper')
+    },
+
+    onScrollToLower () {
+      if (this.showLoading) {
+        return
+      }
+
+      this.showLoading = true
+
+      setTimeout(() => {
+        this.showLoading = false
+        this.items = this.items.concat(getPageData(pageSize, this.items.length))
+      }, 800);
     }
   }
 }
 </script>
 
 <style lang="less">
+.result {
+  margin-bottom: 1em;
+}
 .list-infinite {
   width: 100%;
   height: 500px;
@@ -83,6 +108,7 @@ export default {
   border-radius: 3px;
   overflow-y: auto;
   border-color: dimgray;
+  position: relative;
 
   .list-item-infinite {
     display: flex;
@@ -90,6 +116,62 @@ export default {
     padding: 1em;
     border-bottom: 1px solid;
     border-color: lightgray;
+  }
+
+  .loader-wrapper {
+    padding: 1em;
+  }
+  .loader {
+    font-size: 10px;
+    margin: 0px auto;
+    text-indent: -9999em;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #ffffff;
+    background: linear-gradient(to right, #9b4dca 10%, rgba(255, 255, 255, 0) 42%);
+    position: relative;
+    animation: load3 1.4s infinite linear;
+    transform: translateZ(0);
+  }
+  .loader:before {
+    width: 50%;
+    height: 50%;
+    background: #9b4dca;
+    border-radius: 100% 0 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+  }
+  .loader:after {
+    background: #ffffff;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    content: '';
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  @-webkit-keyframes load3 {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes load3 {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
 </style>
