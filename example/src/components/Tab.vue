@@ -56,6 +56,9 @@ export default {
   display: flex;
   margin-bottom: 1em;
   position: relative;
+  @media (max-width: 640px) {
+    display: none;
+  }
   .tab-item {
     font-size: 14px;
     font-weight: 400;

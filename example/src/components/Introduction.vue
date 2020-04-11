@@ -21,5 +21,8 @@ export default {
   padding: .5em 1em;
   border-radius: 3px;
   background-color: ghostwhite;
+  @media (max-width: 640px) {
+    display: none;
+  }
 }
 </style>

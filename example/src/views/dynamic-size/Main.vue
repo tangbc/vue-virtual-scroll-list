@@ -27,6 +27,7 @@
 import Item from './Item'
 import Code from './Code'
 
+import { isMobile } from '../../common/ua'
 import { Random } from '../../common/mock'
 import genUniqueId from '../../common/gen-unique-id'
 import { TOTAL_COUNT, TAB_TYPE, DEFAULT_TAB } from '../../common/const'
@@ -39,7 +40,7 @@ while (count--) {
     index,
     name: Random.name(),
     id: genUniqueId(index),
-    desc: Random.paragraph(Random.integer(0, 3))
+    desc: Random.paragraph(Random.integer(0, isMobile ? 1 : 3))
   })
 }
 

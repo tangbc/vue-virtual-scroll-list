@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">documentation</router-link>
+      <router-link to="/">home</router-link>
       <router-link to="/fixed-size">fixed size</router-link>
       <router-link to="/dynamic-size">dynamic size</router-link>
       <router-link to="/horizontal">horizontal</router-link>
@@ -21,14 +21,25 @@ body {
   margin: 0 auto;
   padding: 0 2em;
   width: 776px;
+  @media (max-width: 640px) {
+    padding: 3px;
+    width: 100%;
+  }
 }
 
 #nav {
   padding: 1em 0;
+  @media (max-width: 640px) {
+    padding: 0;
+  }
   a {
     margin-right: 1.5em;
     margin-bottom: .5em;
     display: inline-block;
+    @media (max-width: 640px) {
+      margin-bottom: 0;
+      margin-right: 1em;
+    }
   }
   .router-link-exact-active,
   .router-link-exact-active:hover {
