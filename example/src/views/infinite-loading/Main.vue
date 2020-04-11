@@ -20,11 +20,9 @@
           :data-component="itemComponent"
 
           v-on:toupper="onScrollToUpper"
-          :upper-threshold="50"
           v-on:tolower="onScrollToLower"
-          :lower-threshold="50"
         >
-          <div slot="footer" v-show="showLoading" class="loader"></div>
+          <div slot="footer" :style="{ visibilty: visibility }" class="loader"></div>
         </virtual-list>
       </div>
 
@@ -73,16 +71,24 @@ export default {
     }
   },
 
+  computed: {
+    visibility () {
+      return this.showLoading ? '' : 'hidden'
+    }
+  },
+
   methods: {
     onTabChange (type) {
       this.isShowView = type === TAB_TYPE.VIEW
     },
 
     onScrollToUpper () {
-      console.log('to upper')
+      console.log('at top')
     },
 
     onScrollToLower () {
+      console.log('at bottom')
+
       if (this.showLoading) {
         return
       }
