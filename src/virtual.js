@@ -25,7 +25,6 @@ export default class Virtual {
 
     // size data.
     this.sizes = new Map()
-    this.indexs = new Map()
     this.firstRangeTotalSize = 0
     this.firstRangeAverageSize = 0
     this.lastCalcIndex = 0
@@ -45,7 +44,6 @@ export default class Virtual {
     // benchmark test data.
     this.__bsearchCalls = 0
     this.__getIndexOffsetCalls = 0
-    this.__getIndexOffsetCacheHits = 0
   }
 
   destroy () {
@@ -204,30 +202,20 @@ export default class Virtual {
     return low > 0 ? --low : 0
   }
 
-  // return a scroll offset from given index.
-  // @todo can efficiency be improved more here?
+  // return a scroll offset from given index
+  // can efficiency be improved more here?
+  // although the call frequency is very high
+  // its only a superposition of numbers.
   getIndexOffset (givenIndex) {
-    // we know this without calculate!
+    // we know this.
     if (!givenIndex) {
       return 0
-    }
-
-    // get from cache if possible.
-    if (this.indexs.has(givenIndex)) {
-      this.__getIndexOffsetCacheHits++
-      return this.indexs.get(givenIndex)
     }
 
     let offset = 0
     let indexSize = 0
     for (let index = 0; index <= givenIndex; index++) {
       this.__getIndexOffsetCalls++
-
-      // cache last index offset if exist.
-      if (index && indexSize) {
-        this.indexs.set(index, offset)
-      }
-
       indexSize = this.sizes.get(this.param.uniqueIds[index])
       offset = offset + (indexSize || this.getEstimateSize())
     }
