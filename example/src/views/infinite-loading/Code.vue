@@ -14,8 +14,10 @@ const html =
   :data-key="'id'"
   :data-sources="items"
   :data-component="itemComponent"
-  v-on:tobottom="onScrollToBottom"
-/>
+  v-on:tolower="onScrollToBottom"
+>
+  <div slot="footer" class="loading-spinner">Loading ...</div>
+</virtual-list>
 `
 
 const js =
@@ -23,8 +25,8 @@ const js =
 export default {
   data () {
     return {
-      items: getPageData(pageSize, 0),
       itemComponent: Item,
+      items: getPageData(pageSize, 0)
     }
   },
 

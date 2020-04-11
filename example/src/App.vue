@@ -45,6 +45,6 @@ body {
 }
 
 code {
-  background-color: gold !important;
+  background-color: pink !important;
 }
 </style>

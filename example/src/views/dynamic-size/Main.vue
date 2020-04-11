@@ -1,7 +1,7 @@
 <template>
   <div class="example">
     <github-corner />
-    <introduction description="The size of each item is dynamic." />
+    <introduction description="The size of each item is dynamic, you don't have to care about size, it will calculate automatic, but you have to make sure that there's an unique id for every array data." />
 
     <div class="example-content">
       <tab v-on:tab-change="onTabChange" />

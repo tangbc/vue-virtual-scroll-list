@@ -1,7 +1,7 @@
 <template>
   <div class="example">
     <github-corner />
-    <introduction description="The size of each item is dynamic." />
+    <introduction description="Set <code>direction</code> as <code>horizontal</code>, and also can use <code>wrap-class</code>, <code>item-class</code> to help you layout items in horizontal." />
 
     <div class="example-content">
       <tab v-on:tab-change="onTabChange" />

@@ -1,7 +1,7 @@
 <template>
   <div class="example">
     <github-corner />
-    <introduction description="The size of each item is dynamic." />
+    <introduction description="Use <code>v-on:tobottom</code> to listen scroll reach bottom, add a footer slot as loading, then append next parts data into <code>data-sources</code> array." />
 
     <div class="example-content">
       <tab v-on:tab-change="onTabChange" />

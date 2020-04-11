@@ -9,7 +9,7 @@
 const html =
 `
 <virtual-list class="list"
-  :size="60"
+  :size="60" // just assign a estimate value.
   :keeps="30"
   :data-key="'id'"
   :data-sources="items"
@@ -23,7 +23,7 @@ import Item from './Item'
 const items = [
   {
     id: 'unique-id-xxx',
-    ...item props
+    ...
   },
   ....
 ]

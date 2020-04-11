@@ -1,7 +1,7 @@
 <template>
   <div class="example">
     <github-corner />
-    <introduction description="The size of each item is equal." />
+    <introduction description="Maintaining item component inner state is a trouble here, recommend to use only props data." />
 
     <div class="example-content">
       <tab v-on:tab-change="onTabChange" />
