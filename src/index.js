@@ -135,9 +135,9 @@ const VirtualList = Vue.component(NAME, {
       const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
       const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
 
-      if (isLower && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
+      if (isUpper && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
         this.$emit('toupper', evt, range)
-      } else if (isUpper && offset + offsetShape + this.lowerThreshold >= scrollShape) {
+      } else if (isLower && offset + offsetShape + this.lowerThreshold >= scrollShape) {
         this.$emit('tolower', evt, range)
       } else {
         this.$emit('scroll', evt, range)
