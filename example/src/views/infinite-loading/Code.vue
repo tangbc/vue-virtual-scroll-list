@@ -14,7 +14,7 @@ const html =
   :data-key="'id'"
   :data-sources="items"
   :data-component="itemComponent"
-  v-on:tolower="onScrollToBottom"
+  v-on:tobottom="onScrollToBottom"
 >
   <div slot="footer" class="loading-spinner">Loading ...</div>
 </virtual-list>

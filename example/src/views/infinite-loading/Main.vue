@@ -19,8 +19,8 @@
           :data-sources="items"
           :data-component="itemComponent"
 
-          v-on:toupper="onScrollToUpper"
-          v-on:tolower="onScrollToLower"
+          v-on:totop="onScrollToTop"
+          v-on:tobottom="onScrollToBottom"
         >
           <div slot="footer" class="loader"></div>
         </virtual-list>
@@ -79,11 +79,11 @@ export default {
       this.isShowView = type === TAB_TYPE.VIEW
     },
 
-    onScrollToUpper () {
+    onScrollToTop () {
       console.log('at top')
     },
 
-    onScrollToLower () {
+    onScrollToBottom () {
       console.log('at bottom')
 
       if (this.isLoading) {

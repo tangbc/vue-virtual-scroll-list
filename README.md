@@ -83,7 +83,7 @@ npm install vue-virtual-scroll-list --save
     data () {
       return {
         itemComponent: Item,
-        items: [ {uid: 'unique_1'}, {uid: 'unique_2'}, {uid: 'unique_3'}, ... ]
+        items: [ {uid: 'unique_1'}, {uid: 'unique_2'}, ... ]
       }
     },
     components: { 'virtual-list': VirtualList }
@@ -99,35 +99,35 @@ More usages or getting start you can refer to these clearly [examples](https://t
 ### Required props
 
 | **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type**  | **Description**                                                                                                                              |
-|------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `size`           | Number    | Each item size, you don't have to know the accurate, just simply assign an **estimate** or **average** value.                                     |
-| `keeps`          | Number    | How many items you are expecting the list to keep rendering in the real dom.                                                                      |
-| `data-key`       | String    | The unique key get from `data-sources` in each data object, its value **must be unique** in `data-sources`, it is used for identifying item size. |
-| `data-sources`   | Array     | The source array built for list, each array data must be an object and has an unique key for `data-key` property.                                 |
-| `data-component` | Component | The render item component created / declared by vue, and it will use the data object in `datas-sources` as render props.                          |
+|------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `size`           | Number        | Each item size, you don't have to know the accurate, just simply assign an **estimate** or **average** value.                                     |
+| `keeps`          | Number        | How many items you are expecting the list to keep rendering in the real dom.                                                                      |
+| `data-key`       | String        | The unique key get from `data-sources` in each data object, its value **must be unique** in `data-sources`, it is used for identifying item size. |
+| `data-sources`   | Array[Object] | The source array built for list, each array data must be an object and has an unique key for `data-key` property.                                 |
+| `data-component` | Component     | The render item component created / declared by vue, and it will use the data object in `datas-sources` as render props.                          |
 
 ### Optional props
 
 | **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type** | **Default** | **Description**                                                             |
-|-------------------|----------|-------------|------------------------------------------------------------------------|
-| `root-tag`        | String   | div      | Root element tag name.                                                    |
-| `wrap-tag`        | String   | div      | List wrapper element tag name.                                            |
-| `item-tag`        | String   | div      | Item wrapper element tag name.                                            |
-| `wrap-class`      | String   |          | List wrapper element class name.                                          |
-| `item-class`      | String   |          | Item wrapper element class name.                                          |
-| `start`           | Number   | 0        | Setting scroll stay start index.                                          |
-| `offset`          | Number   | 0        | Setting scroll stay offset.                                               |
-| `direction`       | String   | vertical | Scroll direction, available values are `vertical` and `horizontal`.       |
-| `scroll`          | Function |          | Emited when scrolling, param `(event, range)`.                            |
-| `toupper`         | Function |          | Emited when scrolled to top or left, param `(event, range)`.              |
-| `tolower`         | Function |          | Emited when scrolled to bottom or right, param `(event, range)`.          |
-| `upper-threshold` | Number   | 0        | The threshold to emit `toupper` event, attention to multiple calls.       |
-| `lower-threshold` | Number   | 0        | The threshold to emit `tolower` event, attention to multiple calls.       |
-| `header-tag`      | String   | div      | For using header slot, header slot wrapper element tag name.              |
-| `footer-tag`      | String   | div      | For using footer slot, footer slot wrapper element tag name.              |
-| `header-class`    | String   |          | For using header slot, header slot wrapper element class name.            |
-| `footer-class`    | String   |          | For using footer slot, footer slot wrapper element class name.            |
-| `disabled`        | Boolean  | false    | Disable virtual list and always render all items (**just a trial prop**). |
+|--------------------|----------|-------------|------------------------------------------------------------------------|
+| `root-tag`         | String   | div      | Root element tag name.                                                    |
+| `wrap-tag`         | String   | div      | List wrapper element tag name.                                            |
+| `item-tag`         | String   | div      | Item wrapper element tag name.                                            |
+| `wrap-class`       | String   |          | List wrapper element class name.                                          |
+| `item-class`       | String   |          | Item wrapper element class name.                                          |
+| `start`            | Number   | 0        | Setting scroll stay start index.                                          |
+| `offset`           | Number   | 0        | Setting scroll stay offset.                                               |
+| `direction`        | String   | vertical | Scroll direction, available values are `vertical` and `horizontal`.       |
+| `scroll`           | Function |          | Emited when scrolling, param `(event, range)`.                            |
+| `totop`            | Function |          | Emited when scrolled to top or left, param `(event, range)`.              |
+| `tobottom`         | Function |          | Emited when scrolled to bottom or right, param `(event, range)`.          |
+| `top-threshold`    | Number   | 0        | The threshold to emit `totop` event, attention to multiple calls.         |
+| `bottom-threshold` | Number   | 0        | The threshold to emit `tobottom` event, attention to multiple calls.      |
+| `header-tag`       | String   | div      | For using header slot, header slot wrapper element tag name.              |
+| `footer-tag`       | String   | div      | For using footer slot, footer slot wrapper element tag name.              |
+| `header-class`     | String   |          | For using header slot, header slot wrapper element class name.            |
+| `footer-class`     | String   |          | For using footer slot, footer slot wrapper element class name.            |
+| `disabled`        |  Boolean  | false    | Disable virtual list and always render all items (**just a trial prop**). |
 
 
 ## Attentions
