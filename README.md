@@ -26,7 +26,6 @@
 
 * [Advantages](#advantages)
 * [Live demo](#live-demo)
-* [How it works](#how-it-works)
 * [What's new in v2.0](#whats-new-in-v20)
 * [Performance](#performance)
 * [Simple usage](#simple-usage)
@@ -50,12 +49,11 @@
 https://tangbc.github.io/vue-virtual-scroll-list
 
 
-## How it works
-
-
 ## What's new in v2.0
 
-Here are the details of update information: [release v2.0](). And `v1.x` documentation please see [v1.x.md]().
+Here are the details of update information [release v2.0]().
+
+Since the `v2.0` is **not compatible** with `v1.x`, please note before upgrading, `v1.x` documentation see [v1.x.md]().
 
 
 ## Simple usage
@@ -70,7 +68,6 @@ npm install vue-virtual-scroll-list --save
     <virtual-list
       :size="60" // just assign a estimate or average value.
       :keeps="30"
-
       :data-key="'uid'"
       :data-sources="items"
       :data-component="itemComponent"
@@ -99,43 +96,45 @@ More usages or getting start you can refer to these clearly [examples](https://t
 
 ## Props type
 
-### Required props:
+### Required props
 
-| **Prop**      | **Type**  | **Description**                                                                                                                              |
-|---------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| size          | Number    | Each item size, you don't have to know the accurate, just simply assign a **estimate** or **average** value.                                 |
-| keeps         | Number    | How many items you are expecting the list to keep rendering in the real dom.                                                                 |
-| dataKey       | String    | The unique key get from `dataSources` in each data object, its value **must be unique** in `dataSources`, it used for identifying item size. |
-| dataSources   | Array     | The source array built for list, each array data must be an object and has an unique key for `dataKey` property.                             |
-| dataComponent | Component | The render item component created / declared by vue, and it will use the data object in `dataSources` as render props.                       |
+| **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type**  | **Description**                                                                                                                              |
+|------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `size`           | Number    | Each item size, you don't have to know the accurate, just simply assign an **estimate** or **average** value.                                     |
+| `keeps`          | Number    | How many items you are expecting the list to keep rendering in the real dom.                                                                      |
+| `data-key`       | String    | The unique key get from `data-sources` in each data object, its value **must be unique** in `data-sources`, it is used for identifying item size. |
+| `data-sources`   | Array     | The source array built for list, each array data must be an object and has an unique key for `data-key` property.                                 |
+| `data-component` | Component | The render item component created / declared by vue, and it will use the data object in `datas-sources` as render props.                          |
 
-### Optional props:
+### Optional props
 
-| **Prop**  | **Type** | **Default** | **Description**                                                          |
-|-----------|----------|-------------|--------------------------------------------------------------------------|
-| rootTag     | String   | div      | Root element tag name.                                                    |
-| wrapTag     | String   | div      | List wrapper element tag name.                                            |
-| wrapClass   | String   | -        | List wrapper element class name.                                          |
-| itemTag     | String   | div      | Item wrapper element tag name.                                            |
-| itemClass   | String   | -        | Item wrapper element class name.                                          |
-| direction   | String   | vertical | Scroll direction, available values are: `vertical` and `horizontal`.      |
-| start       | Number   | 0        | Setting scroll stay start index.                                          |
-| offset      | Number   | 0        | Setting scroll stay offset.                                               |
-| totop       | Function | -        | Called when list is scrolled to top, with param: `(event, range)`.        |
-| tobottom    | Function | -        | Called when list is scrolled to bottom, with param: `(event, range)`.     |
-| onscroll    | Function | -        | Called when list is scrolling, with param: `(event, range)`.              |
-| headerTag   | String   | div      | For using header slot, header slot wrapper element tag name.              |
-| headerClass | String   | -        | For using header slot, header slot wrapper element class name.            |
-| footerTag   | String   | div      | For using footer slot, footer slot wrapper element tag name.              |
-| footerClass | String   | -        | For using footer slot, footer slot wrapper element class name.            |
-| disabled    | Boolean  | false    | Disable virtual list and always render all items (**just a trial prop**). |
+| **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type** | **Default** | **Description**                                                             |
+|-------------------|----------|-------------|------------------------------------------------------------------------|
+| `root-tag`        | String   | div      | Root element tag name.                                                    |
+| `wrap-tag`        | String   | div      | List wrapper element tag name.                                            |
+| `item-tag`        | String   | div      | Item wrapper element tag name.                                            |
+| `wrap-class`      | String   |          | List wrapper element class name.                                          |
+| `item-class`      | String   |          | Item wrapper element class name.                                          |
+| `start`           | Number   | 0        | Setting scroll stay start index.                                          |
+| `offset`          | Number   | 0        | Setting scroll stay offset.                                               |
+| `direction`       | String   | vertical | Scroll direction, available values are `vertical` and `horizontal`.       |
+| `scroll`          | Function |          | Emited when scrolling, param `(event, range)`.                            |
+| `toupper`         | Function |          | Emited when scrolled to top or left, param `(event, range)`.              |
+| `tolower`         | Function |          | Emited when scrolled to bottom or right, param `(event, range)`.          |
+| `upper-threshold` | Number   | 0        | The threshold to emit `toupper` event, attention to multiple calls.       |
+| `lower-threshold` | Number   | 0        | The threshold to emit `tolower` event, attention to multiple calls.       |
+| `header-tag`      | String   | div      | For using header slot, header slot wrapper element tag name.              |
+| `footer-tag`      | String   | div      | For using footer slot, footer slot wrapper element tag name.              |
+| `header-class`    | String   |          | For using header slot, header slot wrapper element class name.            |
+| `footer-class`    | String   |          | For using footer slot, footer slot wrapper element class name.            |
+| `disabled`        | Boolean  | false    | Disable virtual list and always render all items (**just a trial prop**). |
 
 
 ## Attentions
 
-This component use an "in-place patch" strategy to render list instead of `v-for` + `:key`. This way achieves the best efficient, but only suitable when your list output does not rely on item component inner state or temporary DOM state (e.g. form input values).
+This component use an `in-place patch` strategy to render list instead of `v-for` and `:key`. This way achieves the best efficient, but only suitable when your list output does not rely on item component inner state or temporary DOM state (e.g. form input values).
 
-But how to deal with such a scene? Without maintaining inner state, recommend to use props and dispatch (stateless component), here is an example [keep-state](https://tangbc.github.com/vue-virtual-scroll-list/#/keep-state).
+But how to deal with such a situation? Without maintaining inner state, recommend to use props and dispatch (stateless component), here is an example [keep-state](https://tangbc.github.com/vue-virtual-scroll-list/#/keep-state).
 
 
 ## Contributions
@@ -150,4 +149,24 @@ Maintain and update occasionally, for changes see [release](https://github.com/t
 
 ## License
 
-[MIT License](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/LICENSE)
+MIT License
+
+Copyright (c) 2020 tangbc
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
