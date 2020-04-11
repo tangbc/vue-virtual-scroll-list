@@ -43,11 +43,12 @@
     BEHIND: 'BEHIND' // scroll down or right.
 
   };
-  var SIZE_TYPE = {
+  var CALC_TYPE = {
     INIT: 'INIT',
     FIXED: 'FIXED',
     DYNAMIC: 'DYNAMIC'
   };
+  var LEADING_BUFFER = 1;
 
   var Virtual = /*#__PURE__*/function () {
     function Virtual(param, updateHook) {
@@ -64,12 +65,11 @@
         this.updateHook = updateHook; // size data.
 
         this.sizes = new Map();
-        this.caches = new Map();
         this.firstRangeTotalSize = 0;
         this.firstRangeAverageSize = 0;
-        this.lastCalculatedIndex = 0;
-        this.sizeType = SIZE_TYPE.INIT;
-        this.sizeTypeValue = 0; // scroll data.
+        this.lastCalcIndex = 0;
+        this.fixedSizeValue = 0;
+        this.calcType = CALC_TYPE.INIT; // scroll data.
 
         this.offset = 0;
         this.direction = ''; // range data.
@@ -79,11 +79,9 @@
         if (this.param && !this.param.disabled) {
           this.checkRange(0, param.keeps - 1);
         } // benchmark test data.
+        // this.__bsearchCalls = 0
+        // this.__getIndexOffsetCalls = 0
 
-
-        this.__bsearchCalls = 0;
-        this.__getIndexOffsetCalls = 0;
-        this.__getIndexOffsetCacheHits = 0;
       }
     }, {
       key: "destroy",
@@ -100,6 +98,16 @@
         range.padFront = this.range.padFront;
         range.padBehind = this.range.padBehind;
         return range;
+      }
+    }, {
+      key: "isLower",
+      value: function isLower() {
+        return this.direction === DIRECTION_TYPE.BEHIND;
+      }
+    }, {
+      key: "isUpper",
+      value: function isUpper() {
+        return this.direction === DIRECTION_TYPE.FRONT;
       } // return start index offset.
 
     }, {
@@ -122,13 +130,13 @@
         // if there is no size value different from this at next comming saving
         // we think it's a fixed size list, otherwise is dynamic size list.
 
-        if (this.sizeType === SIZE_TYPE.INIT) {
-          this.sizeTypeValue = size;
-          this.sizeType = SIZE_TYPE.FIXED;
-        } else if (this.sizeType === SIZE_TYPE.FIXED && this.sizeTypeValue !== size) {
-          this.sizeType = SIZE_TYPE.DYNAMIC; // it's no use at all.
+        if (this.calcType === CALC_TYPE.INIT) {
+          this.fixedSizeValue = size;
+          this.calcType = CALC_TYPE.FIXED;
+        } else if (this.calcType === CALC_TYPE.FIXED && this.fixedSizeValue !== size) {
+          this.calcType = CALC_TYPE.DYNAMIC; // it's no use at all.
 
-          delete this.sizeTypeValue;
+          delete this.fixedSizeValue;
         } // calculate the average size only in the first range.
 
 
@@ -139,19 +147,28 @@
           // it's done using.
           delete this.firstRangeTotalSize;
         }
-      } // when dataSources length change, we need to force update
-      // just keep the same range and recalculate pad front and behind.
+      } // in some special situation (e.g. length change) we need to update in a row
+      // try goiong to render next range by a leading buffer according to current direction.
 
     }, {
-      key: "handleDataSourcesLengthChange",
-      value: function handleDataSourcesLengthChange() {
-        this.updateRange(this.range.start, this.range.end);
+      key: "handleDataSourcesChange",
+      value: function handleDataSourcesChange() {
+        var start = this.range.start;
+
+        if (this.direction === DIRECTION_TYPE.FRONT) {
+          start = start - LEADING_BUFFER;
+        } else if (this.direction === DIRECTION_TYPE.BEHIND) {
+          start = start + LEADING_BUFFER;
+        }
+
+        start = Math.max(start, 0);
+        this.updateRange(start, this.getEndByStart(start));
       } // when slot size change, we also need force update.
 
     }, {
       key: "handleSlotSizeChange",
       value: function handleSlotSizeChange() {
-        this.handleDataSourcesLengthChange();
+        this.handleDataSourcesChange();
       } // calculating range on scroll.
 
     }, {
@@ -172,18 +189,13 @@
       } // ----------- public method end. -----------
 
     }, {
-      key: "isFixedSize",
-      value: function isFixedSize() {
-        return this.sizeType === SIZE_TYPE.FIXED;
-      }
-    }, {
       key: "handleFront",
       value: function handleFront() {
         var overs = this.getScrollOvers(); // should not change range if start doesn't exceed overs.
 
         if (overs > this.range.start) {
           return;
-        } // move up start by a buffer length.
+        } // move up start by a buffer length, and make sure its safety.
 
 
         var start = Math.max(overs - this.param.buffer, 0);
@@ -212,8 +224,8 @@
         } // if this list is fixed size, that can be easily.
 
 
-        if (this.isFixedSize()) {
-          return Math.floor(offset / this.sizeTypeValue);
+        if (this.isFixedType()) {
+          return Math.floor(offset / this.fixedSizeValue);
         }
 
         var low = 0;
@@ -222,9 +234,9 @@
         var high = this.param.uniqueIds.length;
 
         while (low <= high) {
+          // this.__bsearchCalls++
           middle = low + Math.floor((high - low) / 2);
           middleOffset = this.getIndexOffset(middle);
-          this.__bsearchCalls++;
 
           if (middleOffset === offset) {
             return middle;
@@ -236,41 +248,35 @@
         }
 
         return low > 0 ? --low : 0;
-      } // return a scroll offset from given index.
-      // @todo can efficiency be improved more here?
+      } // return a scroll offset from given index, can efficiency be improved more here?
+      // although the call frequency is very high, its only a superposition of numbers.
 
     }, {
       key: "getIndexOffset",
       value: function getIndexOffset(givenIndex) {
-        // we know this without calculate!
+        // we know this.
         if (!givenIndex) {
           return 0;
-        } // get from cache if possible.
-
-
-        if (this.caches.has(givenIndex)) {
-          this.__getIndexOffsetCacheHits++;
-          return this.caches.get(givenIndex);
         }
 
         var offset = 0;
         var indexSize = 0;
 
         for (var index = 0; index <= givenIndex; index++) {
-          this.__getIndexOffsetCalls++; // cache last index offset if exist.
-
-          if (index && indexSize) {
-            this.caches.set(index, offset);
-          }
-
+          // this.__getIndexOffsetCalls++
           indexSize = this.sizes.get(this.param.uniqueIds[index]);
           offset = offset + (indexSize || this.getEstimateSize());
         } // remember last calculate index.
 
 
-        this.lastCalculatedIndex = Math.max(this.lastCalculatedIndex, givenIndex - 1);
-        this.lastCalculatedIndex = Math.min(this.lastCalculatedIndex, this.getLastIndex());
+        this.lastCalcIndex = Math.max(this.lastCalcIndex, givenIndex - 1);
+        this.lastCalcIndex = Math.min(this.lastCalcIndex, this.getLastIndex());
         return offset;
+      }
+    }, {
+      key: "isFixedType",
+      value: function isFixedType() {
+        return this.calcType === CALC_TYPE.FIXED;
       } // return the real last index.
 
     }, {
@@ -323,8 +329,8 @@
     }, {
       key: "getPadFront",
       value: function getPadFront() {
-        if (this.isFixedSize()) {
-          return this.sizeTypeValue * this.range.start;
+        if (this.isFixedType()) {
+          return this.fixedSizeValue * this.range.start;
         } else {
           return this.getIndexOffset(this.range.start);
         }
@@ -337,18 +343,18 @@
         var end = this.range.end;
         var lastIndex = this.getLastIndex();
 
-        if (this.isFixedSize()) {
-          return (lastIndex - end) * this.sizeTypeValue;
-        } // if already calculate all, return the exactly padding.
+        if (this.isFixedType()) {
+          return (lastIndex - end) * this.fixedSizeValue;
+        } // if calculated all already, return the exactly offset.
 
 
-        if (this.lastCalculatedIndex === lastIndex) {
+        if (this.lastCalcIndex === lastIndex) {
           return this.getIndexOffset(lastIndex) - this.getIndexOffset(end);
         } else {
-          // if not, return a estimate padding.
+          // if not, return a estimate offset.
           return (lastIndex - end) * this.getEstimateSize();
         }
-      } // get estimate size for one item.
+      } // get estimate size for one item, get from param.size at first range.
 
     }, {
       key: "getEstimateSize",
@@ -400,6 +406,14 @@
       "default": 'vertical' // the other value is horizontal.
 
     },
+    upperThreshold: {
+      type: Number,
+      "default": 0
+    },
+    lowerThreshold: {
+      type: Number,
+      "default": 0
+    },
     start: {
       type: Number,
       "default": 0
@@ -430,7 +444,7 @@
     },
     footerClass: {
       type: String,
-      "default": 'div'
+      "default": ''
     },
     disabled: {
       type: Boolean,
@@ -511,7 +525,7 @@
       },
       // tell parent current size identify by unqiue key.
       dispatchSizeChange: function dispatchSizeChange() {
-        this.$parent.$emit(this.event, this.uniqueKey, this.getCurrentSize());
+        this.$parent.$emit(this.event, this.uniqueKey, this.getCurrentSize(), this.hasInitial);
       }
     }
   }; // wrapping for item.
@@ -552,7 +566,8 @@
     // string value also use for aria role attribute.
     FOOTER: 'footer'
   };
-  var VirtualList = Vue.component('virtual-list', {
+  var NAME = 'virtual-list';
+  var VirtualList = Vue.component(NAME, {
     props: VirtualProps,
     data: function data() {
       return {
@@ -563,7 +578,7 @@
       dataSources: function dataSources(newValue, oldValue) {
         if (newValue.length !== oldValue.length) {
           this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources());
-          this.virtual.handleDataSourcesLengthChange();
+          this.virtual.handleDataSourcesChange();
         }
       }
     },
@@ -581,8 +596,8 @@
         // recommend for a third of keeps.
         uniqueIds: this.getUniqueIdFromDataSources()
       }, this.onRangeChanged); // just for debug
-
-      window.virtual = this.virtual; // also need sync initial range first.
+      // window.virtual = this.virtual
+      // also need sync initial range first.
 
       this.range = this.virtual.getRange(); // listen item size changing.
 
@@ -609,14 +624,16 @@
         this.virtual.saveSize(id, size);
       },
       // event called when slot mounted or size changed.
-      onSlotResized: function onSlotResized(type, size) {
+      onSlotResized: function onSlotResized(type, size, hasInit) {
         if (type === SLOT_TYPE.HEADER) {
           this.virtual.updateParam('slotHeaderSize', size);
         } else if (type === SLOT_TYPE.FOOTER) {
           this.virtual.updateParam('slotFooterSize', size);
         }
 
-        this.virtual.handleSlotSizeChange();
+        if (hasInit) {
+          this.virtual.handleSlotSizeChange();
+        }
       },
       // here is the rerendering entry.
       onRangeChanged: function onRangeChanged(range) {
@@ -630,8 +647,8 @@
         }
 
         var offset = root[this.directionKey];
-        this.emitEvent(offset, evt);
         this.virtual.handleScroll(offset);
+        this.emitEvent(offset, evt);
       },
       getUniqueIdFromDataSources: function getUniqueIdFromDataSources() {
         var _this = this;
@@ -653,15 +670,17 @@
         // ref element is definitely available here.
         var root = this.$refs.root;
         var range = this.virtual.getRange();
+        var isLower = this.virtual.isLower();
+        var isUpper = this.virtual.isUpper();
         var offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight'];
-        var scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']; // only non-empty & offset === 0 calls totop.
+        var scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'];
 
-        if (!!this.dataSources.length && !offset) {
-          this.$emit('totop', evt, range);
-        } else if (offset + offsetShape >= scrollShape) {
-          this.$emit('tobottom', evt, range);
+        if (isUpper && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
+          this.$emit('toupper', evt, range);
+        } else if (isLower && offset + offsetShape + this.lowerThreshold >= scrollShape) {
+          this.$emit('tolower', evt, range);
         } else {
-          this.$emit('onscroll', evt, range);
+          this.$emit('scroll', evt, range);
         }
       },
       // get the real render slots based on range data.
@@ -671,17 +690,23 @@
         var end = this.disabled ? this.dataSources.length - 1 : this.range.end;
 
         for (var index = start; index <= end; index++) {
-          slots.push(h(Item, {
-            "class": this.itemClass,
-            props: {
-              tag: this.itemTag,
-              event: EVENT_TYPE.ITEM,
-              horizontal: this.isHorizontal,
-              uniqueKey: this.dataSources[index][this.dataKey],
-              source: this.dataSources[index],
-              component: this.dataComponent
-            }
-          }));
+          var dataSource = this.dataSources[index];
+
+          if (dataSource) {
+            slots.push(h(Item, {
+              "class": this.itemClass,
+              props: {
+                tag: this.itemTag,
+                event: EVENT_TYPE.ITEM,
+                horizontal: this.isHorizontal,
+                uniqueKey: dataSource[this.dataKey],
+                source: dataSource,
+                component: this.dataComponent
+              }
+            }));
+          } else {
+            console.warn("[".concat(NAME, "]: cannot get the index ").concat(index, " from data-sources."));
+          }
         }
 
         return slots;
