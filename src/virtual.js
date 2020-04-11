@@ -202,10 +202,8 @@ export default class Virtual {
     return low > 0 ? --low : 0
   }
 
-  // return a scroll offset from given index
-  // can efficiency be improved more here?
-  // although the call frequency is very high
-  // its only a superposition of numbers.
+  // return a scroll offset from given index, can efficiency be improved more here?
+  // although the call frequency is very high, its only a superposition of numbers.
   getIndexOffset (givenIndex) {
     // we know this.
     if (!givenIndex) {
