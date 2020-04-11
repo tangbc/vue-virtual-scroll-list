@@ -42,8 +42,8 @@ export default class Virtual {
     }
 
     // benchmark test data.
-    this.__bsearchCalls = 0
-    this.__getIndexOffsetCalls = 0
+    // this.__bsearchCalls = 0
+    // this.__getIndexOffsetCalls = 0
   }
 
   destroy () {
@@ -185,10 +185,9 @@ export default class Virtual {
     let high = this.param.uniqueIds.length
 
     while (low <= high) {
+      // this.__bsearchCalls++
       middle = low + Math.floor((high - low) / 2)
       middleOffset = this.getIndexOffset(middle)
-
-      this.__bsearchCalls++
 
       if (middleOffset === offset) {
         return middle
@@ -213,7 +212,7 @@ export default class Virtual {
     let offset = 0
     let indexSize = 0
     for (let index = 0; index <= givenIndex; index++) {
-      this.__getIndexOffsetCalls++
+      // this.__getIndexOffsetCalls++
       indexSize = this.sizes.get(this.param.uniqueIds[index])
       offset = offset + (indexSize || this.getEstimateSize())
     }

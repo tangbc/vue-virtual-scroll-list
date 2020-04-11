@@ -51,7 +51,7 @@ const VirtualList = Vue.component(NAME, {
     }, this.onRangeChanged)
 
     // just for debug
-    window.virtual = this.virtual
+    // window.virtual = this.virtual
 
     // also need sync initial range first.
     this.range = this.virtual.getRange()
