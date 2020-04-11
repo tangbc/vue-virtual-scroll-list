@@ -51,9 +51,9 @@ https://tangbc.github.io/vue-virtual-scroll-list
 
 ## What's new in v2.0
 
-Here are the details of update information [release v2.0]().
+Here are the details of update information [release v2.0](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v2.0.0).
 
-Since the `v2.0` is **not compatible** with `v1.x`, please note before upgrading, `v1.x` documentation see [v1.x.md]().
+Since the `v2.0` is **not compatible** with `v1.x`, please note before upgrading, `v1.x` documentation see [v1.x.md](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/v1.x.md).
 
 
 ## Simple usage
