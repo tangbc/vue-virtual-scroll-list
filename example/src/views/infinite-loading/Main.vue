@@ -22,7 +22,7 @@
           v-on:toupper="onScrollToUpper"
           v-on:tolower="onScrollToLower"
         >
-          <div slot="footer" :style="{ visibilty: visibility }" class="loader"></div>
+          <div slot="footer" class="loader"></div>
         </virtual-list>
       </div>
 
@@ -62,18 +62,15 @@ export default {
     codeblock: Code
   },
 
+  created () {
+    this.isLoading = false
+  },
+
   data () {
     return {
       items: getPageData(pageSize, 0),
       itemComponent: Item,
       isShowView: DEFAULT_TAB === TAB_TYPE.VIEW,
-      showLoading: false
-    }
-  },
-
-  computed: {
-    visibility () {
-      return this.showLoading ? '' : 'hidden'
     }
   },
 
@@ -89,16 +86,16 @@ export default {
     onScrollToLower () {
       console.log('at bottom')
 
-      if (this.showLoading) {
+      if (this.isLoading) {
         return
       }
 
-      this.showLoading = true
+      this.isLoading = true
 
       setTimeout(() => {
-        this.showLoading = false
+        this.isLoading = false
         this.items = this.items.concat(getPageData(pageSize, this.items.length))
-      }, 800);
+      }, 500);
     }
   }
 }
