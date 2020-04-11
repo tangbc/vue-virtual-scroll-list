@@ -25,7 +25,7 @@ export default class Virtual {
 
     // size data.
     this.sizes = new Map()
-    this.caches = new Map()
+    this.indexs = new Map()
     this.firstRangeTotalSize = 0
     this.firstRangeAverageSize = 0
     this.lastCalcIndex = 0
@@ -213,9 +213,9 @@ export default class Virtual {
     }
 
     // get from cache if possible.
-    if (this.caches.has(givenIndex)) {
+    if (this.indexs.has(givenIndex)) {
       this.__getIndexOffsetCacheHits++
-      return this.caches.get(givenIndex)
+      return this.indexs.get(givenIndex)
     }
 
     let offset = 0
@@ -225,7 +225,7 @@ export default class Virtual {
 
       // cache last index offset if exist.
       if (index && indexSize) {
-        this.caches.set(index, offset)
+        this.indexs.set(index, offset)
       }
 
       indexSize = this.sizes.get(this.param.uniqueIds[index])
