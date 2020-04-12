@@ -130,14 +130,14 @@ const VirtualList = Vue.component(NAME, {
       // ref element is definitely available here.
       const { root } = this.$refs
       const range = this.virtual.getRange()
-      const isLower = this.virtual.isLower()
-      const isUpper = this.virtual.isUpper()
+      const isFront = this.virtual.isFront()
+      const isBehind = this.virtual.isBehind()
       const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
       const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
 
-      if (isUpper && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
+      if (isFront && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
         this.$emit('totop', evt, range)
-      } else if (isLower && offset + offsetShape + this.lowerThreshold >= scrollShape) {
+      } else if (isBehind && offset + offsetShape + this.lowerThreshold >= scrollShape) {
         this.$emit('tobottom', evt, range)
       } else {
         this.$emit('scroll', evt, range)

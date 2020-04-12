@@ -60,11 +60,11 @@ export default class Virtual {
     return range
   }
 
-  isLower () {
+  isBehind () {
     return this.direction === DIRECTION_TYPE.BEHIND
   }
 
-  isUpper () {
+  isFront () {
     return this.direction === DIRECTION_TYPE.FRONT
   }
 
