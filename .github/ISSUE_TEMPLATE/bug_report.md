@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report to help improve
+about: Create a bug report to help improve.
 title: ''
 labels: bug
 assignees: ''
@@ -17,9 +17,8 @@ Steps to reproduce the behavior:
 3. See error
 
 **Screenshots or jsfiddle**
-If applicable, add screenshots or  jsfiddle to help explain your problem.
+If applicable, add screenshots or jsfiddle to help explain your problem.
 
 **Other (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
  - Version [e.g. 2.0]
+ - Browser [e.g. chrome, safari]
