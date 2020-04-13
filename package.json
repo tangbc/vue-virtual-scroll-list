@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "lint": "eslint --fix src --ext .js,.vue",
+    "lint": "eslint --fix src --ext .js",
     "build": "rollup --config ./scripts/rollup.production.js",
     "dev": "rollup --config ./scripts/rollup.development.js --watch"
   },
