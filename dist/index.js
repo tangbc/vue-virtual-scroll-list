@@ -530,7 +530,9 @@
       return h(this.tag, {
         role: 'item'
       }, [h(this.component, {
-        props: this.source
+        props: {
+          data: this.source
+        }
       })]);
     }
   }); // wrapping for slot.
