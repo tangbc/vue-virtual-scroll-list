@@ -14,6 +14,7 @@
           :keeps="30"
           :item-class="'list-item-infinite'"
           :footer-class="'loader-wrapper'"
+          :disabled="false"
 
           :data-key="'id'"
           :data-sources="items"

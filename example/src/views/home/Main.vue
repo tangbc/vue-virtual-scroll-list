@@ -10,7 +10,7 @@
 
     <h3 class="title">What's news in v2.0</h3>
     <ul>
-      <li>Support header slot, footer slot.</li>
+      <li>Support header, footer slot, horizontal direction.</li>
       <li>Code structure is more reasonable and good maintainability.</li>
       <li>Abandoned v-for mode and variable mode, all condition unify into one mode.</li>
       <li>Don't have to care about each item size, in sometimes it's difficult to know that.</li>
