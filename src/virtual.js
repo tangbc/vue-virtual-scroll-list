@@ -110,9 +110,9 @@ export default class Virtual {
   handleDataSourcesChange () {
     let start = this.range.start
 
-    if (this.direction === DIRECTION_TYPE.FRONT) {
+    if (this.isFront()) {
       start = start - LEADING_BUFFER
-    } else if (this.direction === DIRECTION_TYPE.BEHIND) {
+    } else if (this.isBehind()) {
       start = start + LEADING_BUFFER
     }
 
