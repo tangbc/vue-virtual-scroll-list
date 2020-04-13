@@ -11,7 +11,7 @@ const CALC_TYPE = {
   FIXED: 'FIXED',
   DYNAMIC: 'DYNAMIC'
 }
-const LEADING_BUFFER = 1
+const LEADING_BUFFER = 2
 
 export default class Virtual {
   constructor (param, updateHook) {
@@ -37,7 +37,7 @@ export default class Virtual {
 
     // range data.
     this.range = Object.create(null)
-    if (this.param && !this.param.disabled) {
+    if (this.param) {
       this.checkRange(0, param.keeps - 1)
     }
 
@@ -118,7 +118,7 @@ export default class Virtual {
 
     start = Math.max(start, 0)
 
-    this.updateRange(start, this.getEndByStart(start))
+    this.updateRange(this.range.start, this.getEndByStart(start))
   }
 
   // when slot size change, we also need force update.
@@ -128,10 +128,6 @@ export default class Virtual {
 
   // calculating range on scroll.
   handleScroll (offset) {
-    if (this.param.disabled) {
-      return
-    }
-
     this.direction = offset < this.offset ? DIRECTION_TYPE.FRONT : DIRECTION_TYPE.BEHIND
     this.offset = offset
 
@@ -211,7 +207,7 @@ export default class Virtual {
 
     let offset = 0
     let indexSize = 0
-    for (let index = 0; index <= givenIndex; index++) {
+    for (let index = 0; index < givenIndex; index++) {
       // this.__getIndexOffsetCalls++
       indexSize = this.sizes.get(this.param.uniqueIds[index])
       offset = offset + (indexSize || this.getEstimateSize())
@@ -260,9 +256,7 @@ export default class Virtual {
     this.range.padFront = this.getPadFront()
     this.range.padBehind = this.getPadBehind()
 
-    if (!this.param.disabled) {
-      this.updateHook(this.getRange())
-    }
+    this.updateHook(this.getRange())
   }
 
   // return end base on start when going to a new range.

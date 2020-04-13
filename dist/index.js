@@ -48,7 +48,7 @@
     FIXED: 'FIXED',
     DYNAMIC: 'DYNAMIC'
   };
-  var LEADING_BUFFER = 1;
+  var LEADING_BUFFER = 2;
 
   var Virtual = /*#__PURE__*/function () {
     function Virtual(param, updateHook) {
@@ -76,7 +76,7 @@
 
         this.range = Object.create(null);
 
-        if (this.param && !this.param.disabled) {
+        if (this.param) {
           this.checkRange(0, param.keeps - 1);
         } // benchmark test data.
         // this.__bsearchCalls = 0
@@ -100,13 +100,13 @@
         return range;
       }
     }, {
-      key: "isLower",
-      value: function isLower() {
+      key: "isBehind",
+      value: function isBehind() {
         return this.direction === DIRECTION_TYPE.BEHIND;
       }
     }, {
-      key: "isUpper",
-      value: function isUpper() {
+      key: "isFront",
+      value: function isFront() {
         return this.direction === DIRECTION_TYPE.FRONT;
       } // return start index offset.
 
@@ -155,14 +155,14 @@
       value: function handleDataSourcesChange() {
         var start = this.range.start;
 
-        if (this.direction === DIRECTION_TYPE.FRONT) {
+        if (this.isFront()) {
           start = start - LEADING_BUFFER;
-        } else if (this.direction === DIRECTION_TYPE.BEHIND) {
+        } else if (this.isBehind()) {
           start = start + LEADING_BUFFER;
         }
 
         start = Math.max(start, 0);
-        this.updateRange(start, this.getEndByStart(start));
+        this.updateRange(this.range.start, this.getEndByStart(start));
       } // when slot size change, we also need force update.
 
     }, {
@@ -174,10 +174,6 @@
     }, {
       key: "handleScroll",
       value: function handleScroll(offset) {
-        if (this.param.disabled) {
-          return;
-        }
-
         this.direction = offset < this.offset ? DIRECTION_TYPE.FRONT : DIRECTION_TYPE.BEHIND;
         this.offset = offset;
 
@@ -262,7 +258,7 @@
         var offset = 0;
         var indexSize = 0;
 
-        for (var index = 0; index <= givenIndex; index++) {
+        for (var index = 0; index < givenIndex; index++) {
           // this.__getIndexOffsetCalls++
           indexSize = this.sizes.get(this.param.uniqueIds[index]);
           offset = offset + (indexSize || this.getEstimateSize());
@@ -312,10 +308,7 @@
         this.range.end = end;
         this.range.padFront = this.getPadFront();
         this.range.padBehind = this.getPadBehind();
-
-        if (!this.param.disabled) {
-          this.updateHook(this.getRange());
-        }
+        this.updateHook(this.getRange());
       } // return end base on start when going to a new range.
 
     }, {
@@ -591,7 +584,6 @@
         slotHeaderSize: 0,
         slotFooterSize: 0,
         keeps: this.keeps,
-        disabled: this.disabled,
         buffer: Math.round(this.keeps / 3),
         // recommend for a third of keeps.
         uniqueIds: this.getUniqueIdFromDataSources()
@@ -670,14 +662,14 @@
         // ref element is definitely available here.
         var root = this.$refs.root;
         var range = this.virtual.getRange();
-        var isLower = this.virtual.isLower();
-        var isUpper = this.virtual.isUpper();
+        var isFront = this.virtual.isFront();
+        var isBehind = this.virtual.isBehind();
         var offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight'];
         var scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'];
 
-        if (isUpper && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
+        if (isFront && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
           this.$emit('totop', evt, range);
-        } else if (isLower && offset + offsetShape + this.lowerThreshold >= scrollShape) {
+        } else if (isBehind && offset + offsetShape + this.lowerThreshold >= scrollShape) {
           this.$emit('tobottom', evt, range);
         } else {
           this.$emit('scroll', evt, range);
@@ -718,7 +710,7 @@
       var _this$$slots = this.$slots,
           header = _this$$slots.header,
           footer = _this$$slots.footer;
-      var padding = this.isHorizontal ? "0px ".concat(this.range.padBehind, "px 0px ").concat(this.range.padFront, "px") : "".concat(this.range.padFront, "px 0px ").concat(this.range.padBehind, "px");
+      var padding = this.disabled ? 0 : this.isHorizontal ? "0px ".concat(this.range.padBehind, "px 0px ").concat(this.range.padFront, "px") : "".concat(this.range.padFront, "px 0px ").concat(this.range.padBehind, "px");
       return h(this.rootTag, {
         ref: 'root',
         on: {

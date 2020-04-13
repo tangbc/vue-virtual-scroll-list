@@ -45,7 +45,6 @@ const VirtualList = Vue.component(NAME, {
       slotHeaderSize: 0,
       slotFooterSize: 0,
       keeps: this.keeps,
-      disabled: this.disabled,
       buffer: Math.round(this.keeps / 3), // recommend for a third of keeps.
       uniqueIds: this.getUniqueIdFromDataSources()
     }, this.onRangeChanged)
@@ -149,7 +148,6 @@ const VirtualList = Vue.component(NAME, {
       const slots = []
       const start = this.disabled ? 0 : this.range.start
       const end = this.disabled ? this.dataSources.length - 1 : this.range.end
-
       for (let index = start; index <= end; index++) {
         const dataSource = this.dataSources[index]
         if (dataSource) {
@@ -168,7 +166,6 @@ const VirtualList = Vue.component(NAME, {
           console.warn(`[${NAME}]: cannot get the index ${index} from data-sources.`)
         }
       }
-
       return slots
     }
   },
@@ -177,7 +174,7 @@ const VirtualList = Vue.component(NAME, {
   // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
   render (h) {
     const { header, footer } = this.$slots
-    const padding = this.isHorizontal
+    const padding = this.disabled ? 0 : this.isHorizontal
       ? `0px ${this.range.padBehind}px 0px ${this.range.padFront}px`
       : `${this.range.padFront}px 0px ${this.range.padBehind}px`
 
