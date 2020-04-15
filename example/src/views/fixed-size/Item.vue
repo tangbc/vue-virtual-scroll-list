@@ -1,7 +1,7 @@
 <template>
   <div class="item-inner">
-    <span># {{ index }}</span>
-    <span>{{ name }}</span>
+    <span># {{ source.index }}</span>
+    <span>{{ source.name }}</span>
   </div>
 </template>
 
@@ -11,8 +11,12 @@ export default {
   name: 'fix-size-item',
 
   props: {
-    index: Number,
-    name: String
+    source: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   }
 }
 </script>

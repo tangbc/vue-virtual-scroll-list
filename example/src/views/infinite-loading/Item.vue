@@ -1,10 +1,10 @@
 <template>
   <div class="item-inner">
     <div class="head">
-      <span class="index"># {{ index }}</span>
-      <span class="name">{{ name }}</span>
+      <span class="index"># {{ source.index }}</span>
+      <span class="name">{{ source.name }}</span>
     </div>
-    <div class="desc">{{ desc }}</div>
+    <!-- <div class="desc">{{ source.desc }}</div> -->
   </div>
 </template>
 
@@ -14,18 +14,21 @@ export default {
   name: 'infinite-loading-item',
 
   props: {
-    index: Number,
-    name: String,
-    desc: String
+    source: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .item-inner {
-  .head {
-    font-weight: 500;
-  }
+  // .head {
+  //   font-weight: 500;
+  // }
   .index {
     margin-right: 1em;
   }

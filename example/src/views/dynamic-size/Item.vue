@@ -1,10 +1,10 @@
 <template>
   <div class="item-inner">
     <div class="head">
-      <span># {{ index }}</span>
-      <span>{{ name }}</span>
+      <span># {{ source.index }}</span>
+      <span>{{ source.name }}</span>
     </div>
-    <div class="desc">{{ desc }}</div>
+    <div class="desc">{{ source.desc }}</div>
   </div>
 </template>
 
@@ -14,9 +14,12 @@ export default {
   name: 'dynamic-size-item',
 
   props: {
-    index: Number,
-    name: String,
-    desc: String
+    source: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   }
 }
 </script>

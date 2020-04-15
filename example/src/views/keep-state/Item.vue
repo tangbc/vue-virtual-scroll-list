@@ -1,8 +1,8 @@
 <template>
   <div class="item-inner">
-    <span class="index"># {{ index }}</span>
-    <input class="checkbox" v-bind:checked="checked" @change="onChange" type="checkbox" />
-    <span class="name" @click="onClickName">{{ name }}</span>
+    <span class="index"># {{ source.index }}</span>
+    <input class="checkbox" v-bind:checked="source.checked" @change="onChange" type="checkbox" />
+    <span class="name" @click="onClickName">{{ source.name }}</span>
   </div>
 </template>
 
@@ -15,10 +15,12 @@ export default {
   mixins: [mixins],
 
   props: {
-    id: String,
-    index: Number,
-    name: String,
-    checked: Boolean
+    source: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   },
 
   methods: {

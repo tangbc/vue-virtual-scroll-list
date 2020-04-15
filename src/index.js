@@ -159,6 +159,7 @@ const VirtualList = Vue.component(NAME, {
               horizontal: this.isHorizontal,
               uniqueKey: dataSource[this.dataKey],
               source: dataSource,
+              extraProps: this.extraProps,
               component: this.dataComponent
             }
           }))

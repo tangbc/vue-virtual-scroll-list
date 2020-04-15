@@ -23,6 +23,9 @@ export const VirtualProps = {
     type: Object,
     require: true
   },
+  extraProps: {
+    type: Object
+  },
 
   rootTag: {
     type: String,
@@ -108,6 +111,9 @@ export const ItemProps = {
   },
   uniqueKey: {
     type: String
+  },
+  extraProps: {
+    type: Object
   }
 }
 
@@ -116,7 +122,7 @@ export const SlotProps = {
     type: String
   },
   uniqueKey: {
-    String
+    type: String
   },
   tag: {
     type: String

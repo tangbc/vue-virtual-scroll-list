@@ -61,6 +61,7 @@ Since the `v2.0` is **not compatible** with `v1.x`, please note before upgrading
 npm install vue-virtual-scroll-list --save
 ```
 
+Root component is:
 ```vue
 <template>
   <div>
@@ -70,22 +71,45 @@ npm install vue-virtual-scroll-list --save
       :data-key="'uid'"
       :data-sources="items"
       :data-component="itemComponent"
+      :extra-props="{ otherPropValue: otherDataAssginToItemComponet }"
     />
   </div>
 </template>
-
 <script>
   import Item from './Item'
   import VirtualList from 'vue-virtual-scroll-list'
 
   export default {
+    name: 'root',
     data () {
       return {
         itemComponent: Item,
-        items: [ {uid: 'unique_1'}, {uid: 'unique_2'}, ... ]
+        items: [{uid: 'unique_1', text: 'abc'}, {uid: 'unique_2', text: 'xyz'}, ...],
+        otherDataAssginToItemComponet: 'The Progressive JavaScript Framework',
       }
     },
     components: { 'virtual-list': VirtualList }
+  }
+</script>
+```
+
+Item component is:
+```vue
+<template>
+  <div>{{ source.text }} - {{ otherPropValue }}</div>
+</template>
+<script>
+  export default {
+    name: 'item-component',
+    props: {
+      source: { // here is: {uid: 'unique_1', text: 'abc'}
+        type: Object,
+        default () {
+          return {}
+        }
+      },
+      otherPropValue: String // here is: 'The Progressive JavaScript Framework'
+    }
   }
 </script>
 ```
@@ -103,12 +127,13 @@ More usages or getting start you can refer to these clearly [examples](https://t
 | `keeps`          | Number        | How many items you are expecting the list to keep rendering in the real dom.                                                                      |
 | `data-key`       | String        | The unique key get from `data-sources` in each data object, its value **must be unique** in `data-sources`, it is used for identifying item size. |
 | `data-sources`   | Array[Object] | The source array built for list, each array data must be an object and has an unique key for `data-key` property.                                 |
-| `data-component` | Component     | The render item component created / declared by vue, and it will use the data object in `datas-sources` as render props.                          |
+| `data-component` | Component     | The render item component created / declared by vue, and it will use the data object in `datas-sources` as render prop and named: `source`.       |
 
 ### Optional props
 
 | **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type** | **Default** | **Description**                                                             |
-|--------------------|----------|-------------|------------------------------------------------------------------------|
+|--------------------|----------|----------|---------------------------------------------------------------------------|
+| `extra-props`      | Object   | {}       | Extra props assign to item component.                                     |
 | `root-tag`         | String   | div      | Root element tag name.                                                    |
 | `wrap-tag`         | String   | div      | List wrapper element tag name.                                            |
 | `item-tag`         | String   | div      | Item wrapper element tag name.                                            |

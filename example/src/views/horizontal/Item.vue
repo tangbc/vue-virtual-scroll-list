@@ -1,7 +1,7 @@
 <template>
-  <div class="item-inner" v-bind:style="{width: size + 'px'}">
-    <div class="index"># {{ index }}</div>
-    <div class="size">{{ size }}</div>
+  <div class="item-inner" v-bind:style="{width: source.size + 'px'}">
+    <div class="index"># {{ source.index }}</div>
+    <div class="size">{{ source.size }}</div>
   </div>
 </template>
 
@@ -11,9 +11,12 @@ export default {
   name: 'horizontal-item',
 
   props: {
-    index: Number,
-    name: String,
-    size: Number
+    source: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   }
 }
 </script>

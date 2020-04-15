@@ -34,6 +34,55 @@
     return Constructor;
   }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
   /**
    * virtual list core calculating center.
    */
@@ -382,6 +431,9 @@
       type: Object,
       require: true
     },
+    extraProps: {
+      type: Object
+    },
     rootTag: {
       type: String,
       "default": 'div'
@@ -462,6 +514,9 @@
     },
     uniqueKey: {
       type: String
+    },
+    extraProps: {
+      type: Object
     }
   };
   var SlotProps = {
@@ -469,7 +524,7 @@
       type: String
     },
     uniqueKey: {
-      String: String
+      type: String
     },
     tag: {
       type: String
@@ -479,10 +534,6 @@
     }
   };
 
-  /**
-   * item and slot component both use similar wrapper
-   * we need to know their size change at any time.
-   */
   var Wrapper = {
     created: function created() {
       this.hasInitial = false;
@@ -530,9 +581,9 @@
       return h(this.tag, {
         role: 'item'
       }, [h(this.component, {
-        props: {
-          data: this.source
-        }
+        props: _objectSpread2({}, this.extraProps, {
+          source: this.source
+        })
       })]);
     }
   }); // wrapping for slot.
@@ -695,6 +746,7 @@
                 horizontal: this.isHorizontal,
                 uniqueKey: dataSource[this.dataKey],
                 source: dataSource,
+                extraProps: this.extraProps,
                 component: this.dataComponent
               }
             }));
