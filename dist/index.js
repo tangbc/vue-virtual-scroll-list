@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.0.3
+ * vue-virtual-scroll-list v2.0.4
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -364,23 +364,24 @@
    */
   var VirtualProps = {
     size: {
-      type: Number
+      type: Number,
+      required: true
     },
     keeps: {
       type: Number,
-      require: true
+      required: true
     },
     dataKey: {
       type: String,
-      require: true
+      required: true
     },
     dataSources: {
       type: Array,
-      require: true
+      required: true
     },
     dataComponent: {
       type: Object,
-      require: true
+      required: true
     },
     extraProps: {
       type: Object
@@ -402,11 +403,11 @@
       "default": 'vertical' // the other value is horizontal.
 
     },
-    upperThreshold: {
+    topThreshold: {
       type: Number,
       "default": 0
     },
-    lowerThreshold: {
+    bottomThreshold: {
       type: Number,
       "default": 0
     },
@@ -595,9 +596,7 @@
         buffer: Math.round(this.keeps / 3),
         // recommend for a third of keeps.
         uniqueIds: this.getUniqueIdFromDataSources()
-      }, this.onRangeChanged); // just for debug
-      // window.virtual = this.virtual
-      // also need sync initial range first.
+      }, this.onRangeChanged); // also need sync initial range first.
 
       this.range = this.virtual.getRange(); // listen item size changing.
 
@@ -647,8 +646,15 @@
         }
 
         var offset = root[this.directionKey];
+        var offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight'];
+        var scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']; // iOS scrolling spring-back behavior will make direction mistake.
+
+        if (offset + offsetShape > scrollShape) {
+          return;
+        }
+
         this.virtual.handleScroll(offset);
-        this.emitEvent(offset, evt);
+        this.emitEvent(offset, offsetShape, scrollShape, evt);
       },
       getUniqueIdFromDataSources: function getUniqueIdFromDataSources() {
         var _this = this;
@@ -666,18 +672,14 @@
         }
       },
       // emit event in special position.
-      emitEvent: function emitEvent(offset, evt) {
-        // ref element is definitely available here.
-        var root = this.$refs.root;
+      emitEvent: function emitEvent(offset, offsetShape, scrollShape, evt) {
         var range = this.virtual.getRange();
         var isFront = this.virtual.isFront();
         var isBehind = this.virtual.isBehind();
-        var offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight'];
-        var scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'];
 
-        if (isFront && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
+        if (isFront && !!this.dataSources.length && offset - this.topThreshold <= 0) {
           this.$emit('totop', evt, range);
-        } else if (isBehind && offset + offsetShape + this.lowerThreshold >= scrollShape) {
+        } else if (isBehind && offset + offsetShape + this.bottomThreshold >= scrollShape) {
           this.$emit('tobottom', evt, range);
         } else {
           this.$emit('scroll', evt, range);
