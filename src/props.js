@@ -4,24 +4,25 @@
 
 export const VirtualProps = {
   size: {
-    type: Number
+    type: Number,
+    required: true
   },
   keeps: {
     type: Number,
-    require: true
+    required: true
   },
 
   dataKey: {
     type: String,
-    require: true
+    required: true
   },
   dataSources: {
     type: Array,
-    require: true
+    required: true
   },
   dataComponent: {
     type: Object,
-    require: true
+    required: true
   },
   extraProps: {
     type: Object
