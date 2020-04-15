@@ -49,9 +49,6 @@ const VirtualList = Vue.component(NAME, {
       uniqueIds: this.getUniqueIdFromDataSources()
     }, this.onRangeChanged)
 
-    // just for debug
-    window.virtual = this.virtual
-
     // also need sync initial range first.
     this.range = this.virtual.getRange()
 
