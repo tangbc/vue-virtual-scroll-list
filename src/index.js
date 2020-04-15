@@ -50,7 +50,7 @@ const VirtualList = Vue.component(NAME, {
     }, this.onRangeChanged)
 
     // just for debug
-    // window.virtual = this.virtual
+    window.virtual = this.virtual
 
     // also need sync initial range first.
     this.range = this.virtual.getRange()
@@ -108,8 +108,16 @@ const VirtualList = Vue.component(NAME, {
       }
 
       const offset = root[this.directionKey]
+      const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
+      const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
+
+      // iOS scrolling spring-back behavior will make direction mistake.
+      if (offset + offsetShape > scrollShape) {
+        return
+      }
+
       this.virtual.handleScroll(offset)
-      this.emitEvent(offset, evt)
+      this.emitEvent(offset, offsetShape, scrollShape, evt)
     },
 
     getUniqueIdFromDataSources () {
@@ -125,18 +133,14 @@ const VirtualList = Vue.component(NAME, {
     },
 
     // emit event in special position.
-    emitEvent (offset, evt) {
-      // ref element is definitely available here.
-      const { root } = this.$refs
+    emitEvent (offset, offsetShape, scrollShape, evt) {
       const range = this.virtual.getRange()
       const isFront = this.virtual.isFront()
       const isBehind = this.virtual.isBehind()
-      const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
-      const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
 
-      if (isFront && !!this.dataSources.length && offset - this.upperThreshold <= 0) {
+      if (isFront && !!this.dataSources.length && offset - this.topThreshold <= 0) {
         this.$emit('totop', evt, range)
-      } else if (isBehind && offset + offsetShape + this.lowerThreshold >= scrollShape) {
+      } else if (isBehind && offset + offsetShape + this.bottomThreshold >= scrollShape) {
         this.$emit('tobottom', evt, range)
       } else {
         this.$emit('scroll', evt, range)
