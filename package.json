@@ -11,8 +11,7 @@
     "lint": "eslint --fix src --ext .js",
     "dev:docs": "cd example && npm run dev",
     "build:docs": "cd example && npm run build",
-    "build:src": "rollup --config ./scripts/rollup.production.js",
-    "build": "npm run build:src && npm run build:docs",
+    "build": "rollup --config ./scripts/rollup.production.js",
     "dev": "rollup --config ./scripts/rollup.development.js --watch"
   },
   "repository": {
