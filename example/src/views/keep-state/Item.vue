@@ -25,11 +25,11 @@ export default {
 
   methods: {
     onChange (e) {
-      this.dispatch('keep-state', 'checkBoxValueChange', this.id, e.target.checked)
+      this.dispatch('keep-state', 'checkBoxValueChange', this.source.id, e.target.checked)
     },
 
     onClickName () {
-      this.dispatch('keep-state', 'checkBoxValueChange', this.id, !this.checked)
+      this.dispatch('keep-state', 'checkBoxValueChange', this.source.id, !this.source.checked)
     }
   }
 }
