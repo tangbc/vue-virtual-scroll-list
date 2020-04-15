@@ -55,6 +55,10 @@ body {
   background-color: #fff;
 }
 
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
 code {
   background-color: pink !important;
 }

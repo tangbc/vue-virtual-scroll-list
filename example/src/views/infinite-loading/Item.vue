@@ -4,7 +4,7 @@
       <span class="index"># {{ source.index }}</span>
       <span class="name">{{ source.name }}</span>
     </div>
-    <!-- <div class="desc">{{ source.desc }}</div> -->
+    <div class="desc">{{ source.desc }}</div>
   </div>
 </template>
 
@@ -26,9 +26,9 @@ export default {
 
 <style lang="less" scoped>
 .item-inner {
-  // .head {
-  //   font-weight: 500;
-  // }
+  .head {
+    font-weight: 500;
+  }
   .index {
     margin-right: 1em;
   }

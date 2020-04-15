@@ -7,7 +7,7 @@
       <tab v-on:tab-change="onTabChange" />
 
       <div v-show="isShowView">
-        <virtual-list class="list"
+        <virtual-list class="list scroll-touch"
           :size="50"
           :keeps="30"
           :item-class="'list-item-fixed'"

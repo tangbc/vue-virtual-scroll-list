@@ -9,7 +9,7 @@
       <div class="selects" v-show="isShowView">{{ selectNames }}</div>
 
       <div v-show="isShowView">
-        <virtual-list class="list-keep"
+        <virtual-list class="list-keep scroll-touch"
           :size="60"
           :keeps="30"
           :item-class="'list-item-keep'"

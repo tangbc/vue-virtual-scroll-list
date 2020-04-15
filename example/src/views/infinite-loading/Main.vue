@@ -9,7 +9,7 @@
       <div class="result">Items count: {{ items.length }}.</div>
 
       <div v-show="isShowView">
-        <virtual-list class="list-infinite"
+        <virtual-list class="list-infinite scroll-touch"
           :size="70"
           :keeps="30"
           :item-class="'list-item-infinite'"

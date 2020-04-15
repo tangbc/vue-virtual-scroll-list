@@ -7,7 +7,7 @@
       <tab v-on:tab-change="onTabChange" />
 
       <div v-show="isShowView">
-        <virtual-list class="list-horizontal"
+        <virtual-list class="list-horizontal scroll-touch"
           :size="110"
           :keeps="30"
           :direction="'horizontal'"
