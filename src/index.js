@@ -68,13 +68,35 @@ const VirtualList = Vue.component(NAME, {
   mounted () {
     // set position.
     if (this.start) {
-      this.setScrollOffset(this.virtual.getOffset(this.start))
+      this.scrollToIndex(this.start)
     } else if (this.offset) {
-      this.setScrollOffset(this.offset)
+      this.scrollToOffset(this.offset)
     }
+
+    window.virtual = this.virtual
   },
 
   methods: {
+    // set current scroll position to a expectant offset.
+    scrollToOffset (offset) {
+      const { root } = this.$refs
+      if (root) {
+        root[this.directionKey] = offset || 0
+      }
+    },
+
+    // set current scroll position to a expectant index.
+    scrollToIndex (index) {
+      const offset = this.virtual.getOffset(index)
+      this.scrollToOffset(offset)
+    },
+
+    // ----------- public method end. -----------
+
+    getUniqueIdFromDataSources () {
+      return this.dataSources.map((dataSource) => dataSource[this.dataKey])
+    },
+
     // event called when every item mounted or size changed.
     onItemResized (id, size) {
       this.virtual.saveSize(id, size)
@@ -115,18 +137,6 @@ const VirtualList = Vue.component(NAME, {
 
       this.virtual.handleScroll(offset)
       this.emitEvent(offset, offsetShape, scrollShape, evt)
-    },
-
-    getUniqueIdFromDataSources () {
-      return this.dataSources.map((dataSource) => dataSource[this.dataKey])
-    },
-
-    // set current scroll position to a expectant offset.
-    setScrollOffset (offset) {
-      const { root } = this.$refs
-      if (root) {
-        root[this.directionKey] = offset || 0
-      }
     },
 
     // emit event in special position.
