@@ -1,5 +1,5 @@
 /**
- * props declaration for default, item and slot component.
+ * props declaration for default, item and slot component
  */
 
 export const VirtualProps = {
@@ -43,7 +43,7 @@ export const VirtualProps = {
 
   direction: {
     type: String,
-    default: 'vertical' // the other value is horizontal.
+    default: 'vertical' // the other value is horizontal
   },
   topThreshold: {
     type: Number,

@@ -1,5 +1,5 @@
 /**
- * virtual list default component.
+ * virtual list default component
  */
 
 import Vue from 'vue'
@@ -12,7 +12,7 @@ const EVENT_TYPE = {
   SLOT: 'slot_resize'
 }
 const SLOT_TYPE = {
-  HEADER: 'header', // string value also use for aria role attribute.
+  HEADER: 'header', // string value also use for aria role attribute
   FOOTER: 'footer'
 }
 
@@ -41,21 +41,21 @@ const VirtualList = Vue.component(NAME, {
     this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
 
     this.virtual = new Virtual({
-      size: this.size, // also could be a estimate value.
+      size: this.size, // also could be a estimate value
       slotHeaderSize: 0,
       slotFooterSize: 0,
       keeps: this.keeps,
-      buffer: Math.round(this.keeps / 3), // recommend for a third of keeps.
+      buffer: Math.round(this.keeps / 3), // recommend for a third of keeps
       uniqueIds: this.getUniqueIdFromDataSources()
     }, this.onRangeChanged)
 
-    // also need sync initial range first.
+    // also need sync initial range first
     this.range = this.virtual.getRange()
 
-    // listen item size changing.
+    // listen item size changing
     this.$on(EVENT_TYPE.ITEM, this.onItemResized)
 
-    // listen slot size changing.
+    // listen slot size changing
     if (this.$slots.header || this.$slots.footer) {
       this.$on(EVENT_TYPE.SLOT, this.onSlotResized)
     }
@@ -66,7 +66,7 @@ const VirtualList = Vue.component(NAME, {
   },
 
   mounted () {
-    // set position.
+    // set position
     if (this.start) {
       this.scrollToIndex(this.start)
     } else if (this.offset) {
@@ -77,7 +77,7 @@ const VirtualList = Vue.component(NAME, {
   },
 
   methods: {
-    // set current scroll position to a expectant offset.
+    // set current scroll position to a expectant offset
     scrollToOffset (offset) {
       const { root } = this.$refs
       if (root) {
@@ -85,24 +85,24 @@ const VirtualList = Vue.component(NAME, {
       }
     },
 
-    // set current scroll position to a expectant index.
+    // set current scroll position to a expectant index
     scrollToIndex (index) {
       const offset = this.virtual.getOffset(index)
       this.scrollToOffset(offset)
     },
 
-    // ----------- public method end. -----------
+    // ----------- public method end -----------
 
     getUniqueIdFromDataSources () {
       return this.dataSources.map((dataSource) => dataSource[this.dataKey])
     },
 
-    // event called when every item mounted or size changed.
+    // event called when each item mounted or size changed
     onItemResized (id, size) {
       this.virtual.saveSize(id, size)
     },
 
-    // event called when slot mounted or size changed.
+    // event called when slot mounted or size changed
     onSlotResized (type, size, hasInit) {
       if (type === SLOT_TYPE.HEADER) {
         this.virtual.updateParam('slotHeaderSize', size)
@@ -115,7 +115,7 @@ const VirtualList = Vue.component(NAME, {
       }
     },
 
-    // here is the rerendering entry.
+    // here is the rerendering entry
     onRangeChanged (range) {
       this.range = range
     },
@@ -130,7 +130,7 @@ const VirtualList = Vue.component(NAME, {
       const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
       const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
 
-      // iOS scrolling spring-back behavior will make direction mistake.
+      // iOS scroll-spring-back behavior will make direction mistake
       if (offset + offsetShape > scrollShape) {
         return
       }
@@ -139,22 +139,19 @@ const VirtualList = Vue.component(NAME, {
       this.emitEvent(offset, offsetShape, scrollShape, evt)
     },
 
-    // emit event in special position.
+    // emit event in special position
     emitEvent (offset, offsetShape, scrollShape, evt) {
       const range = this.virtual.getRange()
-      const isFront = this.virtual.isFront()
-      const isBehind = this.virtual.isBehind()
-
-      if (isFront && !!this.dataSources.length && offset - this.topThreshold <= 0) {
+      if (this.virtual.isFront() && !!this.dataSources.length && offset - this.topThreshold <= 0) {
         this.$emit('totop', evt, range)
-      } else if (isBehind && offset + offsetShape + this.bottomThreshold >= scrollShape) {
+      } else if (this.virtual.isBehind() && offset + offsetShape + this.bottomThreshold >= scrollShape) {
         this.$emit('tobottom', evt, range)
       } else {
         this.$emit('scroll', evt, range)
       }
     },
 
-    // get the real render slots based on range data.
+    // get the real render slots based on range data
     getRenderSlots (h) {
       const slots = []
       const start = this.disabled ? 0 : this.range.start
@@ -182,7 +179,7 @@ const VirtualList = Vue.component(NAME, {
     }
   },
 
-  // render function, a closer-to-the-compiler alternative to templates.
+  // render function, a closer-to-the-compiler alternative to templates
   // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
   render (h) {
     const { header, footer } = this.$slots
@@ -196,7 +193,7 @@ const VirtualList = Vue.component(NAME, {
         '&scroll': this.onScroll
       }
     }, [
-      // header slot.
+      // header slot
       header ? h(Slot, {
         class: this.headerClass,
         props: {
@@ -206,7 +203,7 @@ const VirtualList = Vue.component(NAME, {
         }
       }, header) : null,
 
-      // main list.
+      // main list
       h(this.wrapTag, {
         class: this.wrapClass,
         attrs: {
@@ -217,7 +214,7 @@ const VirtualList = Vue.component(NAME, {
         }
       }, this.getRenderSlots(h)),
 
-      // footer slot.
+      // footer slot
       footer ? h(Slot, {
         class: this.footerClass,
         props: {

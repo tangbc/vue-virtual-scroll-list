@@ -1,6 +1,6 @@
 /**
  * item and slot component both use similar wrapper
- * we need to know their size change at any time.
+ * we need to know their size change at any time
  */
 
 import Vue from 'vue'
@@ -13,12 +13,12 @@ const Wrapper = {
   },
 
   mounted () {
-    // dispatch once at initial.
+    // dispatch once at initial
     this.dispatchSizeChange()
 
     if (typeof ResizeObserver !== 'undefined') {
       this.resizeObserver = new ResizeObserver(() => {
-        // dispatch when size changed.
+        // dispatch when size changed
         if (this.hasInitial) {
           this.dispatchSizeChange()
         } else {
@@ -41,14 +41,14 @@ const Wrapper = {
       return this.$el ? this.$el[this.shapeKey] : 0
     },
 
-    // tell parent current size identify by unqiue key.
+    // tell parent current size identify by unqiue key
     dispatchSizeChange () {
       this.$parent.$emit(this.event, this.uniqueKey, this.getCurrentSize(), this.hasInitial)
     }
   }
 }
 
-// wrapping for item.
+// wrapping for item
 export const Item = Vue.component('virtual-list-item', {
   mixins: [Wrapper],
 
@@ -66,7 +66,7 @@ export const Item = Vue.component('virtual-list-item', {
   }
 })
 
-// wrapping for slot.
+// wrapping for slot
 export const Slot = Vue.component('virtual-list-slot', {
   mixins: [Wrapper],
 
