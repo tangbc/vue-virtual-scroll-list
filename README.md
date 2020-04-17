@@ -224,24 +224,6 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Item wrapper element class name.</td>
     </tr>
     <tr>
-      <td><code>direction</code></td>
-      <td>String</td>
-      <td>vertical</td>
-      <td>Scroll direction, available values are <code>vertical</code> and <code>horizontal</code></td>
-    </tr>
-    <tr>
-      <td><code>top-threshold</code></td>
-      <td>Number</td>
-      <td>0</td>
-      <td>The threshold to emit <code>totop</code> event, attention to multiple calls.</td>
-    </tr>
-    <tr>
-      <td><code>bottom-threshold</code></td>
-      <td>Number</td>
-      <td>0</td>
-      <td>The threshold to emit <code>tobottom</code> event, attention to multiple calls.</td>
-    </tr>
-    <tr>
       <td><code>header-tag</code></td>
       <td>String</td>
       <td>div</td>
@@ -264,6 +246,24 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>String</td>
       <td></td>
       <td>For using footer slot, footer slot wrapper element class name.</td>
+    </tr>
+    <tr>
+      <td><code>direction</code></td>
+      <td>String</td>
+      <td>vertical</td>
+      <td>Scroll direction, available values are <code>vertical</code> and <code>horizontal</code></td>
+    </tr>
+    <tr>
+      <td><code>top-threshold</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>The threshold to emit <code>totop</code> event, attention to multiple calls.</td>
+    </tr>
+    <tr>
+      <td><code>bottom-threshold</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>The threshold to emit <code>tobottom</code> event, attention to multiple calls.</td>
     </tr>
   </table>
 </details>
