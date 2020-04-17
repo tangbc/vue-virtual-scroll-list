@@ -29,14 +29,15 @@
 * [What's new in v2.0](#whats-new-in-v20)
 * [Simple usage](#simple-usage)
 * [**Props type**](#props-type)
+  * [Required props](#required-props)
+  * [Optional props](#optional-props)
+  * [Public methods](#public-methods)
 * [Attentions](#attentions)
-* [Contributions](#contributions)
-* [Changelogs](#changelogs)
 
 
 ## Advantages
 
-* Tiny and very very easy to use.
+* Tiny, simple and very very easy to use.
 
 * Big data list with high render performance and efficient.
 
@@ -66,7 +67,7 @@ Root component:
 <template>
   <div>
     <virtual-list
-      :size="60" // just assign a estimate or average value.
+      :size="60" // You dont know? no problem, just assign a estimate value!
       :keeps="30"
       :data-key="'uid'"
       :data-sources="items"
@@ -116,7 +117,7 @@ Item component:
 </script>
 ```
 
-More usages or getting start you can refer to these clearly [examples](https://tangbc.github.com/vue-virtual-scroll-list).
+More usages or getting start you can refer to these clearly [examples](https://github.com/tangbc/vue-virtual-scroll-list/tree/master/example/src/views).
 
 
 ## Props type
@@ -133,26 +134,139 @@ More usages or getting start you can refer to these clearly [examples](https://t
 
 ### Optional props
 
-| **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type** | **Default** | **Description**                                                             |
-|--------------------|----------|----------|---------------------------------------------------------------------------|
-| `extra-props`      | Object   | {}       | Extra props assign to item component.                                     |
-| `root-tag`         | String   | div      | Root element tag name.                                                    |
-| `wrap-tag`         | String   | div      | List wrapper element tag name.                                            |
-| `item-tag`         | String   | div      | Item wrapper element tag name.                                            |
-| `wrap-class`       | String   |          | List wrapper element class name.                                          |
-| `item-class`       | String   |          | Item wrapper element class name.                                          |
-| `start`            | Number   | 0        | Setting scroll stay start index.                                          |
-| `offset`           | Number   | 0        | Setting scroll stay offset.                                               |
-| `direction`        | String   | vertical | Scroll direction, available values are `vertical` and `horizontal`.       |
-| `scroll`           | Function |          | Emited when scrolling, param `(event, range)`.                            |
-| `totop`            | Function |          | Emited when scrolled to top or left, param `(event, range)`.              |
-| `tobottom`         | Function |          | Emited when scrolled to bottom or right, param `(event, range)`.          |
-| `top-threshold`    | Number   | 0        | The threshold to emit `totop` event, attention to multiple calls.         |
-| `bottom-threshold` | Number   | 0        | The threshold to emit `tobottom` event, attention to multiple calls.      |
-| `header-tag`       | String   | div      | For using header slot, header slot wrapper element tag name.              |
-| `footer-tag`       | String   | div      | For using footer slot, footer slot wrapper element tag name.              |
-| `header-class`     | String   |          | For using header slot, header slot wrapper element class name.            |
-| `footer-class`     | String   |          | For using footer slot, footer slot wrapper element class name.            |
+<details>
+  <summary><strong>Commonly used</strong></summary>
+  <p></p>
+  <table>
+    <tr>
+      <th>Props</th>
+      <th>Type</th>
+      <th>default</th>
+      <th>description</th>
+    </tr>
+    <tr>
+      <td><code>extra-props</code></td>
+      <td>Object</td>
+      <td>{}</td>
+      <td>Extra props assign to item component.</td>
+    </tr>
+    <tr>
+      <td><code>start</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>Setting scroll stay start index.</td>
+    </tr>
+    <tr>
+      <td><code>offset</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>Setting scroll stay offset.</td>
+    </tr>
+    <tr>
+      <td><code>totop</code></td>
+      <td>Function</td>
+      <td></td>
+      <td>Emited when scrolled to top or left, param <code>(event, range)</code>.</td>
+    </tr>
+    <tr>
+      <td><code>tobottom</code></td>
+      <td>Function</td>
+      <td></td>
+      <td>Emited when scrolled to bottom or right, param <code>(event, range)</code>.</td>
+    </tr>
+    <tr>
+      <td><code>scroll</code></td>
+      <td>Function</td>
+      <td></td>
+      <td>Emited when scrolling, param <code>(event, range)</code>.</td>
+    </tr>
+  </table>
+</details>
+
+<details>
+  <summary><strong>Uncommonly used</strong></summary>
+  <p></p>
+  <table>
+    <tr>
+      <th>Props</th>
+      <th>Type</th>
+      <th>default</th>
+      <th>description</th>
+    </tr>
+    <tr>
+      <td><code>root-tag</code></td>
+      <td>String</td>
+      <td>div</td>
+      <td>Root element tag name.</td>
+    </tr>
+    <tr>
+      <td><code>wrap-tag</code></td>
+      <td>String</td>
+      <td>div</td>
+      <td>List wrapper element tag name.</td>
+    </tr>
+    <tr>
+      <td><code>item-tag</code></td>
+      <td>String</td>
+      <td>div</td>
+      <td>Item wrapper element tag name.</td>
+    </tr>
+    <tr>
+      <td><code>wrap-class</code></td>
+      <td>String</td>
+      <td></td>
+      <td>List wrapper element class name.</td>
+    </tr>
+    <tr>
+      <td><code>item-class</code></td>
+      <td>String</td>
+      <td></td>
+      <td>Item wrapper element class name.</td>
+    </tr>
+    <tr>
+      <td><code>direction</code></td>
+      <td>String</td>
+      <td>vertical</td>
+      <td>Scroll direction, available values are <code>vertical</code> and <code>horizontal</code></td>
+    </tr>
+    <tr>
+      <td><code>top-threshold</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>The threshold to emit <code>totop</code> event, attention to multiple calls.</td>
+    </tr>
+    <tr>
+      <td><code>bottom-threshold</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>The threshold to emit <code>tobottom</code> event, attention to multiple calls.</td>
+    </tr>
+    <tr>
+      <td><code>header-tag</code></td>
+      <td>String</td>
+      <td>div</td>
+      <td>For using header slot, header slot wrapper element tag name.</td>
+    </tr>
+    <tr>
+      <td><code>footer-tag</code></td>
+      <td>String</td>
+      <td>div</td>
+      <td>For using footer slot, footer slot wrapper element tag name.</td>
+    </tr>
+    <tr>
+      <td><code>header-class</code></td>
+      <td>String</td>
+      <td></td>
+      <td>For using header slot, header slot wrapper element class name.</td>
+    </tr>
+    <tr>
+      <td><code>footer-class</code></td>
+      <td>String</td>
+      <td></td>
+      <td>For using footer slot, footer slot wrapper element class name.</td>
+    </tr>
+  </table>
+</details>
 
 ### Public methods
 
