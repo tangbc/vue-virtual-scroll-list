@@ -40,17 +40,7 @@ const VirtualList = Vue.component(NAME, {
     this.isHorizontal = this.direction === 'horizontal'
     this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
 
-    this.virtual = new Virtual({
-      size: this.size, // also could be a estimate value
-      slotHeaderSize: 0,
-      slotFooterSize: 0,
-      keeps: this.keeps,
-      buffer: Math.round(this.keeps / 3), // recommend for a third of keeps
-      uniqueIds: this.getUniqueIdFromDataSources()
-    }, this.onRangeChanged)
-
-    // sync initial range
-    this.range = this.virtual.getRange()
+    this.installVirtual()
 
     // listen item size changing
     this.$on(EVENT_TYPE.ITEM, this.onItemResized)
@@ -72,8 +62,6 @@ const VirtualList = Vue.component(NAME, {
     } else if (this.offset) {
       this.scrollToOffset(this.offset)
     }
-
-    window.virtual = this.virtual
   },
 
   methods: {
@@ -116,7 +104,31 @@ const VirtualList = Vue.component(NAME, {
       }
     },
 
+    // reset all state back to initial
+    reset () {
+      this.virtual.destroy()
+      this.scrollToOffset(0)
+      this.installVirtual()
+    },
+
     // ----------- public method end -----------
+
+    installVirtual () {
+      this.virtual = new Virtual({
+        size: this.size, // also could be a estimate value
+        slotHeaderSize: 0,
+        slotFooterSize: 0,
+        keeps: this.keeps,
+        buffer: Math.round(this.keeps / 3), // recommend for a third of keeps
+        uniqueIds: this.getUniqueIdFromDataSources()
+      }, this.onRangeChanged)
+
+      // sync initial range
+      this.range = this.virtual.getRange()
+
+      // just for debug
+      // window.virtual = this.virtual
+    },
 
     getUniqueIdFromDataSources () {
       return this.dataSources.map((dataSource) => dataSource[this.dataKey])
