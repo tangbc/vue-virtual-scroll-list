@@ -49,7 +49,7 @@ const VirtualList = Vue.component(NAME, {
       uniqueIds: this.getUniqueIdFromDataSources()
     }, this.onRangeChanged)
 
-    // also need sync initial range first
+    // sync initial range
     this.range = this.virtual.getRange()
 
     // listen item size changing
@@ -87,14 +87,42 @@ const VirtualList = Vue.component(NAME, {
 
     // set current scroll position to a expectant index
     scrollToIndex (index) {
-      const offset = this.virtual.getOffset(index)
-      this.scrollToOffset(offset)
+      // scroll to top
+      if (index === 0) {
+        this.scrollToOffset(0)
+      } else if (index >= this.dataSources.length - 1) {
+        // scroll to bottom
+        this.scrollToOffset(this.getScrollSize())
+      } else {
+        const offset = this.virtual.getOffset(index)
+        this.scrollToOffset(offset)
+      }
     },
 
     // ----------- public method end -----------
 
     getUniqueIdFromDataSources () {
       return this.dataSources.map((dataSource) => dataSource[this.dataKey])
+    },
+
+    // get client viewport size (width or height)
+    getClientSize () {
+      const { root } = this.$refs
+      if (root) {
+        return root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
+      } else {
+        return 0
+      }
+    },
+
+    // get all scroll size (width or height)
+    getScrollSize () {
+      const { root } = this.$refs
+      if (root) {
+        return root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
+      } else {
+        return 0
+      }
     },
 
     // event called when each item mounted or size changed
@@ -127,24 +155,24 @@ const VirtualList = Vue.component(NAME, {
       }
 
       const offset = root[this.directionKey]
-      const offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
-      const scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
+      const clientSize = this.getClientSize()
+      const scrollSize = this.getScrollSize()
 
       // iOS scroll-spring-back behavior will make direction mistake
-      if (offset + offsetShape > scrollShape) {
+      if (offset + clientSize > scrollSize) {
         return
       }
 
       this.virtual.handleScroll(offset)
-      this.emitEvent(offset, offsetShape, scrollShape, evt)
+      this.emitEvent(offset, clientSize, scrollSize, evt)
     },
 
     // emit event in special position
-    emitEvent (offset, offsetShape, scrollShape, evt) {
+    emitEvent (offset, clientSize, scrollSize, evt) {
       const range = this.virtual.getRange()
       if (this.virtual.isFront() && !!this.dataSources.length && offset - this.topThreshold <= 0) {
         this.$emit('totop', evt, range)
-      } else if (this.virtual.isBehind() && offset + offsetShape + this.bottomThreshold >= scrollShape) {
+      } else if (this.virtual.isBehind() && offset + clientSize + this.bottomThreshold >= scrollSize) {
         this.$emit('tobottom', evt, range)
       } else {
         this.$emit('scroll', evt, range)
