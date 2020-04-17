@@ -50,7 +50,7 @@ https://tangbc.github.io/vue-virtual-scroll-list
 
 ## What's new in v2.0
 
-Here are the details of update information [release v2.0](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v2.0.0).
+Here are the major of update informations with [release v2.0](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v2.0.0).
 
 Since the `v2.0` is **not compatible** with `v1.x`, please note before upgrading, `v1.x` documentation see [v1.x.md](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/v1.x.md).
 
@@ -61,7 +61,7 @@ Since the `v2.0` is **not compatible** with `v1.x`, please note before upgrading
 npm install vue-virtual-scroll-list --save
 ```
 
-Root component is:
+Root component:
 ```vue
 <template>
   <div>
@@ -75,6 +75,7 @@ Root component is:
     />
   </div>
 </template>
+
 <script>
   import Item from './Item'
   import VirtualList from 'vue-virtual-scroll-list'
@@ -93,11 +94,12 @@ Root component is:
 </script>
 ```
 
-Item component is:
+Item component:
 ```vue
 <template>
   <div>{{ source.text }} - {{ otherPropValue }}</div>
 </template>
+
 <script>
   export default {
     name: 'item-component',
@@ -151,6 +153,18 @@ More usages or getting start you can refer to these clearly [examples](https://t
 | `footer-tag`       | String   | div      | For using footer slot, footer slot wrapper element tag name.              |
 | `header-class`     | String   |          | For using header slot, header slot wrapper element class name.            |
 | `footer-class`     | String   |          | For using footer slot, footer slot wrapper element class name.            |
+
+### Public methods
+
+Here are some usefull public methods you can call via [`ref`](https://vuejs.org/v2/guide/components-edge-cases.html#Accessing-Child-Component-Instances-amp-Child-Elements):
+
+* `reset()`: reset all state back to initial.
+
+* `scrollToBottom()`: manual set scroll position to bottom.
+
+* `scrollToIndex(index)`: manual set scroll position to a designated index.
+
+* `scrollToOffset(offset)`: manual set scroll position to a designated offset.
 
 
 ## Attentions
