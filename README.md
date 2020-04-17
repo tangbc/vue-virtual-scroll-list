@@ -141,8 +141,8 @@ More usages or getting start you can refer to these clearly [examples](https://g
     <tr>
       <th>Props</th>
       <th>Type</th>
-      <th>default</th>
-      <th>description</th>
+      <th>Default</th>
+      <th>Description</th>
     </tr>
     <tr>
       <td><code>extra-props</code></td>
@@ -190,8 +190,8 @@ More usages or getting start you can refer to these clearly [examples](https://g
     <tr>
       <th>Props</th>
       <th>Type</th>
-      <th>default</th>
-      <th>description</th>
+      <th>Default</th>
+      <th>Description</th>
     </tr>
     <tr>
       <td><code>root-tag</code></td>
