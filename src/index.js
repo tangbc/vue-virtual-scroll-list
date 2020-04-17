@@ -92,10 +92,27 @@ const VirtualList = Vue.component(NAME, {
         this.scrollToOffset(0)
       } else if (index >= this.dataSources.length - 1) {
         // scroll to bottom
-        this.scrollToOffset(this.getScrollSize())
+        this.scrollToBottom()
       } else {
         const offset = this.virtual.getOffset(index)
         this.scrollToOffset(offset)
+      }
+    },
+
+    // set current scroll position to bottom
+    scrollToBottom () {
+      const { shepherd } = this.$refs
+      if (shepherd) {
+        shepherd.scrollIntoView(false)
+
+        // check if it's really scrolled to the bottom
+        // maybe list doesn't render and calculate to last range
+        // so we need retry in next event loop until it really at bottom
+        setTimeout(() => {
+          if (this.getOffset() + this.getClientSize() < this.getScrollSize()) {
+            this.scrollToBottom()
+          }
+        }, 3);
       }
     },
 
@@ -105,24 +122,22 @@ const VirtualList = Vue.component(NAME, {
       return this.dataSources.map((dataSource) => dataSource[this.dataKey])
     },
 
-    // get client viewport size (width or height)
-    getClientSize () {
+    // return current scroll offset
+    getOffset () {
       const { root } = this.$refs
-      if (root) {
-        return root[this.isHorizontal ? 'clientWidth' : 'clientHeight']
-      } else {
-        return 0
-      }
+      return root ? root[this.directionKey] : 0
     },
 
-    // get all scroll size (width or height)
+    // return client viewport size (width or height)
+    getClientSize () {
+      const { root } = this.$refs
+      return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0
+    },
+
+    // return all scroll size (width or height)
     getScrollSize () {
       const { root } = this.$refs
-      if (root) {
-        return root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']
-      } else {
-        return 0
-      }
+      return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0
     },
 
     // event called when each item mounted or size changed
@@ -149,17 +164,12 @@ const VirtualList = Vue.component(NAME, {
     },
 
     onScroll (evt) {
-      const { root } = this.$refs
-      if (!root) {
-        return
-      }
-
-      const offset = root[this.directionKey]
+      const offset = this.getOffset()
       const clientSize = this.getClientSize()
       const scrollSize = this.getScrollSize()
 
       // iOS scroll-spring-back behavior will make direction mistake
-      if (offset + clientSize > scrollSize) {
+      if (offset + clientSize > scrollSize || !scrollSize) {
         return
       }
 
@@ -170,9 +180,9 @@ const VirtualList = Vue.component(NAME, {
     // emit event in special position
     emitEvent (offset, clientSize, scrollSize, evt) {
       const range = this.virtual.getRange()
-      if (this.virtual.isFront() && !!this.dataSources.length && offset - this.topThreshold <= 0) {
+      if (this.virtual.isFront() && !!this.dataSources.length && (offset - this.topThreshold <= 0)) {
         this.$emit('totop', evt, range)
-      } else if (this.virtual.isBehind() && offset + clientSize + this.bottomThreshold >= scrollSize) {
+      } else if (this.virtual.isBehind() && (offset + clientSize + this.bottomThreshold >= scrollSize)) {
         this.$emit('tobottom', evt, range)
       } else {
         this.$emit('scroll', evt, range)
@@ -250,7 +260,12 @@ const VirtualList = Vue.component(NAME, {
           event: EVENT_TYPE.SLOT,
           uniqueKey: SLOT_TYPE.FOOTER
         }
-      }, footer) : null
+      }, footer) : null,
+
+      // an empty element use to scroll to bottom
+      h('div', {
+        ref: 'shepherd'
+      })
     ])
   }
 })
