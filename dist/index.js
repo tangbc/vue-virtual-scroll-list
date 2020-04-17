@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.0.4
+ * vue-virtual-scroll-list v2.0.5
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -35,12 +35,12 @@
   }
 
   /**
-   * virtual list core calculating center.
+   * virtual list core calculating center
    */
   var DIRECTION_TYPE = {
     FRONT: 'FRONT',
-    // scroll up or left.
-    BEHIND: 'BEHIND' // scroll down or right.
+    // scroll up or left
+    BEHIND: 'BEHIND' // scroll down or right
 
   };
   var CALC_TYPE = {
@@ -60,25 +60,25 @@
     _createClass(Virtual, [{
       key: "init",
       value: function init(param, updateHook) {
-        // param data.
+        // param data
         this.param = param;
-        this.updateHook = updateHook; // size data.
+        this.updateHook = updateHook; // size data
 
         this.sizes = new Map();
         this.firstRangeTotalSize = 0;
         this.firstRangeAverageSize = 0;
         this.lastCalcIndex = 0;
         this.fixedSizeValue = 0;
-        this.calcType = CALC_TYPE.INIT; // scroll data.
+        this.calcType = CALC_TYPE.INIT; // scroll data
 
         this.offset = 0;
-        this.direction = ''; // range data.
+        this.direction = ''; // range data
 
         this.range = Object.create(null);
 
         if (this.param) {
           this.checkRange(0, param.keeps - 1);
-        } // benchmark test data.
+        } // benchmark test data
         // this.__bsearchCalls = 0
         // this.__getIndexOffsetCalls = 0
 
@@ -87,7 +87,7 @@
       key: "destroy",
       value: function destroy() {
         this.init(null, null);
-      } // return actually render range.
+      } // return actually render range
 
     }, {
       key: "getRange",
@@ -108,7 +108,7 @@
       key: "isFront",
       value: function isFront() {
         return this.direction === DIRECTION_TYPE.FRONT;
-      } // return start index offset.
+      } // return start index offset
 
     }, {
       key: "getOffset",
@@ -121,34 +121,34 @@
         if (this.param && key in this.param) {
           this.param[key] = value;
         }
-      } // save each size map by id.
+      } // save each size map by id
 
     }, {
       key: "saveSize",
       value: function saveSize(id, size) {
         this.sizes.set(id, size); // we assume size type is fixed at the beginning and remember first size value
         // if there is no size value different from this at next comming saving
-        // we think it's a fixed size list, otherwise is dynamic size list.
+        // we think it's a fixed size list, otherwise is dynamic size list
 
         if (this.calcType === CALC_TYPE.INIT) {
           this.fixedSizeValue = size;
           this.calcType = CALC_TYPE.FIXED;
         } else if (this.calcType === CALC_TYPE.FIXED && this.fixedSizeValue !== size) {
-          this.calcType = CALC_TYPE.DYNAMIC; // it's no use at all.
+          this.calcType = CALC_TYPE.DYNAMIC; // it's no use at all
 
           delete this.fixedSizeValue;
-        } // calculate the average size only in the first range.
+        } // calculate the average size only in the first range
 
 
         if (this.sizes.size <= this.param.keeps) {
           this.firstRangeTotalSize = this.firstRangeTotalSize + size;
           this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size);
         } else {
-          // it's done using.
+          // it's done using
           delete this.firstRangeTotalSize;
         }
       } // in some special situation (e.g. length change) we need to update in a row
-      // try goiong to render next range by a leading buffer according to current direction.
+      // try goiong to render next range by a leading buffer according to current direction
 
     }, {
       key: "handleDataSourcesChange",
@@ -163,13 +163,13 @@
 
         start = Math.max(start, 0);
         this.updateRange(this.range.start, this.getEndByStart(start));
-      } // when slot size change, we also need force update.
+      } // when slot size change, we also need force update
 
     }, {
       key: "handleSlotSizeChange",
       value: function handleSlotSizeChange() {
         this.handleDataSourcesChange();
-      } // calculating range on scroll.
+      } // calculating range on scroll
 
     }, {
       key: "handleScroll",
@@ -182,16 +182,16 @@
         } else if (this.direction === DIRECTION_TYPE.BEHIND) {
           this.handleBehind();
         }
-      } // ----------- public method end. -----------
+      } // ----------- public method end -----------
 
     }, {
       key: "handleFront",
       value: function handleFront() {
-        var overs = this.getScrollOvers(); // should not change range if start doesn't exceed overs.
+        var overs = this.getScrollOvers(); // should not change range if start doesn't exceed overs
 
         if (overs > this.range.start) {
           return;
-        } // move up start by a buffer length, and make sure its safety.
+        } // move up start by a buffer length, and make sure its safety
 
 
         var start = Math.max(overs - this.param.buffer, 0);
@@ -200,24 +200,24 @@
     }, {
       key: "handleBehind",
       value: function handleBehind() {
-        var overs = this.getScrollOvers(); // range should not change if scroll overs within buffer.
+        var overs = this.getScrollOvers(); // range should not change if scroll overs within buffer
 
         if (overs < this.range.start + this.param.buffer) {
           return;
         }
 
         this.checkRange(overs, this.getEndByStart(overs));
-      } // return the pass over numbers at current scroll offset.
+      } // return the pass overs at current scroll offset
 
     }, {
       key: "getScrollOvers",
       value: function getScrollOvers() {
-        // if slot header exist, we need subtract its size.
+        // if slot header exist, we need subtract its size
         var offset = this.offset - this.param.slotHeaderSize;
 
         if (offset <= 0) {
           return 0;
-        } // if this list is fixed size, that can be easily.
+        } // if is fixed type, that can be easily
 
 
         if (this.isFixedType()) {
@@ -245,7 +245,7 @@
 
         return low > 0 ? --low : 0;
       } // return a scroll offset from given index, can efficiency be improved more here?
-      // although the call frequency is very high, its only a superposition of numbers.
+      // although the call frequency is very high, its only a superposition of numbers
 
     }, {
       key: "getIndexOffset",
@@ -262,7 +262,7 @@
           // this.__getIndexOffsetCalls++
           indexSize = this.sizes.get(this.param.uniqueIds[index]);
           offset = offset + (indexSize || this.getEstimateSize());
-        } // remember last calculate index.
+        } // remember last calculate index
 
 
         this.lastCalcIndex = Math.max(this.lastCalcIndex, givenIndex - 1);
@@ -273,33 +273,33 @@
       key: "isFixedType",
       value: function isFixedType() {
         return this.calcType === CALC_TYPE.FIXED;
-      } // return the real last index.
+      } // return the real last index
 
     }, {
       key: "getLastIndex",
       value: function getLastIndex() {
         return this.param.uniqueIds.length - 1;
       } // in some conditions range will break, we need check and correct it
-      // and then decide whether need update to next range.
+      // and then decide whether need update to next range
 
     }, {
       key: "checkRange",
       value: function checkRange(start, end) {
         var keeps = this.param.keeps;
-        var total = this.param.uniqueIds.length; // datas less than keeps, render all.
+        var total = this.param.uniqueIds.length; // datas less than keeps, render all
 
         if (total <= keeps) {
           start = 0;
           end = this.getLastIndex();
         } else if (end - start < keeps - 1) {
-          // if range length is less than keeps, corrent it base on end.
+          // if range length is less than keeps, corrent it base on end
           start = end - keeps + 1;
         }
 
         if (this.range.start !== start) {
           this.updateRange(start, end);
         }
-      } // call updating to a new range and rerender.
+      } // call updating to a new range and rerender
 
     }, {
       key: "updateRange",
@@ -309,7 +309,7 @@
         this.range.padFront = this.getPadFront();
         this.range.padBehind = this.getPadBehind();
         this.updateHook(this.getRange());
-      } // return end base on start when going to a new range.
+      } // return end base on start when going to a new range
 
     }, {
       key: "getEndByStart",
@@ -317,7 +317,7 @@
         var theoryEnd = start + this.param.keeps - 1;
         var truelyEnd = Math.min(theoryEnd, this.getLastIndex());
         return truelyEnd;
-      } // return total front offset.
+      } // return total front offset
 
     }, {
       key: "getPadFront",
@@ -327,8 +327,7 @@
         } else {
           return this.getIndexOffset(this.range.start);
         }
-      } // return total behind offset.
-      // for better performance, use estimated value if a not calculated.
+      } // return total behind offset
 
     }, {
       key: "getPadBehind",
@@ -338,16 +337,16 @@
 
         if (this.isFixedType()) {
           return (lastIndex - end) * this.fixedSizeValue;
-        } // if calculated all already, return the exactly offset.
+        } // if calculated all already, return the exactly offset
 
 
         if (this.lastCalcIndex === lastIndex) {
           return this.getIndexOffset(lastIndex) - this.getIndexOffset(end);
         } else {
-          // if not, return a estimate offset.
+          // if not, use a estimated value
           return (lastIndex - end) * this.getEstimateSize();
         }
-      } // get estimate size for one item, get from param.size at first range.
+      } // get estimate size for one item, get from param.size at first range
 
     }, {
       key: "getEstimateSize",
@@ -360,7 +359,7 @@
   }();
 
   /**
-   * props declaration for default, item and slot component.
+   * props declaration for default, item and slot component
    */
   var VirtualProps = {
     size: {
@@ -400,7 +399,7 @@
     },
     direction: {
       type: String,
-      "default": 'vertical' // the other value is horizontal.
+      "default": 'vertical' // the other value is horizontal
 
     },
     topThreshold: {
@@ -488,7 +487,7 @@
 
   /**
    * item and slot component both use similar wrapper
-   * we need to know their size change at any time.
+   * we need to know their size change at any time
    */
   var Wrapper = {
     created: function created() {
@@ -498,12 +497,12 @@
     mounted: function mounted() {
       var _this = this;
 
-      // dispatch once at initial.
+      // dispatch once at initial
       this.dispatchSizeChange();
 
       if (typeof ResizeObserver !== 'undefined') {
         this.resizeObserver = new ResizeObserver(function () {
-          // dispatch when size changed.
+          // dispatch when size changed
           if (_this.hasInitial) {
             _this.dispatchSizeChange();
           } else {
@@ -523,12 +522,12 @@
       getCurrentSize: function getCurrentSize() {
         return this.$el ? this.$el[this.shapeKey] : 0;
       },
-      // tell parent current size identify by unqiue key.
+      // tell parent current size identify by unqiue key
       dispatchSizeChange: function dispatchSizeChange() {
         this.$parent.$emit(this.event, this.uniqueKey, this.getCurrentSize(), this.hasInitial);
       }
     }
-  }; // wrapping for item.
+  }; // wrapping for item
 
   var Item = Vue.component('virtual-list-item', {
     mixins: [Wrapper],
@@ -542,7 +541,7 @@
         props: itemProps
       })]);
     }
-  }); // wrapping for slot.
+  }); // wrapping for slot
 
   var Slot = Vue.component('virtual-list-slot', {
     mixins: [Wrapper],
@@ -557,7 +556,7 @@
   });
 
   /**
-   * virtual list default component.
+   * virtual list default component
    */
   var EVENT_TYPE = {
     ITEM: 'item_resize',
@@ -565,7 +564,7 @@
   };
   var SLOT_TYPE = {
     HEADER: 'header',
-    // string value also use for aria role attribute.
+    // string value also use for aria role attribute
     FOOTER: 'footer'
   };
   var NAME = 'virtual-list';
@@ -587,20 +586,9 @@
     created: function created() {
       this.isHorizontal = this.direction === 'horizontal';
       this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop';
-      this.virtual = new Virtual({
-        size: this.size,
-        // also could be a estimate value.
-        slotHeaderSize: 0,
-        slotFooterSize: 0,
-        keeps: this.keeps,
-        buffer: Math.round(this.keeps / 3),
-        // recommend for a third of keeps.
-        uniqueIds: this.getUniqueIdFromDataSources()
-      }, this.onRangeChanged); // also need sync initial range first.
+      this.installVirtual(); // listen item size changing
 
-      this.range = this.virtual.getRange(); // listen item size changing.
-
-      this.$on(EVENT_TYPE.ITEM, this.onItemResized); // listen slot size changing.
+      this.$on(EVENT_TYPE.ITEM, this.onItemResized); // listen slot size changing
 
       if (this.$slots.header || this.$slots.footer) {
         this.$on(EVENT_TYPE.SLOT, this.onSlotResized);
@@ -610,19 +598,102 @@
       this.virtual.destroy();
     },
     mounted: function mounted() {
-      // set position.
+      // set position
       if (this.start) {
-        this.setScrollOffset(this.virtual.getOffset(this.start));
+        this.scrollToIndex(this.start);
       } else if (this.offset) {
-        this.setScrollOffset(this.offset);
+        this.scrollToOffset(this.offset);
       }
     },
     methods: {
-      // event called when every item mounted or size changed.
+      // set current scroll position to a expectant offset
+      scrollToOffset: function scrollToOffset(offset) {
+        var root = this.$refs.root;
+
+        if (root) {
+          root[this.directionKey] = offset || 0;
+        }
+      },
+      // set current scroll position to a expectant index
+      scrollToIndex: function scrollToIndex(index) {
+        // scroll to top
+        if (index <= 0) {
+          this.scrollToOffset(0);
+        } else if (index >= this.dataSources.length - 1) {
+          // scroll to bottom
+          this.scrollToBottom();
+        } else {
+          var offset = this.virtual.getOffset(index);
+          this.scrollToOffset(offset);
+        }
+      },
+      // set current scroll position to bottom
+      scrollToBottom: function scrollToBottom() {
+        var _this = this;
+
+        var shepherd = this.$refs.shepherd;
+
+        if (shepherd) {
+          shepherd.scrollIntoView(false); // check if it's really scrolled to the bottom
+          // maybe list doesn't render and calculate to last range
+          // so we need retry in next event loop until it really at bottom
+
+          setTimeout(function () {
+            if (_this.getOffset() + _this.getClientSize() < _this.getScrollSize()) {
+              _this.scrollToBottom();
+            }
+          }, 3);
+        }
+      },
+      // reset all state back to initial
+      reset: function reset() {
+        this.virtual.destroy();
+        this.scrollToOffset(0);
+        this.installVirtual();
+      },
+      // ----------- public method end -----------
+      installVirtual: function installVirtual() {
+        this.virtual = new Virtual({
+          size: this.size,
+          // also could be a estimate value
+          slotHeaderSize: 0,
+          slotFooterSize: 0,
+          keeps: this.keeps,
+          buffer: Math.round(this.keeps / 3),
+          // recommend for a third of keeps
+          uniqueIds: this.getUniqueIdFromDataSources()
+        }, this.onRangeChanged); // sync initial range
+
+        this.range = this.virtual.getRange(); // just for debug
+        // window.virtual = this.virtual
+      },
+      getUniqueIdFromDataSources: function getUniqueIdFromDataSources() {
+        var _this2 = this;
+
+        return this.dataSources.map(function (dataSource) {
+          return dataSource[_this2.dataKey];
+        });
+      },
+      // return current scroll offset
+      getOffset: function getOffset() {
+        var root = this.$refs.root;
+        return root ? root[this.directionKey] : 0;
+      },
+      // return client viewport size (width or height)
+      getClientSize: function getClientSize() {
+        var root = this.$refs.root;
+        return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0;
+      },
+      // return all scroll size (width or height)
+      getScrollSize: function getScrollSize() {
+        var root = this.$refs.root;
+        return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0;
+      },
+      // event called when each item mounted or size changed
       onItemResized: function onItemResized(id, size) {
         this.virtual.saveSize(id, size);
       },
-      // event called when slot mounted or size changed.
+      // event called when slot mounted or size changed
       onSlotResized: function onSlotResized(type, size, hasInit) {
         if (type === SLOT_TYPE.HEADER) {
           this.virtual.updateParam('slotHeaderSize', size);
@@ -634,58 +705,35 @@
           this.virtual.handleSlotSizeChange();
         }
       },
-      // here is the rerendering entry.
+      // here is the rerendering entry
       onRangeChanged: function onRangeChanged(range) {
         this.range = range;
       },
       onScroll: function onScroll(evt) {
-        var root = this.$refs.root;
+        var offset = this.getOffset();
+        var clientSize = this.getClientSize();
+        var scrollSize = this.getScrollSize(); // iOS scroll-spring-back behavior will make direction mistake
 
-        if (!root) {
-          return;
-        }
-
-        var offset = root[this.directionKey];
-        var offsetShape = root[this.isHorizontal ? 'clientWidth' : 'clientHeight'];
-        var scrollShape = root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight']; // iOS scrolling spring-back behavior will make direction mistake.
-
-        if (offset + offsetShape > scrollShape) {
+        if (offset + clientSize > scrollSize || !scrollSize) {
           return;
         }
 
         this.virtual.handleScroll(offset);
-        this.emitEvent(offset, offsetShape, scrollShape, evt);
+        this.emitEvent(offset, clientSize, scrollSize, evt);
       },
-      getUniqueIdFromDataSources: function getUniqueIdFromDataSources() {
-        var _this = this;
-
-        return this.dataSources.map(function (dataSource) {
-          return dataSource[_this.dataKey];
-        });
-      },
-      // set current scroll position to a expectant offset.
-      setScrollOffset: function setScrollOffset(offset) {
-        var root = this.$refs.root;
-
-        if (root) {
-          root[this.directionKey] = offset || 0;
-        }
-      },
-      // emit event in special position.
-      emitEvent: function emitEvent(offset, offsetShape, scrollShape, evt) {
+      // emit event in special position
+      emitEvent: function emitEvent(offset, clientSize, scrollSize, evt) {
         var range = this.virtual.getRange();
-        var isFront = this.virtual.isFront();
-        var isBehind = this.virtual.isBehind();
 
-        if (isFront && !!this.dataSources.length && offset - this.topThreshold <= 0) {
+        if (this.virtual.isFront() && !!this.dataSources.length && offset - this.topThreshold <= 0) {
           this.$emit('totop', evt, range);
-        } else if (isBehind && offset + offsetShape + this.bottomThreshold >= scrollShape) {
+        } else if (this.virtual.isBehind() && offset + clientSize + this.bottomThreshold >= scrollSize) {
           this.$emit('tobottom', evt, range);
         } else {
           this.$emit('scroll', evt, range);
         }
       },
-      // get the real render slots based on range data.
+      // get the real render slots based on range data
       getRenderSlots: function getRenderSlots(h) {
         var slots = [];
         var start = this.disabled ? 0 : this.range.start;
@@ -715,7 +763,7 @@
         return slots;
       }
     },
-    // render function, a closer-to-the-compiler alternative to templates.
+    // render function, a closer-to-the-compiler alternative to templates
     // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
     render: function render(h) {
       var _this$$slots = this.$slots,
@@ -727,7 +775,7 @@
         on: {
           '&scroll': this.onScroll
         }
-      }, [// header slot.
+      }, [// header slot
       header ? h(Slot, {
         "class": this.headerClass,
         props: {
@@ -735,7 +783,7 @@
           event: EVENT_TYPE.SLOT,
           uniqueKey: SLOT_TYPE.HEADER
         }
-      }, header) : null, // main list.
+      }, header) : null, // main list
       h(this.wrapTag, {
         "class": this.wrapClass,
         attrs: {
@@ -744,7 +792,7 @@
         style: {
           padding: padding
         }
-      }, this.getRenderSlots(h)), // footer slot.
+      }, this.getRenderSlots(h)), // footer slot
       footer ? h(Slot, {
         "class": this.footerClass,
         props: {
@@ -752,7 +800,10 @@
           event: EVENT_TYPE.SLOT,
           uniqueKey: SLOT_TYPE.FOOTER
         }
-      }, footer) : null]);
+      }, footer) : null, // an empty element use to scroll to bottom
+      h('div', {
+        ref: 'shepherd'
+      })]);
     }
   });
 
