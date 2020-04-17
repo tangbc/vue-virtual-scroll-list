@@ -76,7 +76,7 @@ const VirtualList = Vue.component(NAME, {
     // set current scroll position to a expectant index
     scrollToIndex (index) {
       // scroll to top
-      if (index === 0) {
+      if (index <= 0) {
         this.scrollToOffset(0)
       } else if (index >= this.dataSources.length - 1) {
         // scroll to bottom
@@ -100,7 +100,7 @@ const VirtualList = Vue.component(NAME, {
           if (this.getOffset() + this.getClientSize() < this.getScrollSize()) {
             this.scrollToBottom()
           }
-        }, 3);
+        }, 3)
       }
     },
 
