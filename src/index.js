@@ -137,7 +137,7 @@ const VirtualList = Vue.component(NAME, {
     // return current scroll offset
     getOffset () {
       const { root } = this.$refs
-      return root ? root[this.directionKey] : 0
+      return root ? Math.ceil(root[this.directionKey]) : 0
     },
 
     // return client viewport size (width or height)

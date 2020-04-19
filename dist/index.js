@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.0.5
+ * vue-virtual-scroll-list v2.0.6
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -677,7 +677,7 @@
       // return current scroll offset
       getOffset: function getOffset() {
         var root = this.$refs.root;
-        return root ? root[this.directionKey] : 0;
+        return root ? Math.ceil(root[this.directionKey]) : 0;
       },
       // return client viewport size (width or height)
       getClientSize: function getClientSize() {
