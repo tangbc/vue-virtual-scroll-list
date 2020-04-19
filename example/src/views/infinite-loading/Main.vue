@@ -37,6 +37,7 @@ import Item from './Item'
 import Code from './Code'
 
 import { Random } from '../../common/mock'
+import getSentences from '../../common/sentences'
 import genUniqueId from '../../common/gen-unique-id'
 import { TAB_TYPE, DEFAULT_TAB } from '../../common/const'
 
@@ -48,7 +49,7 @@ const getPageData = (count, currentLength) => {
       index,
       name: Random.name(),
       id: genUniqueId(index),
-      desc: Random.paragraph(Random.integer(0, 2))
+      desc: getSentences()
     })
   }
   return DataItems

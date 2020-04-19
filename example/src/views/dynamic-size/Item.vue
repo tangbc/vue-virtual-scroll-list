@@ -33,6 +33,7 @@ export default {
     margin-right: 1em;
   }
   .desc {
+    padding-top: .5em;
     text-align: justify;
   }
 }
