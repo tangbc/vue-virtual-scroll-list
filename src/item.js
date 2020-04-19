@@ -9,7 +9,7 @@ import { ItemProps, SlotProps } from './props'
 const Wrapper = {
   created () {
     this.hasInitial = false
-    this.shapeKey = this.horizontal ? 'offsetWidth' : 'offsetHeight'
+    this.shapeKey = this.horizontal ? 'width' : 'height'
   },
 
   mounted () {
@@ -38,7 +38,7 @@ const Wrapper = {
 
   methods: {
     getCurrentSize () {
-      return this.$el ? this.$el[this.shapeKey] : 0
+      return this.$el ? this.$el.getBoundingClientRect()[this.shapeKey] : 0
     },
 
     // tell parent current size identify by unqiue key
