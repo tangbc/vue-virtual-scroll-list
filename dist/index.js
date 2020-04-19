@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.0.7
+ * vue-virtual-scroll-list v2.0.8
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -379,7 +379,7 @@
       required: true
     },
     dataComponent: {
-      type: Object,
+      type: [Object, Function],
       required: true
     },
     extraProps: {
@@ -461,7 +461,7 @@
       type: Object
     },
     component: {
-      type: Object
+      type: [Object, Function]
     },
     uniqueKey: {
       type: String

@@ -21,7 +21,7 @@ export const VirtualProps = {
     required: true
   },
   dataComponent: {
-    type: Object,
+    type: [Object, Function],
     required: true
   },
   extraProps: {
@@ -108,7 +108,7 @@ export const ItemProps = {
     type: Object
   },
   component: {
-    type: Object
+    type: [Object, Function]
   },
   uniqueKey: {
     type: String
