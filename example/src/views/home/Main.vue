@@ -2,10 +2,17 @@
   <div class="index">
     <github-corner />
 
-    <h2 class="name">vue-virtual-scroll-list</h2>
+    <h2 class="name">
+      <a href="https://github.com/tangbc/vue-virtual-scroll-list">vue-virtual-scroll-list</a>
+    </h2>
 
     <div class="head">
-      <img src="https://nodei.co/npm/vue-virtual-scroll-list.png?downloads=true&downloadRank=true&stars=true">
+      <img alt="Travis CI Status" src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master"/>
+      <!-- <img alt="Code Coverage" src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg"/> -->
+      <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
+      <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
+      <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
+      <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
     </div>
 
     <h3 class="title">What's news in v2.0</h3>
@@ -41,8 +48,18 @@ export default {
 }
 .head {
   margin-bottom: 2em;
+  img {
+    margin-right: .5em;
+  }
 }
 .title {
   margin: 1em 0;
+}
+ul {
+  padding-left: .5em;
+}
+li {
+  list-style-position: outside;
+  margin-left: 1em;
 }
 </style>
