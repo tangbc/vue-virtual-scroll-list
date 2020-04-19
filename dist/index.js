@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.0.6
+ * vue-virtual-scroll-list v2.0.7
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -594,8 +594,9 @@
         this.$on(EVENT_TYPE.SLOT, this.onSlotResized);
       }
     },
-    beforeDestroy: function beforeDestroy() {
-      this.virtual.destroy();
+    // set back offset when use keep-alive
+    activated: function activated() {
+      this.scrollToOffset(this.virtual.offset);
     },
     mounted: function mounted() {
       // set position
@@ -604,6 +605,9 @@
       } else if (this.offset) {
         this.scrollToOffset(this.offset);
       }
+    },
+    beforeDestroy: function beforeDestroy() {
+      this.virtual.destroy();
     },
     methods: {
       // set current scroll position to a expectant offset

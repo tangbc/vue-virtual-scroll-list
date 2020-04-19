@@ -17,9 +17,6 @@
   <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
     <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
   </a>
-  <a href="https://opensource.org/licenses/MIT">
-    <img alt="License" src="https://img.shields.io/npm/l/vue-virtual-scroll-list.svg">
-  </a>
 </p>
 
 ## Table of contents

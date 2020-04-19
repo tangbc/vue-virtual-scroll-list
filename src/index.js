@@ -51,8 +51,9 @@ const VirtualList = Vue.component(NAME, {
     }
   },
 
-  beforeDestroy () {
-    this.virtual.destroy()
+  // set back offset when use keep-alive
+  activated () {
+    this.scrollToOffset(this.virtual.offset)
   },
 
   mounted () {
@@ -62,6 +63,10 @@ const VirtualList = Vue.component(NAME, {
     } else if (this.offset) {
       this.scrollToOffset(this.offset)
     }
+  },
+
+  beforeDestroy () {
+    this.virtual.destroy()
   },
 
   methods: {
