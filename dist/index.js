@@ -774,7 +774,10 @@
       var _this$$slots = this.$slots,
           header = _this$$slots.header,
           footer = _this$$slots.footer;
-      var padding = this.isHorizontal ? "0px ".concat(this.range.padBehind, "px 0px ").concat(this.range.padFront, "px") : "".concat(this.range.padFront, "px 0px ").concat(this.range.padBehind, "px");
+      var _this$range = this.range,
+          padFront = _this$range.padFront,
+          padBehind = _this$range.padBehind;
+      var padding = this.isHorizontal ? "0px ".concat(padBehind, "px 0px ").concat(padFront, "px") : "".concat(padFront, "px 0px ").concat(padBehind, "px");
       return h(this.rootTag, {
         ref: 'root',
         on: {

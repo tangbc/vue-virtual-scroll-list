@@ -235,9 +235,8 @@ const VirtualList = Vue.component('virtual-list', {
   // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
   render (h) {
     const { header, footer } = this.$slots
-    const padding = this.isHorizontal
-      ? `0px ${this.range.padBehind}px 0px ${this.range.padFront}px`
-      : `${this.range.padFront}px 0px ${this.range.padBehind}px`
+    const { padFront, padBehind } = this.range
+    const padding = this.isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px`
 
     return h(this.rootTag, {
       ref: 'root',
