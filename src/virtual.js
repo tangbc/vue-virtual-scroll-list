@@ -14,14 +14,14 @@ const CALC_TYPE = {
 const LEADING_BUFFER = 2
 
 export default class Virtual {
-  constructor (param, updateHook) {
-    this.init(param, updateHook)
+  constructor (param, callUpdate) {
+    this.init(param, callUpdate)
   }
 
-  init (param, updateHook) {
+  init (param, callUpdate) {
     // param data
     this.param = param
-    this.updateHook = updateHook
+    this.callUpdate = callUpdate
 
     // size data
     this.sizes = new Map()
@@ -37,7 +37,7 @@ export default class Virtual {
 
     // range data
     this.range = Object.create(null)
-    if (this.param) {
+    if (param) {
       this.checkRange(0, param.keeps - 1)
     }
 
@@ -50,7 +50,7 @@ export default class Virtual {
     this.init(null, null)
   }
 
-  // return actually render range
+  // return current render range
   getRange () {
     const range = Object.create(null)
     range.start = this.range.start
@@ -162,7 +162,7 @@ export default class Virtual {
     this.checkRange(overs, this.getEndByStart(overs))
   }
 
-  // return the pass overs at current scroll offset
+  // return the pass overs according to current scroll offset
   getScrollOvers () {
     // if slot header exist, we need subtract its size
     const offset = this.offset - this.param.slotHeaderSize
@@ -220,6 +220,7 @@ export default class Virtual {
     return offset
   }
 
+  // is fixed size type
   isFixedType () {
     return this.calcType === CALC_TYPE.FIXED
   }
@@ -229,7 +230,7 @@ export default class Virtual {
     return this.param.uniqueIds.length - 1
   }
 
-  // in some conditions range will break, we need check and correct it
+  // in some conditions range is broke, we need correct it
   // and then decide whether need update to next range
   checkRange (start, end) {
     const keeps = this.param.keeps
@@ -249,17 +250,16 @@ export default class Virtual {
     }
   }
 
-  // call updating to a new range and rerender
+  // setting to a new range and rerender
   updateRange (start, end) {
     this.range.start = start
     this.range.end = end
     this.range.padFront = this.getPadFront()
     this.range.padBehind = this.getPadBehind()
-
-    this.updateHook(this.getRange())
+    this.callUpdate(this.getRange())
   }
 
-  // return end base on start when going to a new range
+  // return end base on start
   getEndByStart (start) {
     const theoryEnd = start + this.param.keeps - 1
     const truelyEnd = Math.min(theoryEnd, this.getLastIndex())
@@ -284,7 +284,7 @@ export default class Virtual {
       return (lastIndex - end) * this.fixedSizeValue
     }
 
-    // if calculated all already, return the exactly offset
+    // if it's all calculated, return the exactly offset
     if (this.lastCalcIndex === lastIndex) {
       return this.getIndexOffset(lastIndex) - this.getIndexOffset(end)
     } else {
@@ -293,7 +293,7 @@ export default class Virtual {
     }
   }
 
-  // get estimate size for one item, get from param.size at first range
+  // get the item estimate size
   getEstimateSize () {
     return this.firstRangeAverageSize || this.param.size
   }

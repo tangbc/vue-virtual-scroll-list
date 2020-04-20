@@ -51,18 +51,18 @@
   var LEADING_BUFFER = 2;
 
   var Virtual = /*#__PURE__*/function () {
-    function Virtual(param, updateHook) {
+    function Virtual(param, callUpdate) {
       _classCallCheck(this, Virtual);
 
-      this.init(param, updateHook);
+      this.init(param, callUpdate);
     }
 
     _createClass(Virtual, [{
       key: "init",
-      value: function init(param, updateHook) {
+      value: function init(param, callUpdate) {
         // param data
         this.param = param;
-        this.updateHook = updateHook; // size data
+        this.callUpdate = callUpdate; // size data
 
         this.sizes = new Map();
         this.firstRangeTotalSize = 0;
@@ -76,7 +76,7 @@
 
         this.range = Object.create(null);
 
-        if (this.param) {
+        if (param) {
           this.checkRange(0, param.keeps - 1);
         } // benchmark test data
         // this.__bsearchCalls = 0
@@ -87,7 +87,7 @@
       key: "destroy",
       value: function destroy() {
         this.init(null, null);
-      } // return actually render range
+      } // return current render range
 
     }, {
       key: "getRange",
@@ -207,7 +207,7 @@
         }
 
         this.checkRange(overs, this.getEndByStart(overs));
-      } // return the pass overs at current scroll offset
+      } // return the pass overs according to current scroll offset
 
     }, {
       key: "getScrollOvers",
@@ -268,7 +268,8 @@
         this.lastCalcIndex = Math.max(this.lastCalcIndex, givenIndex - 1);
         this.lastCalcIndex = Math.min(this.lastCalcIndex, this.getLastIndex());
         return offset;
-      }
+      } // is fixed size type
+
     }, {
       key: "isFixedType",
       value: function isFixedType() {
@@ -279,7 +280,7 @@
       key: "getLastIndex",
       value: function getLastIndex() {
         return this.param.uniqueIds.length - 1;
-      } // in some conditions range will break, we need check and correct it
+      } // in some conditions range is broke, we need correct it
       // and then decide whether need update to next range
 
     }, {
@@ -299,7 +300,7 @@
         if (this.range.start !== start) {
           this.updateRange(start, end);
         }
-      } // call updating to a new range and rerender
+      } // setting to a new range and rerender
 
     }, {
       key: "updateRange",
@@ -308,8 +309,8 @@
         this.range.end = end;
         this.range.padFront = this.getPadFront();
         this.range.padBehind = this.getPadBehind();
-        this.updateHook(this.getRange());
-      } // return end base on start when going to a new range
+        this.callUpdate(this.getRange());
+      } // return end base on start
 
     }, {
       key: "getEndByStart",
@@ -337,7 +338,7 @@
 
         if (this.isFixedType()) {
           return (lastIndex - end) * this.fixedSizeValue;
-        } // if calculated all already, return the exactly offset
+        } // if it's all calculated, return the exactly offset
 
 
         if (this.lastCalcIndex === lastIndex) {
@@ -346,7 +347,7 @@
           // if not, use a estimated value
           return (lastIndex - end) * this.getEstimateSize();
         }
-      } // get estimate size for one item, get from param.size at first range
+      } // get the item estimate size
 
     }, {
       key: "getEstimateSize",
@@ -567,8 +568,7 @@
     // string value also use for aria role attribute
     FOOTER: 'footer'
   };
-  var NAME = 'virtual-list';
-  var VirtualList = Vue.component(NAME, {
+  var VirtualList = Vue.component('virtual-list', {
     props: VirtualProps,
     data: function data() {
       return {
@@ -586,15 +586,15 @@
     created: function created() {
       this.isHorizontal = this.direction === 'horizontal';
       this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop';
-      this.installVirtual(); // listen item size changing
+      this.installVirtual(); // listen item size change
 
-      this.$on(EVENT_TYPE.ITEM, this.onItemResized); // listen slot size changing
+      this.$on(EVENT_TYPE.ITEM, this.onItemResized); // listen slot size change
 
       if (this.$slots.header || this.$slots.footer) {
         this.$on(EVENT_TYPE.SLOT, this.onSlotResized);
       }
     },
-    // set back offset when use keep-alive
+    // set back offset when awake from keep-alive
     activated: function activated() {
       this.scrollToOffset(this.virtual.offset);
     },
@@ -668,8 +668,7 @@
           uniqueIds: this.getUniqueIdFromDataSources()
         }, this.onRangeChanged); // sync initial range
 
-        this.range = this.virtual.getRange(); // just for debug
-        // window.virtual = this.virtual
+        this.range = this.virtual.getRange();
       },
       getUniqueIdFromDataSources: function getUniqueIdFromDataSources() {
         var _this2 = this;
@@ -683,12 +682,12 @@
         var root = this.$refs.root;
         return root ? Math.ceil(root[this.directionKey]) : 0;
       },
-      // return client viewport size (width or height)
+      // return client viewport size
       getClientSize: function getClientSize() {
         var root = this.$refs.root;
         return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0;
       },
-      // return all scroll size (width or height)
+      // return all scroll size
       getScrollSize: function getScrollSize() {
         var root = this.$refs.root;
         return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0;
@@ -738,10 +737,12 @@
         }
       },
       // get the real render slots based on range data
+      // in-place patch strategy will try to reuse components as possible
+      // so those components that are reused will not trigger lifecycle mounted
       getRenderSlots: function getRenderSlots(h) {
         var slots = [];
-        var start = this.disabled ? 0 : this.range.start;
-        var end = this.disabled ? this.dataSources.length - 1 : this.range.end;
+        var start = this.range.start;
+        var end = this.range.end;
 
         for (var index = start; index <= end; index++) {
           var dataSource = this.dataSources[index];
@@ -760,7 +761,7 @@
               }
             }));
           } else {
-            console.warn("[".concat(NAME, "]: cannot get the index ").concat(index, " from data-sources."));
+            console.warn("Cannot get the index ".concat(index, " from data-sources."));
           }
         }
 
@@ -773,7 +774,7 @@
       var _this$$slots = this.$slots,
           header = _this$$slots.header,
           footer = _this$$slots.footer;
-      var padding = this.disabled ? 0 : this.isHorizontal ? "0px ".concat(this.range.padBehind, "px 0px ").concat(this.range.padFront, "px") : "".concat(this.range.padFront, "px 0px ").concat(this.range.padBehind, "px");
+      var padding = this.isHorizontal ? "0px ".concat(this.range.padBehind, "px 0px ").concat(this.range.padFront, "px") : "".concat(this.range.padFront, "px 0px ").concat(this.range.padBehind, "px");
       return h(this.rootTag, {
         ref: 'root',
         on: {

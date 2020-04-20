@@ -16,9 +16,7 @@ const SLOT_TYPE = {
   FOOTER: 'footer'
 }
 
-const NAME = 'virtual-list'
-
-const VirtualList = Vue.component(NAME, {
+const VirtualList = Vue.component('virtual-list', {
   props: VirtualProps,
 
   data () {
@@ -42,16 +40,16 @@ const VirtualList = Vue.component(NAME, {
 
     this.installVirtual()
 
-    // listen item size changing
+    // listen item size change
     this.$on(EVENT_TYPE.ITEM, this.onItemResized)
 
-    // listen slot size changing
+    // listen slot size change
     if (this.$slots.header || this.$slots.footer) {
       this.$on(EVENT_TYPE.SLOT, this.onSlotResized)
     }
   },
 
-  // set back offset when use keep-alive
+  // set back offset when awake from keep-alive
   activated () {
     this.scrollToOffset(this.virtual.offset)
   },
@@ -130,9 +128,6 @@ const VirtualList = Vue.component(NAME, {
 
       // sync initial range
       this.range = this.virtual.getRange()
-
-      // just for debug
-      // window.virtual = this.virtual
     },
 
     getUniqueIdFromDataSources () {
@@ -145,13 +140,13 @@ const VirtualList = Vue.component(NAME, {
       return root ? Math.ceil(root[this.directionKey]) : 0
     },
 
-    // return client viewport size (width or height)
+    // return client viewport size
     getClientSize () {
       const { root } = this.$refs
       return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0
     },
 
-    // return all scroll size (width or height)
+    // return all scroll size
     getScrollSize () {
       const { root } = this.$refs
       return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0
@@ -207,10 +202,12 @@ const VirtualList = Vue.component(NAME, {
     },
 
     // get the real render slots based on range data
+    // in-place patch strategy will try to reuse components as possible
+    // so those components that are reused will not trigger lifecycle mounted
     getRenderSlots (h) {
       const slots = []
-      const start = this.disabled ? 0 : this.range.start
-      const end = this.disabled ? this.dataSources.length - 1 : this.range.end
+      const start = this.range.start
+      const end = this.range.end
       for (let index = start; index <= end; index++) {
         const dataSource = this.dataSources[index]
         if (dataSource) {
@@ -227,7 +224,7 @@ const VirtualList = Vue.component(NAME, {
             }
           }))
         } else {
-          console.warn(`[${NAME}]: cannot get the index ${index} from data-sources.`)
+          console.warn(`Cannot get the index ${index} from data-sources.`)
         }
       }
       return slots
@@ -238,7 +235,7 @@ const VirtualList = Vue.component(NAME, {
   // https://vuejs.org/v2/guide/render-function.html#The-Data-Object-In-Depth
   render (h) {
     const { header, footer } = this.$slots
-    const padding = this.disabled ? 0 : this.isHorizontal
+    const padding = this.isHorizontal
       ? `0px ${this.range.padBehind}px 0px ${this.range.padFront}px`
       : `${this.range.padFront}px 0px ${this.range.padBehind}px`
 
