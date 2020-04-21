@@ -211,20 +211,24 @@ const VirtualList = Vue.component('virtual-list', {
       for (let index = start; index <= end; index++) {
         const dataSource = this.dataSources[index]
         if (dataSource) {
-          slots.push(h(Item, {
-            class: this.itemClass,
-            props: {
-              tag: this.itemTag,
-              event: EVENT_TYPE.ITEM,
-              horizontal: this.isHorizontal,
-              uniqueKey: dataSource[this.dataKey],
-              source: dataSource,
-              extraProps: this.extraProps,
-              component: this.dataComponent
-            }
-          }))
+          if (dataSource[this.dataKey]) {
+            slots.push(h(Item, {
+              class: this.itemClass,
+              props: {
+                tag: this.itemTag,
+                event: EVENT_TYPE.ITEM,
+                horizontal: this.isHorizontal,
+                uniqueKey: dataSource[this.dataKey],
+                source: dataSource,
+                extraProps: this.extraProps,
+                component: this.dataComponent
+              }
+            }))
+          } else {
+            console.warn(`Cannot get the data-key '${this.dataKey}' from data-sources.`)
+          }
         } else {
-          console.warn(`Cannot get the index ${index} from data-sources.`)
+          console.warn(`Cannot get the index '${index}' from data-sources.`)
         }
       }
       return slots
