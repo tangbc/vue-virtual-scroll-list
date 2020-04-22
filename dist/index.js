@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.0
+ * vue-virtual-scroll-list v2.1.1
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -534,14 +534,15 @@
     mixins: [Wrapper],
     props: ItemProps,
     render: function render(h) {
-      var component = this.component,
-          _this$itemProps = this.itemProps,
-          itemProps = _this$itemProps === void 0 ? {} : _this$itemProps;
-      itemProps.source = this.source;
-      return h(this.tag, {
+      var tag = this.tag,
+          component = this.component,
+          _this$extraProps = this.extraProps,
+          extraProps = _this$extraProps === void 0 ? {} : _this$extraProps;
+      extraProps.source = this.source;
+      return h(tag, {
         role: 'item'
       }, [h(component, {
-        props: itemProps
+        props: extraProps
       })]);
     }
   }); // wrapping for slot
@@ -550,8 +551,9 @@
     mixins: [Wrapper],
     props: SlotProps,
     render: function render(h) {
-      var uniqueKey = this.uniqueKey;
-      return h(this.tag, {
+      var tag = this.tag,
+          uniqueKey = this.uniqueKey;
+      return h(tag, {
         attrs: {
           role: uniqueKey
         }
