@@ -31,8 +31,9 @@ import Code from './Code'
 
 import { Random } from '../../common/mock'
 import genUniqueId from '../../common/gen-unique-id'
-import { TOTAL_COUNT, TAB_TYPE, DEFAULT_TAB } from '../../common/const'
+import { TAB_TYPE, DEFAULT_TAB } from '../../common/const'
 
+const TOTAL_COUNT = 10000
 const sizes = [60, 80, 100, 150, 180]
 
 const DataItems = []

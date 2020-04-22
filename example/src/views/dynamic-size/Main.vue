@@ -1,7 +1,11 @@
 <template>
   <div class="example">
     <github-corner />
-    <introduction description="The size of each item is dynamic, you don't have to care about size, it will calculate automatic, but you have to make sure that there's an unique id for every array data." />
+    <introduction
+      description="The size of each item is dynamic,
+      you don't have to care about size, it will calculate automatic,
+      but you have to make sure that there's an unique id for every array data."
+    />
 
     <div class="example-content">
       <tab v-on:tab-change="onTabChange" />
@@ -30,7 +34,9 @@ import Code from './Code'
 import { Random } from '../../common/mock'
 import getSentences from '../../common/sentences'
 import genUniqueId from '../../common/gen-unique-id'
-import { TOTAL_COUNT, TAB_TYPE, DEFAULT_TAB } from '../../common/const'
+import { TAB_TYPE, DEFAULT_TAB } from '../../common/const'
+
+const TOTAL_COUNT = 10000
 
 const DataItems = []
 let count = TOTAL_COUNT
@@ -53,6 +59,7 @@ export default {
 
   data () {
     return {
+      total: TOTAL_COUNT.toLocaleString(),
       items: DataItems,
       itemComponent: Item,
       isShowView: DEFAULT_TAB === TAB_TYPE.VIEW
