@@ -7,6 +7,7 @@
       <router-link to="/horizontal">horizontal</router-link>
       <router-link to="/infinite-loading">infinite loading</router-link>
       <router-link to="/keep-state">keep state</router-link>
+      <router-link to="/chat-room">chat room</router-link>
     </div>
     <router-view/>
   </div>
@@ -57,6 +58,23 @@ body {
 
 .scroll-touch {
   -webkit-overflow-scrolling: touch;
+   /* width */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f4f4f4;
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    background: rgba(0, 0, 0, 0.12);
+  }
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #b2b2b2;
+  }
 }
 
 code {

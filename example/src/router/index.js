@@ -34,6 +34,11 @@ const routes = [
     path: '/keep-state',
     name: 'keep-state',
     component: () => import(/* webpackChunkName: "keep-state" */ '../views/keep-state/Main.vue')
+  },
+  {
+    path: '/chat-room',
+    name: 'chat-room',
+    component: () => import(/* webpackChunkName: "chat-room" */ '../views/chat-room/Main.vue')
   }
 ]
 
