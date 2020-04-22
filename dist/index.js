@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.0.9
+ * vue-virtual-scroll-list v2.1.0
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -534,11 +534,13 @@
     mixins: [Wrapper],
     props: ItemProps,
     render: function render(h) {
-      var itemProps = this.extraProps || {};
+      var component = this.component,
+          _this$itemProps = this.itemProps,
+          itemProps = _this$itemProps === void 0 ? {} : _this$itemProps;
       itemProps.source = this.source;
       return h(this.tag, {
         role: 'item'
-      }, [h(this.component, {
+      }, [h(component, {
         props: itemProps
       })]);
     }
@@ -548,9 +550,10 @@
     mixins: [Wrapper],
     props: SlotProps,
     render: function render(h) {
+      var uniqueKey = this.uniqueKey;
       return h(this.tag, {
         attrs: {
-          role: this.uniqueKey
+          role: uniqueKey
         }
       }, this.$slots["default"]);
     }
@@ -744,28 +747,36 @@
       // so those components that are reused will not trigger lifecycle mounted
       getRenderSlots: function getRenderSlots(h) {
         var slots = [];
-        var start = this.range.start;
-        var end = this.range.end;
+        var _this$range = this.range,
+            start = _this$range.start,
+            end = _this$range.end;
+        var dataSources = this.dataSources,
+            dataKey = this.dataKey,
+            itemClass = this.itemClass,
+            itemTag = this.itemTag,
+            isHorizontal = this.isHorizontal,
+            extraProps = this.extraProps,
+            dataComponent = this.dataComponent;
 
         for (var index = start; index <= end; index++) {
-          var dataSource = this.dataSources[index];
+          var dataSource = dataSources[index];
 
           if (dataSource) {
-            if (dataSource[this.dataKey]) {
+            if (dataSource[dataKey]) {
               slots.push(h(Item, {
-                "class": this.itemClass,
+                "class": itemClass,
                 props: {
-                  tag: this.itemTag,
+                  tag: itemTag,
                   event: EVENT_TYPE.ITEM,
-                  horizontal: this.isHorizontal,
-                  uniqueKey: dataSource[this.dataKey],
+                  horizontal: isHorizontal,
+                  uniqueKey: dataSource[dataKey],
                   source: dataSource,
-                  extraProps: this.extraProps,
-                  component: this.dataComponent
+                  extraProps: extraProps,
+                  component: dataComponent
                 }
               }));
             } else {
-              console.warn("Cannot get the data-key '".concat(this.dataKey, "' from data-sources."));
+              console.warn("Cannot get the data-key '".concat(dataKey, "' from data-sources."));
             }
           } else {
             console.warn("Cannot get the index '".concat(index, "' from data-sources."));
@@ -781,26 +792,33 @@
       var _this$$slots = this.$slots,
           header = _this$$slots.header,
           footer = _this$$slots.footer;
-      var _this$range = this.range,
-          padFront = _this$range.padFront,
-          padBehind = _this$range.padBehind;
+      var _this$range2 = this.range,
+          padFront = _this$range2.padFront,
+          padBehind = _this$range2.padBehind;
+      var rootTag = this.rootTag,
+          headerClass = this.headerClass,
+          headerTag = this.headerTag,
+          wrapTag = this.wrapTag,
+          wrapClass = this.wrapClass,
+          footerClass = this.footerClass,
+          footerTag = this.footerTag;
       var padding = this.isHorizontal ? "0px ".concat(padBehind, "px 0px ").concat(padFront, "px") : "".concat(padFront, "px 0px ").concat(padBehind, "px");
-      return h(this.rootTag, {
+      return h(rootTag, {
         ref: 'root',
         on: {
           '&scroll': this.onScroll
         }
       }, [// header slot
       header ? h(Slot, {
-        "class": this.headerClass,
+        "class": headerClass,
         props: {
-          tag: this.headerTag,
+          tag: headerTag,
           event: EVENT_TYPE.SLOT,
           uniqueKey: SLOT_TYPE.HEADER
         }
       }, header) : null, // main list
-      h(this.wrapTag, {
-        "class": this.wrapClass,
+      h(wrapTag, {
+        "class": wrapClass,
         attrs: {
           role: 'group'
         },
@@ -809,9 +827,9 @@
         }
       }, this.getRenderSlots(h)), // footer slot
       footer ? h(Slot, {
-        "class": this.footerClass,
+        "class": footerClass,
         props: {
-          tag: this.footerTag,
+          tag: footerTag,
           event: EVENT_TYPE.SLOT,
           uniqueKey: SLOT_TYPE.FOOTER
         }

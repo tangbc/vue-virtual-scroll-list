@@ -211,26 +211,26 @@ const VirtualList = Vue.component('virtual-list', {
     // so those components that are reused will not trigger lifecycle mounted
     getRenderSlots (h) {
       const slots = []
-      const start = this.range.start
-      const end = this.range.end
+      const { start, end } = this.range
+      const { dataSources, dataKey, itemClass, itemTag, isHorizontal, extraProps, dataComponent } = this
       for (let index = start; index <= end; index++) {
-        const dataSource = this.dataSources[index]
+        const dataSource = dataSources[index]
         if (dataSource) {
-          if (dataSource[this.dataKey]) {
+          if (dataSource[dataKey]) {
             slots.push(h(Item, {
-              class: this.itemClass,
+              class: itemClass,
               props: {
-                tag: this.itemTag,
+                tag: itemTag,
                 event: EVENT_TYPE.ITEM,
-                horizontal: this.isHorizontal,
-                uniqueKey: dataSource[this.dataKey],
+                horizontal: isHorizontal,
+                uniqueKey: dataSource[dataKey],
                 source: dataSource,
-                extraProps: this.extraProps,
-                component: this.dataComponent
+                extraProps: extraProps,
+                component: dataComponent
               }
             }))
           } else {
-            console.warn(`Cannot get the data-key '${this.dataKey}' from data-sources.`)
+            console.warn(`Cannot get the data-key '${dataKey}' from data-sources.`)
           }
         } else {
           console.warn(`Cannot get the index '${index}' from data-sources.`)
@@ -245,9 +245,10 @@ const VirtualList = Vue.component('virtual-list', {
   render (h) {
     const { header, footer } = this.$slots
     const { padFront, padBehind } = this.range
+    const { rootTag, headerClass, headerTag, wrapTag, wrapClass, footerClass, footerTag } = this
     const padding = this.isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px`
 
-    return h(this.rootTag, {
+    return h(rootTag, {
       ref: 'root',
       on: {
         '&scroll': this.onScroll
@@ -255,17 +256,17 @@ const VirtualList = Vue.component('virtual-list', {
     }, [
       // header slot
       header ? h(Slot, {
-        class: this.headerClass,
+        class: headerClass,
         props: {
-          tag: this.headerTag,
+          tag: headerTag,
           event: EVENT_TYPE.SLOT,
           uniqueKey: SLOT_TYPE.HEADER
         }
       }, header) : null,
 
       // main list
-      h(this.wrapTag, {
-        class: this.wrapClass,
+      h(wrapTag, {
+        class: wrapClass,
         attrs: {
           role: 'group'
         },
@@ -276,9 +277,9 @@ const VirtualList = Vue.component('virtual-list', {
 
       // footer slot
       footer ? h(Slot, {
-        class: this.footerClass,
+        class: footerClass,
         props: {
-          tag: this.footerTag,
+          tag: footerTag,
           event: EVENT_TYPE.SLOT,
           uniqueKey: SLOT_TYPE.FOOTER
         }
