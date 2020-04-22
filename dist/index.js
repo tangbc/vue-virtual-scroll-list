@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.0.8
+ * vue-virtual-scroll-list v2.0.9
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -113,7 +113,7 @@
     }, {
       key: "getOffset",
       value: function getOffset(start) {
-        return this.getIndexOffset(start);
+        return start < 1 ? 0 : this.getIndexOffset(start);
       }
     }, {
       key: "updateParam",
@@ -581,6 +581,12 @@
           this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources());
           this.virtual.handleDataSourcesChange();
         }
+      },
+      start: function start(newValue) {
+        this.scrollToIndex(newValue);
+      },
+      offset: function offset(newValue) {
+        this.scrollToOffset(newValue);
       }
     },
     created: function created() {
@@ -620,11 +626,8 @@
       },
       // set current scroll position to a expectant index
       scrollToIndex: function scrollToIndex(index) {
-        // scroll to top
-        if (index <= 0) {
-          this.scrollToOffset(0);
-        } else if (index >= this.dataSources.length - 1) {
-          // scroll to bottom
+        // scroll to bottom
+        if (index >= this.dataSources.length - 1) {
           this.scrollToBottom();
         } else {
           var offset = this.virtual.getOffset(index);
@@ -748,20 +751,24 @@
           var dataSource = this.dataSources[index];
 
           if (dataSource) {
-            slots.push(h(Item, {
-              "class": this.itemClass,
-              props: {
-                tag: this.itemTag,
-                event: EVENT_TYPE.ITEM,
-                horizontal: this.isHorizontal,
-                uniqueKey: dataSource[this.dataKey],
-                source: dataSource,
-                extraProps: this.extraProps,
-                component: this.dataComponent
-              }
-            }));
+            if (dataSource[this.dataKey]) {
+              slots.push(h(Item, {
+                "class": this.itemClass,
+                props: {
+                  tag: this.itemTag,
+                  event: EVENT_TYPE.ITEM,
+                  horizontal: this.isHorizontal,
+                  uniqueKey: dataSource[this.dataKey],
+                  source: dataSource,
+                  extraProps: this.extraProps,
+                  component: this.dataComponent
+                }
+              }));
+            } else {
+              console.warn("Cannot get the data-key '".concat(this.dataKey, "' from data-sources."));
+            }
           } else {
-            console.warn("Cannot get the index ".concat(index, " from data-sources."));
+            console.warn("Cannot get the index '".concat(index, "' from data-sources."));
           }
         }
 

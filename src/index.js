@@ -31,6 +31,14 @@ const VirtualList = Vue.component('virtual-list', {
         this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources())
         this.virtual.handleDataSourcesChange()
       }
+    },
+
+    start (newValue) {
+      this.scrollToIndex(newValue)
+    },
+
+    offset (newValue) {
+      this.scrollToOffset(newValue)
     }
   },
 
@@ -78,11 +86,8 @@ const VirtualList = Vue.component('virtual-list', {
 
     // set current scroll position to a expectant index
     scrollToIndex (index) {
-      // scroll to top
-      if (index <= 0) {
-        this.scrollToOffset(0)
-      } else if (index >= this.dataSources.length - 1) {
-        // scroll to bottom
+      // scroll to bottom
+      if (index >= this.dataSources.length - 1) {
         this.scrollToBottom()
       } else {
         const offset = this.virtual.getOffset(index)
