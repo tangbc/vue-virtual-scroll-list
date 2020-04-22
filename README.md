@@ -34,7 +34,7 @@
 
 ## Advantages
 
-* Tiny, simple and very very easy to use.
+* Tiny, simple structure and very easy to use.
 
 * Big data list with high render performance and efficient.
 
@@ -131,7 +131,7 @@ More usages or getting start you can refer to these clearly [examples](https://g
 
 ### Optional props
 
-<details>
+<details open>
   <summary><strong>Commonly used</strong></summary>
   <p></p>
   <table>
