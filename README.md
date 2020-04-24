@@ -283,6 +283,10 @@ Here are some usefull public methods you can call via [`ref`](https://vuejs.org/
 
 * `scrollToOffset(offset)`: manual set scroll position to a designated offset.
 
+* `getSize(id)`: get the designated item size by id (from data-key value).
+
+* `getSizes()`: get the total number of stored (rendered) items.
+
 
 ## Attentions
 

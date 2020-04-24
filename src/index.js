@@ -76,6 +76,16 @@ const VirtualList = Vue.component('virtual-list', {
   },
 
   methods: {
+    // get item size by id
+    getSize (id) {
+      return this.virtual.sizes.get(id)
+    },
+
+    // get the total number of stored (rendered) items
+    getSizes () {
+      return this.virtual.sizes.size
+    },
+
     // set current scroll position to a expectant offset
     scrollToOffset (offset) {
       const { root } = this.$refs
