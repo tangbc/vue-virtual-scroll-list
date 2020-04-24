@@ -55,13 +55,13 @@ export const Item = Vue.component('virtual-list-item', {
   props: ItemProps,
 
   render (h) {
-    const itemProps = this.extraProps || {}
-    itemProps.source = this.source
+    const { tag, component, extraProps = {} } = this
+    extraProps.source = this.source
 
-    return h(this.tag, {
+    return h(tag, {
       role: 'item'
-    }, [h(this.component, {
-      props: itemProps
+    }, [h(component, {
+      props: extraProps
     })])
   }
 })
@@ -73,9 +73,11 @@ export const Slot = Vue.component('virtual-list-slot', {
   props: SlotProps,
 
   render (h) {
-    return h(this.tag, {
+    const { tag, uniqueKey } = this
+
+    return h(tag, {
       attrs: {
-        role: this.uniqueKey
+        role: uniqueKey
       }
     }, this.$slots.default)
   }

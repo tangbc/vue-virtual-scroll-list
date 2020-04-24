@@ -31,7 +31,9 @@ import Code from './Code'
 
 import { Random } from '../../common/mock'
 import genUniqueId from '../../common/gen-unique-id'
-import { TOTAL_COUNT, TAB_TYPE, DEFAULT_TAB } from '../../common/const'
+import { TAB_TYPE, DEFAULT_TAB } from '../../common/const'
+
+const TOTAL_COUNT = 1000
 
 const DataItems = []
 let count = TOTAL_COUNT

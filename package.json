@@ -1,6 +1,6 @@
 {
   "name": "vue-virtual-scroll-list",
-  "version": "2.0.9",
+  "version": "2.1.1",
   "description": "A vue component support big amount data list with high scroll performance.",
   "main": "dist/index.js",
   "files": [
@@ -11,7 +11,7 @@
     "lint": "eslint --fix src --ext .js",
     "dev:docs": "cd example && npm run dev",
     "build:docs": "cd example && npm run build",
-    "build": "rollup --config ./scripts/rollup.production.js",
+    "build": "npm run lint && rollup --config ./scripts/rollup.production.js",
     "dev": "rollup --config ./scripts/rollup.development.js --watch"
   },
   "repository": {
