@@ -160,6 +160,12 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Setting scroll stay offset.</td>
     </tr>
     <tr>
+      <td><code>scroll</code></td>
+      <td>Function</td>
+      <td></td>
+      <td>Emited when scrolling, param <code>(event, range)</code>.</td>
+    </tr>
+    <tr>
       <td><code>totop</code></td>
       <td>Function</td>
       <td></td>
@@ -172,10 +178,10 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Emited when scrolled to bottom or right, param <code>(event, range)</code>.</td>
     </tr>
     <tr>
-      <td><code>scroll</code></td>
+      <td><code>resized</code></td>
       <td>Function</td>
       <td></td>
-      <td>Emited when scrolling, param <code>(event, range)</code>.</td>
+      <td>Emited when each item resized (mounted), param <code>(id, size)</code>.</td>
     </tr>
   </table>
 </details>

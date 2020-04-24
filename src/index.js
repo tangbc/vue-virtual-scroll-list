@@ -160,6 +160,7 @@ const VirtualList = Vue.component('virtual-list', {
     // event called when each item mounted or size changed
     onItemResized (id, size) {
       this.virtual.saveSize(id, size)
+      this.$emit('resized', id, size)
     },
 
     // event called when slot mounted or size changed
