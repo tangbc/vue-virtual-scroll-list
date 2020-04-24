@@ -95,6 +95,9 @@ export const VirtualProps = {
 }
 
 export const ItemProps = {
+  index: {
+    type: Number
+  },
   event: {
     type: String
   },

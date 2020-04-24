@@ -221,6 +221,7 @@ const VirtualList = Vue.component('virtual-list', {
             slots.push(h(Item, {
               class: itemClass,
               props: {
+                index,
                 tag: itemTag,
                 event: EVENT_TYPE.ITEM,
                 horizontal: isHorizontal,

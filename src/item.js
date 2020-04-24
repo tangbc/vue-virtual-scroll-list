@@ -55,8 +55,9 @@ export const Item = Vue.component('virtual-list-item', {
   props: ItemProps,
 
   render (h) {
-    const { tag, component, extraProps = {} } = this
+    const { tag, component, extraProps = {}, index } = this
     extraProps.source = this.source
+    extraProps.index = index
 
     return h(tag, {
       role: 'item'
