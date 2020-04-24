@@ -29,7 +29,6 @@ body {
 }
 
 #nav {
-  padding: 1em 0;
   @media (max-width: 640px) {
     padding: 0;
   }

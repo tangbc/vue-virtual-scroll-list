@@ -53,7 +53,7 @@ export default {
     padding-left: 1em;
     font-size: 16px;
     .name {
-      color: #9b4cca;
+      padding-bottom: .2em;
     }
     .content {
       position: relative;
