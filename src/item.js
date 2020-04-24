@@ -8,25 +8,21 @@ import { ItemProps, SlotProps } from './props'
 
 const Wrapper = {
   created () {
-    this.hasInitial = false
     this.shapeKey = this.horizontal ? 'offsetWidth' : 'offsetHeight'
   },
 
   mounted () {
-    // dispatch once at initial
-    this.dispatchSizeChange()
-
     if (typeof ResizeObserver !== 'undefined') {
       this.resizeObserver = new ResizeObserver(() => {
-        // dispatch when size changed
-        if (this.hasInitial) {
-          this.dispatchSizeChange()
-        } else {
-          this.hasInitial = true
-        }
+        this.dispatchSizeChange()
       })
       this.resizeObserver.observe(this.$el)
     }
+  },
+
+  // since componet will be reused, so disptach when updated
+  updated () {
+    this.dispatchSizeChange()
   },
 
   beforeDestroy () {
