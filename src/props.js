@@ -70,6 +70,9 @@ export const VirtualProps = {
     type: String,
     default: ''
   },
+  itemClassAdd: {
+    type: Function
+  },
 
   headerTag: {
     type: String,

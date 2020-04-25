@@ -227,7 +227,6 @@ const VirtualList = Vue.component('virtual-list', {
         if (dataSource) {
           if (dataSource[dataKey]) {
             slots.push(h(Item, {
-              class: itemClass,
               props: {
                 index,
                 tag: itemTag,
@@ -237,7 +236,8 @@ const VirtualList = Vue.component('virtual-list', {
                 source: dataSource,
                 extraProps: extraProps,
                 component: dataComponent
-              }
+              },
+              class: `${itemClass} ${this.itemClassAdd ? this.itemClassAdd(index) : ''}`
             }))
           } else {
             console.warn(`Cannot get the data-key '${dataKey}' from data-sources.`)

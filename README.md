@@ -165,12 +165,6 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td></td>
       <td>Emited when scrolled to bottom or right, param <code>(event, range)</code>.</td>
     </tr>
-    <tr>
-      <td><code>resized</code></td>
-      <td>Event</td>
-      <td></td>
-      <td>Emited when each item resized (mounted), param <code>(id, size)</code>.</td>
-    </tr>
   </table>
 </details>
 
@@ -195,6 +189,12 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Number</td>
       <td>0</td>
       <td>Setting scroll stay offset.</td>
+    </tr>
+    <tr>
+      <td><code>resized</code></td>
+      <td>Event</td>
+      <td></td>
+      <td>Emited when each item resized (mounted), param <code>(id, size)</code>.</td>
     </tr>
     <tr>
       <td><code>root-tag</code></td>
@@ -225,6 +225,12 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>String</td>
       <td></td>
       <td>Item wrapper element class name.</td>
+    </tr>
+    <tr>
+      <td><code>item-class-add</code></td>
+      <td>Function</td>
+      <td></td>
+      <td>A function that you can return extra class (String) to item wrapper element, param <code>(index)</code>.</td>
     </tr>
     <tr>
       <td><code>header-tag</code></td>
@@ -287,7 +293,7 @@ Here are some usefull public methods you can call via [`ref`](https://vuejs.org/
 
 * `getSizes()`: get the total number of stored (rendered) items.
 
-* `getClientSize()`: get wrapper client viewport size (width or height).
+* `getClientSize()`: get wrapper element client viewport size (width or height).
 
 * `getScrollSize()`: get all scroll size (scrollHeight or scrollWidth).
 
