@@ -31,6 +31,8 @@ body {
 #nav {
   @media (max-width: 640px) {
     padding: 0;
+    overflow-x: auto;
+    white-space: nowrap;
   }
   a {
     margin-right: 1.5em;

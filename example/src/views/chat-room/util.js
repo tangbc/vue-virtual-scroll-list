@@ -1,10 +1,23 @@
 import { Random } from '../../common/mock'
-import genUniqueId from '../../common/gen-unique-id'
 import getSentences from '../../common/sentences'
 import getUser from '../../common/user'
 
 let sidCounter = 0
 const maxCounts = 500
+
+export function genSid () {
+  return `sid-${sidCounter++}`
+}
+
+export function genBody () {
+  return {
+    user: {},
+    sid: '',
+    content: '',
+    images: [],
+    isCreator: false
+  }
+}
 
 export function getMessages (numbers, delay) {
   return new Promise((resolve) => {
@@ -16,18 +29,41 @@ export function getMessages (numbers, delay) {
     setTimeout(() => {
       const messages = []
       while (numbers--) {
-        messages.push({
-          user: getUser(),
-          sid: genUniqueId(sidCounter++),
-          content: getSentences(),
-          images: []
-        })
+        let body = genBody()
+        body.user = getUser()
+        body.content = getSentences()
+        body.sid = genSid()
+        messages.push(body)
       }
+
       resolve(messages)
-    }, delay ? Random.pick([200, 500, 800, 1000]) : 0)
+    }, delay ? Random.pick([300, 500, 800]) : 0)
   })
 }
 
 export function getSids (messages) {
   return messages.map((message) => message.sid)
+}
+
+export const LOAD_TYPES = {
+  EMPTY: 'EMPTY',
+  PAGES: 'PAGES',
+  FEW: 'FEW'
+}
+
+export function setLoadType (type) {
+  try {
+    localStorage.setItem('LOAD_TYPES', type)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export function getLoadType () {
+  try {
+    return localStorage.getItem('LOAD_TYPES')
+  } catch (e) {
+    console.error(e)
+    return LOAD_TYPES.EMPTY
+  }
 }
