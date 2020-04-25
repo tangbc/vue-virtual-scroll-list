@@ -205,13 +205,12 @@ const VirtualList = Vue.component('virtual-list', {
 
     // emit event in special position
     emitEvent (offset, clientSize, scrollSize, evt) {
-      const range = this.virtual.getRange()
       if (this.virtual.isFront() && !!this.dataSources.length && (offset - this.topThreshold <= 0)) {
-        this.$emit('totop', evt, range)
+        this.$emit('totop')
       } else if (this.virtual.isBehind() && (offset + clientSize + this.bottomThreshold >= scrollSize)) {
-        this.$emit('tobottom', evt, range)
+        this.$emit('tobottom')
       } else {
-        this.$emit('scroll', evt, range)
+        this.$emit('scroll', evt, this.virtual.getRange())
       }
     },
 
