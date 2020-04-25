@@ -2,11 +2,17 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">home</router-link>
+      <span class="line">|</span>
       <router-link to="/fixed-size">fixed size</router-link>
+      <span class="line">|</span>
       <router-link to="/dynamic-size">dynamic size</router-link>
+      <span class="line">|</span>
       <router-link to="/horizontal">horizontal</router-link>
+      <span class="line">|</span>
       <router-link to="/infinite-loading">infinite loading</router-link>
+      <span class="line">|</span>
       <router-link to="/keep-state">keep state</router-link>
+      <span class="line">|</span>
       <router-link to="/chat-room">chat room</router-link>
     </div>
     <router-view/>
@@ -33,7 +39,8 @@ body {
   background-color: #9b4cca;
   color: #fff;
   height: 40px;
-  line-height: 40px;
+  display: flex;
+  align-items: center;
   padding-left: 2em;
   @media (max-width: 640px) {
     padding: 0;
@@ -43,18 +50,24 @@ body {
     background-color: unset;
     color: unset;
     height: unset;
-    line-height: unset;
     padding-left: unset;
+    align-items: unset;
   }
   a {
-    margin-right: 1.5em;
-    margin-bottom: .5em;
     display: inline-block;
     color: #fff;
     @media (max-width: 640px) {
       margin-bottom: 0;
       margin-right: 1em;
       color: #9b4dca;
+    }
+  }
+  .line {
+    margin: 0 1em;
+    font-size: 14px;
+    color: darkgray;
+    @media (max-width: 640px) {
+      display: none;
     }
   }
   .router-link-exact-active,
