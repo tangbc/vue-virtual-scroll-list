@@ -61,7 +61,7 @@ export function setLoadType (type) {
 
 export function getLoadType () {
   try {
-    return localStorage.getItem('LOAD_TYPES')
+    return localStorage.getItem('LOAD_TYPES') || LOAD_TYPES.EMPTY
   } catch (e) {
     console.error(e)
     return LOAD_TYPES.EMPTY
