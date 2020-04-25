@@ -19,9 +19,6 @@ body {
 }
 
 #app {
-  margin: 0 auto;
-  padding: 0 2em;
-  width: 776px;
   @media (max-width: 640px) {
     padding: 3px;
     width: 100%;
@@ -29,29 +26,63 @@ body {
 }
 
 #nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #9b4cca;
+  color: #fff;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 2em;
   @media (max-width: 640px) {
     padding: 0;
     overflow-x: auto;
     white-space: nowrap;
+    position: relative;
+    background-color: unset;
+    color: unset;
+    height: unset;
+    line-height: unset;
+    padding-left: unset;
   }
   a {
     margin-right: 1.5em;
     margin-bottom: .5em;
     display: inline-block;
+    color: #fff;
     @media (max-width: 640px) {
       margin-bottom: 0;
       margin-right: 1em;
+      color: #9b4dca;
     }
   }
   .router-link-exact-active,
   .router-link-exact-active:hover {
     color: inherit;
     cursor: default;
-    border-bottom: 1px solid;
-    border-color: #606c76;
+    text-decoration: underline;
+    @media (max-width: 640px) {
+      border-bottom: 1px solid;
+      border-color: #606c76;
+      text-decoration: none;
+    }
+
   }
 }
 
+.example {
+  margin: 0 auto;
+  padding: 0 2em;
+  width: 776px;
+  padding-top: 3em;
+  @media (max-width: 640px) {
+    margin: unset;
+    padding: unset;
+    width: unset;
+    padding-top: unset;
+  }
+}
 .example-content {
   margin-top: 1em;
   background-color: #fff;

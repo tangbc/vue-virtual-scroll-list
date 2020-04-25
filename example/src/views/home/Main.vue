@@ -1,5 +1,5 @@
 <template>
-  <div class="index">
+  <div class="example">
     <github-corner />
 
     <h2 class="name">
