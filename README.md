@@ -148,38 +148,26 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Extra props assign to item component.</td>
     </tr>
     <tr>
-      <td><code>start</code></td>
-      <td>Number</td>
-      <td>0</td>
-      <td>Setting scroll stay start index.</td>
-    </tr>
-    <tr>
-      <td><code>offset</code></td>
-      <td>Number</td>
-      <td>0</td>
-      <td>Setting scroll stay offset.</td>
-    </tr>
-    <tr>
       <td><code>scroll</code></td>
-      <td>Function</td>
+      <td>Event</td>
       <td></td>
       <td>Emited when scrolling, param <code>(event, range)</code>.</td>
     </tr>
     <tr>
       <td><code>totop</code></td>
-      <td>Function</td>
+      <td>Event</td>
       <td></td>
       <td>Emited when scrolled to top or left, param <code>(event, range)</code>.</td>
     </tr>
     <tr>
       <td><code>tobottom</code></td>
-      <td>Function</td>
+      <td>Event</td>
       <td></td>
       <td>Emited when scrolled to bottom or right, param <code>(event, range)</code>.</td>
     </tr>
     <tr>
       <td><code>resized</code></td>
-      <td>Function</td>
+      <td>Event</td>
       <td></td>
       <td>Emited when each item resized (mounted), param <code>(id, size)</code>.</td>
     </tr>
@@ -191,10 +179,22 @@ More usages or getting start you can refer to these clearly [examples](https://g
   <p></p>
   <table>
     <tr>
-      <th>Props</th>
+      <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Props&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
       <th>Type</th>
       <th>Default</th>
       <th>Description</th>
+    </tr>
+    <tr>
+      <td><code>start</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>Setting scroll stay start index.</td>
+    </tr>
+    <tr>
+      <td><code>offset</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>Setting scroll stay offset.</td>
     </tr>
     <tr>
       <td><code>root-tag</code></td>
@@ -286,6 +286,10 @@ Here are some usefull public methods you can call via [`ref`](https://vuejs.org/
 * `getSize(id)`: get the designated item size by id (from data-key value).
 
 * `getSizes()`: get the total number of stored (rendered) items.
+
+* `getClientSize()`: get wrapper client viewport size (width or height).
+
+* `getScrollSize()`: get all scroll size (scrollHeight or scrollWidth).
 
 
 ## Attentions
