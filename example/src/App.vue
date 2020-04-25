@@ -105,7 +105,7 @@ body {
   -webkit-overflow-scrolling: touch;
    /* width */
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
   }
   /* Track */
   &::-webkit-scrollbar-track {
