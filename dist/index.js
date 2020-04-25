@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.1
+ * vue-virtual-scroll-list v2.1.2
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -427,6 +427,9 @@
       type: String,
       "default": ''
     },
+    itemClassAdd: {
+      type: Function
+    },
     headerTag: {
       type: String,
       "default": 'div'
@@ -449,6 +452,9 @@
     }
   };
   var ItemProps = {
+    index: {
+      type: Number
+    },
     event: {
       type: String
     },
@@ -492,26 +498,21 @@
    */
   var Wrapper = {
     created: function created() {
-      this.hasInitial = false;
       this.shapeKey = this.horizontal ? 'offsetWidth' : 'offsetHeight';
     },
     mounted: function mounted() {
       var _this = this;
 
-      // dispatch once at initial
-      this.dispatchSizeChange();
-
       if (typeof ResizeObserver !== 'undefined') {
         this.resizeObserver = new ResizeObserver(function () {
-          // dispatch when size changed
-          if (_this.hasInitial) {
-            _this.dispatchSizeChange();
-          } else {
-            _this.hasInitial = true;
-          }
+          _this.dispatchSizeChange();
         });
         this.resizeObserver.observe(this.$el);
       }
+    },
+    // since componet will be reused, so disptach when updated
+    updated: function updated() {
+      this.dispatchSizeChange();
     },
     beforeDestroy: function beforeDestroy() {
       if (this.resizeObserver) {
@@ -537,8 +538,10 @@
       var tag = this.tag,
           component = this.component,
           _this$extraProps = this.extraProps,
-          extraProps = _this$extraProps === void 0 ? {} : _this$extraProps;
+          extraProps = _this$extraProps === void 0 ? {} : _this$extraProps,
+          index = this.index;
       extraProps.source = this.source;
+      extraProps.index = index;
       return h(tag, {
         role: 'item'
       }, [h(component, {
@@ -581,11 +584,9 @@
       };
     },
     watch: {
-      dataSources: function dataSources(newValue, oldValue) {
-        if (newValue.length !== oldValue.length) {
-          this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources());
-          this.virtual.handleDataSourcesChange();
-        }
+      'dataSources.length': function dataSourcesLength() {
+        this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources());
+        this.virtual.handleDataSourcesChange();
       },
       start: function start(newValue) {
         this.scrollToIndex(newValue);
@@ -621,6 +622,14 @@
       this.virtual.destroy();
     },
     methods: {
+      // get item size by id
+      getSize: function getSize(id) {
+        return this.virtual.sizes.get(id);
+      },
+      // get the total number of stored (rendered) items
+      getSizes: function getSizes() {
+        return this.virtual.sizes.size;
+      },
       // set current scroll position to a expectant offset
       scrollToOffset: function scrollToOffset(offset) {
         var root = this.$refs.root;
@@ -703,6 +712,7 @@
       // event called when each item mounted or size changed
       onItemResized: function onItemResized(id, size) {
         this.virtual.saveSize(id, size);
+        this.$emit('resized', id, size);
       },
       // event called when slot mounted or size changed
       onSlotResized: function onSlotResized(type, size, hasInit) {
@@ -734,14 +744,12 @@
       },
       // emit event in special position
       emitEvent: function emitEvent(offset, clientSize, scrollSize, evt) {
-        var range = this.virtual.getRange();
-
         if (this.virtual.isFront() && !!this.dataSources.length && offset - this.topThreshold <= 0) {
-          this.$emit('totop', evt, range);
+          this.$emit('totop');
         } else if (this.virtual.isBehind() && offset + clientSize + this.bottomThreshold >= scrollSize) {
-          this.$emit('tobottom', evt, range);
+          this.$emit('tobottom');
         } else {
-          this.$emit('scroll', evt, range);
+          this.$emit('scroll', evt, this.virtual.getRange());
         }
       },
       // get the real render slots based on range data
@@ -766,8 +774,8 @@
           if (dataSource) {
             if (dataSource[dataKey]) {
               slots.push(h(Item, {
-                "class": itemClass,
                 props: {
+                  index: index,
                   tag: itemTag,
                   event: EVENT_TYPE.ITEM,
                   horizontal: isHorizontal,
@@ -775,7 +783,8 @@
                   source: dataSource,
                   extraProps: extraProps,
                   component: dataComponent
-                }
+                },
+                "class": "".concat(itemClass, " ").concat(this.itemClassAdd ? this.itemClassAdd(index) : '')
               }));
             } else {
               console.warn("Cannot get the data-key '".concat(dataKey, "' from data-sources."));
