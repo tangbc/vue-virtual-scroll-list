@@ -9,12 +9,12 @@
       @input="onInput"
       @paste="onPaste"
     ></div>
-    <div class="send" :class="{ disabled: disabledSend }" @click="eventSend"></div>
+    <div class="send" :class="{ disabled: disabledSend }" @mousedown.prevent @click="eventSend"></div>
     <img class="author-avatar" src="https://avatars1.githubusercontent.com/u/6846113" alt="preload-avatar">
     <div class="auto">
-      <button @click="eventClickMockReceived" class="button button-clear item">received one random</button>
+      <button @mousedown.prevent @click="eventClickMockReceived" class="button button-clear item">received one random</button>
       <span class="line">|</span>
-      <button @click="eventClickMockSend" class="button button-clear item">send one random</button>
+      <button @mousedown.prevent @click="eventClickMockSend" class="button button-clear item">send one random</button>
     </div>
   </div>
 </template>
