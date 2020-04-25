@@ -64,7 +64,7 @@ Root component:
 <template>
   <div>
     <virtual-list
-      :size="60" // You dont know? no problem, just assign a estimate value!
+      :size="60" // You dont know? no problem, just pass a estimate value!
       :keeps="30"
       :data-key="'uid'"
       :data-sources="items"
@@ -102,6 +102,9 @@ Item component:
   export default {
     name: 'item-component',
     props: {
+      index: { // index of current item
+        type: Number
+      },
       source: { // here is: {uid: 'unique_1', text: 'abc'}
         type: Object,
         default () {
@@ -123,7 +126,7 @@ More usages or getting start you can refer to these clearly [examples](https://g
 
 | **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type**  | **Description**                                                                                                                              |
 |------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `size`           | Number        | Each item size, you don't have to know the accurate, just simply assign an **estimate** or **average** value.                                     |
+| `size`           | Number        | Each item size, you don't have to know the accurate, just simply pass an **estimate** or **average** value.                                     |
 | `keeps`          | Number        | How many items you are expecting the list to keep rendering in the real dom.                                                                      |
 | `data-key`       | String        | The unique key get from `data-sources` in each data object, its value **must be unique** in `data-sources`, it is used for identifying item size. |
 | `data-sources`   | Array[Object] | The source array built for list, each array data must be an object and has an unique key for `data-key` property.                                 |
@@ -136,7 +139,7 @@ More usages or getting start you can refer to these clearly [examples](https://g
   <p></p>
   <table>
     <tr>
-      <th>Props</th>
+      <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Props&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
       <th>Type</th>
       <th>Default</th>
       <th>Description</th>
@@ -145,7 +148,7 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td><code>extra-props</code></td>
       <td>Object</td>
       <td>{}</td>
-      <td>Extra props assign to item component.</td>
+      <td>Extra props pass to item component, notice: <code>index</code> and <code>source</code> are both occupied.</td>
     </tr>
     <tr>
       <td><code>scroll</code></td>
@@ -157,13 +160,13 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td><code>totop</code></td>
       <td>Event</td>
       <td></td>
-      <td>Emited when scrolled to top or left, param <code>(event, range)</code>.</td>
+      <td>Emited when scrolled to top or left, no param.</td>
     </tr>
     <tr>
       <td><code>tobottom</code></td>
       <td>Event</td>
       <td></td>
-      <td>Emited when scrolled to bottom or right, param <code>(event, range)</code>.</td>
+      <td>Emited when scrolled to bottom or right, no param.</td>
     </tr>
   </table>
 </details>
