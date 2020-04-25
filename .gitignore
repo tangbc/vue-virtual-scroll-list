@@ -1,6 +1,7 @@
 .idea
 .vscode
 dist/*.map
+docs/js/*.map
 dev
 issues
 node_modules
