@@ -53,7 +53,7 @@ export const LOAD_TYPES = {
 
 export function setLoadType (type) {
   try {
-    localStorage.setItem('LOAD_TYPES', type)
+    sessionStorage.setItem('LOAD_TYPES', type)
   } catch (e) {
     console.error(e)
   }
@@ -61,7 +61,7 @@ export function setLoadType (type) {
 
 export function getLoadType () {
   try {
-    return localStorage.getItem('LOAD_TYPES') || LOAD_TYPES.EMPTY
+    return sessionStorage.getItem('LOAD_TYPES') || LOAD_TYPES.EMPTY
   } catch (e) {
     console.error(e)
     return LOAD_TYPES.EMPTY
