@@ -630,6 +630,21 @@
       getSizes: function getSizes() {
         return this.virtual.sizes.size;
       },
+      // return current scroll offset
+      getOffset: function getOffset() {
+        var root = this.$refs.root;
+        return root ? Math.ceil(root[this.directionKey]) : 0;
+      },
+      // return client viewport size
+      getClientSize: function getClientSize() {
+        var root = this.$refs.root;
+        return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0;
+      },
+      // return all scroll size
+      getScrollSize: function getScrollSize() {
+        var root = this.$refs.root;
+        return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0;
+      },
       // set current scroll position to a expectant offset
       scrollToOffset: function scrollToOffset(offset) {
         var root = this.$refs.root;
@@ -693,21 +708,6 @@
         return this.dataSources.map(function (dataSource) {
           return dataSource[_this2.dataKey];
         });
-      },
-      // return current scroll offset
-      getOffset: function getOffset() {
-        var root = this.$refs.root;
-        return root ? Math.ceil(root[this.directionKey]) : 0;
-      },
-      // return client viewport size
-      getClientSize: function getClientSize() {
-        var root = this.$refs.root;
-        return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0;
-      },
-      // return all scroll size
-      getScrollSize: function getScrollSize() {
-        var root = this.$refs.root;
-        return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0;
       },
       // event called when each item mounted or size changed
       onItemResized: function onItemResized(id, size) {

@@ -84,6 +84,24 @@ const VirtualList = Vue.component('virtual-list', {
       return this.virtual.sizes.size
     },
 
+    // return current scroll offset
+    getOffset () {
+      const { root } = this.$refs
+      return root ? Math.ceil(root[this.directionKey]) : 0
+    },
+
+    // return client viewport size
+    getClientSize () {
+      const { root } = this.$refs
+      return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0
+    },
+
+    // return all scroll size
+    getScrollSize () {
+      const { root } = this.$refs
+      return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0
+    },
+
     // set current scroll position to a expectant offset
     scrollToOffset (offset) {
       const { root } = this.$refs
@@ -145,24 +163,6 @@ const VirtualList = Vue.component('virtual-list', {
 
     getUniqueIdFromDataSources () {
       return this.dataSources.map((dataSource) => dataSource[this.dataKey])
-    },
-
-    // return current scroll offset
-    getOffset () {
-      const { root } = this.$refs
-      return root ? Math.ceil(root[this.directionKey]) : 0
-    },
-
-    // return client viewport size
-    getClientSize () {
-      const { root } = this.$refs
-      return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0
-    },
-
-    // return all scroll size
-    getScrollSize () {
-      const { root } = this.$refs
-      return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0
     },
 
     // event called when each item mounted or size changed

@@ -296,6 +296,8 @@ Here are some usefull public methods you can call via [`ref`](https://vuejs.org/
 
 * `getSizes()`: get the total number of stored (rendered) items.
 
+* `getOffset()`: get current scroll offset.
+
 * `getClientSize()`: get wrapper element client viewport size (width or height).
 
 * `getScrollSize()`: get all scroll size (scrollHeight or scrollWidth).
