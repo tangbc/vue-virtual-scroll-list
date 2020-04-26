@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
+import GithubButton from 'vue-github-button'
 import VirtualList from '../../src/index'
 import Introduction from './components/Introduction'
 import CodeHighLight from './components/CodeHighLight'
@@ -13,6 +14,7 @@ Vue.component(Introduction.name, Introduction)
 Vue.component(CodeHighLight.name, CodeHighLight)
 Vue.component(Corner.name, Corner)
 Vue.component(Tab.name, Tab)
+Vue.component('github-button', GithubButton)
 
 Vue.config.devtools = false
 Vue.config.productionTip = false

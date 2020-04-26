@@ -1,17 +1,32 @@
 <template>
   <div class="example">
-    <github-corner />
 
     <h2 class="name">
-      <a href="https://github.com/tangbc/vue-virtual-scroll-list">vue-virtual-scroll-list</a>
+      vue-virtual-scroll-list
     </h2>
+
+    <div class="desc">⚡️ A vue component support big amount data list with high scroll performance.</div>
+
+    <div class="icons">
+      <span class="btn">
+        <github-button href="https://github.com/tangbc/vue-virtual-scroll-list/issues" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-size="large" data-show-count="true" aria-label="Issue tangbc/vue-virtual-scroll-list on GitHub">Issue</github-button>
+      </span>
+      <span class="btn">
+        <github-button href="https://github.com/tangbc/vue-virtual-scroll-list" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-size="large" data-show-count="true" aria-label="Star tangbc/vue-virtual-scroll-list on GitHub">Star</github-button>
+      </span>
+      <span class="btn">
+        <github-button href="https://github.com/tangbc/vue-virtual-scroll-list/fork" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-size="large" data-show-count="true" aria-label="Fork tangbc/vue-virtual-scroll-list on GitHub">Fork</github-button>
+      </span>
+      <span class="btn">
+        <github-button href="https://github.com/tangbc/vue-virtual-scroll-list/subscription" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-size="large" data-show-count="true" aria-label="Watch tangbc/vue-virtual-scroll-list on GitHub">Watch</github-button>
+      </span>
+    </div>
 
     <div class="head">
       <img alt="Travis CI Status" src="https://travis-ci.org/tangbc/vue-virtual-scroll-list.svg?branch=master"/>
       <!-- <img alt="Code Coverage" src="https://codecov.io/gh/tangbc/vue-virtual-scroll-list/branch/master/graph/badge.svg"/> -->
       <img alt="NPM downloads" src="https://img.shields.io/npm/dm/vue-virtual-scroll-list.svg">
       <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
-      <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
       <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
     </div>
 
@@ -23,12 +38,8 @@
       <li>Don't have to care about each item size, in sometimes it's difficult to know that.</li>
     </ul>
 
-    <h3 class="title">Todos</h3>
-    <ul>
-      <li>Improve calculate offset efficient.</li>
-      <li>Support page scroll, table layout, unit test.</li>
-      <li>......</li>
-    </ul>
+    <h3 class="title">Contributions</h3>
+    <div>Welcome to improve this component with any issue, pull request or code review. ✋</div>
   </div>
 </template>
 
@@ -44,12 +55,23 @@ export default {
 
 <style lang="less" scoped>
 .name {
-  margin: 1em 0;
+  margin-top: 1em;
+}
+.desc {
+  padding-bottom: 3em;
+}
+.icons {
+  padding-bottom: 1em;
+  .btn {
+    margin-right: 1em;
+  }
 }
 .head {
-  margin-bottom: 2em;
+  margin-bottom: 3em;
   img {
     margin-right: .5em;
+    width: auto;
+    height: 26px;
   }
 }
 .title {

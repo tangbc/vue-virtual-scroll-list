@@ -77,7 +77,7 @@ export default {
     onPaste (e) {
       e.preventDefault()
       const plainText = (e.originalEvent || e).clipboardData.getData('text/plain')
-      document.execCommand("insertText", false, plainText)
+      document.execCommand('insertText', false, plainText)
     },
 
     eventSend () {
