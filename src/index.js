@@ -195,7 +195,7 @@ const VirtualList = Vue.component('virtual-list', {
       const scrollSize = this.getScrollSize()
 
       // iOS scroll-spring-back behavior will make direction mistake
-      if (offset + clientSize > scrollSize || !scrollSize) {
+      if (offset < 0 || (offset + clientSize > scrollSize) || !scrollSize) {
         return
       }
 
