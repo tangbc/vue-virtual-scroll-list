@@ -95,7 +95,7 @@ Root component:
 Item component:
 ```vue
 <template>
-  <div>{{ source.text }} - {{ otherPropValue }}</div>
+  <div>{{ index }} - {{ source.text }} - {{ otherPropValue }}</div>
 </template>
 
 <script>

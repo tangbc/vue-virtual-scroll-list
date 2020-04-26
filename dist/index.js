@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.2
+ * vue-virtual-scroll-list v2.1.3
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -735,7 +735,7 @@
         var clientSize = this.getClientSize();
         var scrollSize = this.getScrollSize(); // iOS scroll-spring-back behavior will make direction mistake
 
-        if (offset + clientSize > scrollSize || !scrollSize) {
+        if (offset < 0 || offset + clientSize > scrollSize || !scrollSize) {
           return;
         }
 
@@ -744,12 +744,12 @@
       },
       // emit event in special position
       emitEvent: function emitEvent(offset, clientSize, scrollSize, evt) {
+        this.$emit('scroll', evt, this.virtual.getRange());
+
         if (this.virtual.isFront() && !!this.dataSources.length && offset - this.topThreshold <= 0) {
           this.$emit('totop');
         } else if (this.virtual.isBehind() && offset + clientSize + this.bottomThreshold >= scrollSize) {
           this.$emit('tobottom');
-        } else {
-          this.$emit('scroll', evt, this.virtual.getRange());
         }
       },
       // get the real render slots based on range data
