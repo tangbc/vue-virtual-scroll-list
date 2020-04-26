@@ -55,7 +55,7 @@ export default {
   },
 
   mounted () {
-    if (this.$refs.rich) {
+    if (this.$refs.rich && !isMobile) {
       this.$refs.rich.focus()
     }
   },

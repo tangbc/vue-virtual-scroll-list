@@ -65,6 +65,7 @@ export default {
     this.param = {
       pageSize: loadType === LOAD_TYPES.FEW ? 2 : 10,
       isFirstPageReady: false,
+      isFetching: false
     }
 
     this.finished = loadType !== LOAD_TYPES.PAGES
@@ -77,16 +78,14 @@ export default {
     }
   },
 
-  // mounted () {
-  //   window.vsl = this.$refs.vsl
-  // },
-
   methods: {
     onTotop () {
       // only page type has paging
-      if (getLoadType() !== LOAD_TYPES.PAGES) {
+      if (getLoadType() !== LOAD_TYPES.PAGES || this.param.isFetching) {
         return
       }
+
+      this.param.isFetching = true
 
       // get next page
       getMessages(this.param.pageSize, true).then((messages) => {
@@ -106,6 +105,8 @@ export default {
             return previousSize + this.$refs.vsl.getSize(currentSid)
           })
           this.setVirtualListToOffset(offset)
+
+          this.param.isFetching = false
         })
       })
     },
