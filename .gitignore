@@ -5,3 +5,4 @@ docs/js/*.map
 dev
 issues
 node_modules
+coverage

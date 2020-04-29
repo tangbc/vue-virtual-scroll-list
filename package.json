@@ -12,7 +12,8 @@
     "dev:docs": "cd example && npm run dev",
     "build:docs": "cd example && npm run build",
     "build": "npm run lint && rollup --config ./scripts/rollup.production.js",
-    "dev": "rollup --config ./scripts/rollup.development.js --watch"
+    "dev": "rollup --config ./scripts/rollup.development.js --watch",
+    "test": "rm -rf ./coverage && jest"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,8 @@
   "devDependencies": {
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
+    "@vue/test-utils": "^1.0.0-beta.33",
+    "babel-jest": "^25.5.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-loader": "^4.0.0",
@@ -43,8 +46,10 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
+    "jest": "^25.5.1",
     "rollup": "^2.1.0",
     "rollup-plugin-babel": "^4.4.0",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-template-compiler": "^2.6.11"
   }
 }
