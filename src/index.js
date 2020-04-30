@@ -125,7 +125,8 @@ const VirtualList = Vue.component('virtual-list', {
     scrollToBottom () {
       const { shepherd } = this.$refs
       if (shepherd) {
-        this.scrollToOffset(shepherd[this.isHorizontal ? 'offsetLeft' : 'offsetTop'])
+        const offset = shepherd[this.isHorizontal ? 'offsetLeft' : 'offsetTop']
+        this.scrollToOffset(offset)
 
         // check if it's really scrolled to the bottom
         // maybe list doesn't render and calculate to last range
@@ -254,8 +255,8 @@ const VirtualList = Vue.component('virtual-list', {
   render (h) {
     const { header, footer } = this.$slots
     const { padFront, padBehind } = this.range
-    const { rootTag, headerClass, headerTag, wrapTag, wrapClass, footerClass, footerTag } = this
-    const padding = this.isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px`
+    const { rootTag, headerClass, headerTag, wrapTag, wrapClass, footerClass, footerTag, isHorizontal } = this
+    const padding = isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px`
 
     return h(rootTag, {
       ref: 'root',
@@ -296,7 +297,11 @@ const VirtualList = Vue.component('virtual-list', {
 
       // an empty element use to scroll to bottom
       h('div', {
-        ref: 'shepherd'
+        ref: 'shepherd',
+        style: {
+          width: isHorizontal ? '0px' : '100%',
+          height: isHorizontal ? '100%' : '0px'
+        }
       })
     ])
   }
