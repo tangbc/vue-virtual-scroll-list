@@ -45,6 +45,8 @@
 
 https://tangbc.github.io/vue-virtual-scroll-list
 
+https://codesandbox.io/s/live-demo-virtual-list-e1ww1
+
 
 ## What's new in v2.0
 
