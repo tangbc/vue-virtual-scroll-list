@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.4
+ * vue-virtual-scroll-list v2.1.5
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -352,7 +352,7 @@
     }, {
       key: "getEstimateSize",
       value: function getEstimateSize() {
-        return this.firstRangeAverageSize || this.param.size;
+        return this.firstRangeAverageSize || this.param.estimateSize;
       }
     }]);
 
@@ -363,14 +363,6 @@
    * props declaration for default, item and slot component
    */
   var VirtualProps = {
-    size: {
-      type: Number,
-      required: true
-    },
-    keeps: {
-      type: Number,
-      required: true
-    },
     dataKey: {
       type: String,
       required: true
@@ -383,8 +375,16 @@
       type: [Object, Function],
       required: true
     },
+    keeps: {
+      type: Number,
+      "default": 30
+    },
     extraProps: {
       type: Object
+    },
+    estimateSize: {
+      type: Number,
+      "default": 50
     },
     rootTag: {
       type: String,
@@ -445,10 +445,6 @@
     footerClass: {
       type: String,
       "default": ''
-    },
-    disabled: {
-      type: Boolean,
-      "default": false
     }
   };
   var ItemProps = {
@@ -691,11 +687,10 @@
       // ----------- public method end -----------
       installVirtual: function installVirtual() {
         this.virtual = new Virtual({
-          size: this.size,
-          // also could be a estimate value
           slotHeaderSize: 0,
           slotFooterSize: 0,
           keeps: this.keeps,
+          estimateSize: this.estimateSize,
           buffer: Math.round(this.keeps / 3),
           // recommend for a third of keeps
           uniqueIds: this.getUniqueIdFromDataSources()
