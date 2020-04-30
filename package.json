@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint --fix src --ext .js",
     "dev:docs": "cd example && npm run dev",
-    "build:docs": "cd example && npm run build",
+    "build:docs": "cd example && npm run build && cp ../dist/index.js ../docs",
     "build": "npm run lint && rollup --config ./scripts/rollup.production.js",
     "dev": "rollup --config ./scripts/rollup.development.js --watch"
   },
