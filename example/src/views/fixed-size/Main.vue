@@ -8,13 +8,12 @@
 
       <div v-show="isShowView">
         <virtual-list class="list scroll-touch"
-          :size="50"
-          :keeps="30"
-          :item-class="'list-item-fixed'"
-
           :data-key="'id'"
           :data-sources="items"
           :data-component="itemComponent"
+
+          :estimate-size="50"
+          :item-class="'list-item-fixed'"
         />
       </div>
 
