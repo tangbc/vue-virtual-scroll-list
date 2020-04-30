@@ -224,7 +224,7 @@ const VirtualList = Vue.component('virtual-list', {
       for (let index = start; index <= end; index++) {
         const dataSource = dataSources[index]
         if (dataSource) {
-          if(Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
+          if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
             slots.push(h(Item, {
               props: {
                 index,
