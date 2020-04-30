@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.3
+ * vue-virtual-scroll-list v2.1.4
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -670,7 +670,8 @@
         var shepherd = this.$refs.shepherd;
 
         if (shepherd) {
-          shepherd.scrollIntoView(false); // check if it's really scrolled to the bottom
+          var offset = shepherd[this.isHorizontal ? 'offsetLeft' : 'offsetTop'];
+          this.scrollToOffset(offset); // check if it's really scrolled to the bottom
           // maybe list doesn't render and calculate to last range
           // so we need retry in next event loop until it really at bottom
 
@@ -772,7 +773,7 @@
           var dataSource = dataSources[index];
 
           if (dataSource) {
-            if (dataSource[dataKey]) {
+            if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
               slots.push(h(Item, {
                 props: {
                   index: index,
@@ -812,8 +813,9 @@
           wrapTag = this.wrapTag,
           wrapClass = this.wrapClass,
           footerClass = this.footerClass,
-          footerTag = this.footerTag;
-      var padding = this.isHorizontal ? "0px ".concat(padBehind, "px 0px ").concat(padFront, "px") : "".concat(padFront, "px 0px ").concat(padBehind, "px");
+          footerTag = this.footerTag,
+          isHorizontal = this.isHorizontal;
+      var padding = isHorizontal ? "0px ".concat(padBehind, "px 0px ").concat(padFront, "px") : "".concat(padFront, "px 0px ").concat(padBehind, "px");
       return h(rootTag, {
         ref: 'root',
         on: {
@@ -846,7 +848,11 @@
         }
       }, footer) : null, // an empty element use to scroll to bottom
       h('div', {
-        ref: 'shepherd'
+        ref: 'shepherd',
+        style: {
+          width: isHorizontal ? '0px' : '100%',
+          height: isHorizontal ? '100%' : '0px'
+        }
       })]);
     }
   });
