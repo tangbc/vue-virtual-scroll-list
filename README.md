@@ -319,7 +319,7 @@ More usages or getting start you can refer to these clearly [examples](https://g
     </tr>
     <tr>
       <td><code>getSize(id)</code></td>
-      <td>Get the designated item size by id (from `data-key` value).</td>
+      <td>Get the designated item size by id (from <code>data-key</code> value).</td>
     </tr>
     <tr>
       <td><code>getSizes()</code></td>
