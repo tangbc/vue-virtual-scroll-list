@@ -41,7 +41,7 @@ body {
   height: 40px;
   display: flex;
   align-items: center;
-  padding-left: 2em;
+  padding-left: 1em;
   @media (max-width: 640px) {
     padding: 0;
     overflow-x: auto;

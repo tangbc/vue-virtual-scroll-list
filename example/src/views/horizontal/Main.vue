@@ -77,6 +77,7 @@ export default {
   border-radius: 3px;
   overflow-x: auto;
   border-color: dimgray;
+  display: flex; // when using scrollToBottom()
 
   .wrapper {
     display: flex;
