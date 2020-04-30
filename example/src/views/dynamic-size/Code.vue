@@ -9,11 +9,10 @@
 const html =
 `
 <virtual-list class="list"
-  :size="80" // just assign a estimate value.
-  :keeps="30"
   :data-key="'id'"
   :data-sources="items"
   :data-component="itemComponent"
+  :estimate-size="80"
 />
 `
 

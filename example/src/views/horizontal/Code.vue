@@ -9,14 +9,13 @@
 const html =
 `
 <virtual-list class="list-horizontal"
-  :size="110" // just assign a estimate value.
-  :keeps="30"
-  :direction="'horizontal'" // make scroll direction in horizontal.
-  :wrap-class="'wrapper'"
-  :item-class="'list-item-horizontal'"
   :data-key="'id'"
   :data-sources="items"
   :data-component="itemComponent"
+  :estimate-size="110"
+  :wrap-class="'wrapper'"
+  :item-class="'list-item-horizontal'"
+  :direction="'horizontal'" // make scroll direction in horizontal.
 />
 `
 
