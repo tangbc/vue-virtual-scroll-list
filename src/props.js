@@ -3,15 +3,6 @@
  */
 
 export const VirtualProps = {
-  size: {
-    type: Number,
-    required: true
-  },
-  keeps: {
-    type: Number,
-    required: true
-  },
-
   dataKey: {
     type: String,
     required: true
@@ -24,8 +15,17 @@ export const VirtualProps = {
     type: [Object, Function],
     required: true
   },
+
+  keeps: {
+    type: Number,
+    default: 30
+  },
   extraProps: {
     type: Object
+  },
+  estimateSize: {
+    type: Number,
+    default: 50
   },
 
   rootTag: {
@@ -40,7 +40,6 @@ export const VirtualProps = {
     type: String,
     default: ''
   },
-
   direction: {
     type: String,
     default: 'vertical' // the other value is horizontal
@@ -61,7 +60,6 @@ export const VirtualProps = {
     type: Number,
     default: 0
   },
-
   itemTag: {
     type: String,
     default: 'div'
@@ -73,7 +71,6 @@ export const VirtualProps = {
   itemClassAdd: {
     type: Function
   },
-
   headerTag: {
     type: String,
     default: 'div'
@@ -89,11 +86,6 @@ export const VirtualProps = {
   footerClass: {
     type: String,
     default: ''
-  },
-
-  disabled: {
-    type: Boolean,
-    default: false
   }
 }
 

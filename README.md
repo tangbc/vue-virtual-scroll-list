@@ -11,9 +11,9 @@
   <a href="https://npmjs.com/package/vue-virtual-scroll-list">
     <img alt="NPM version" src="https://img.shields.io/npm/v/vue-virtual-scroll-list.svg"/>
   </a>
-  <a href="https://vuejs.org/">
+  <!-- <a href="https://vuejs.org/">
     <img alt="Vue version" src="https://img.shields.io/badge/vue-%3E=2.3.0-brightgreen.svg"/>
-  </a>
+  </a> -->
   <a href="http://packagequality.com/#?package=vue-virtual-scroll-list">
     <img alt="Package quality" src="https://npm.packagequality.com/shield/vue-virtual-scroll-list.svg">
   </a>
@@ -34,7 +34,7 @@
 
 ## Advantages
 
-* Tiny, simple structure and very easy to use.
+* Only 3 required props, simple and very easy to use.
 
 * Big data list with high render performance and efficient.
 
@@ -66,8 +66,6 @@ Root component:
 <template>
   <div>
     <virtual-list
-      :size="60" // You dont know? no problem, just pass a estimate value!
-      :keeps="30"
       :data-key="'uid'"
       :data-sources="items"
       :data-component="itemComponent"
@@ -128,8 +126,6 @@ More usages or getting start you can refer to these clearly [examples](https://g
 
 | **&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;** | **Type**  | **Description**                                                                                                                              |
 |------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `size`           | Number        | Each item size, you don't have to know the accurate, just simply pass an **estimate** or **average** value.                                     |
-| `keeps`          | Number        | How many items you are expecting the list to keep rendering in the real dom.                                                                      |
 | `data-key`       | String        | The unique key get from `data-sources` in each data object, its value **must be unique** in `data-sources`, it is used for identifying item size. |
 | `data-sources`   | Array[Object] | The source array built for list, each array data must be an object and has an unique key for `data-key` property.                                 |
 | `data-component` | Component     | The render item component created / declared by vue, and it will use the data object in `datas-sources` as render prop and named: `source`.       |
@@ -141,34 +137,28 @@ More usages or getting start you can refer to these clearly [examples](https://g
   <p></p>
   <table>
     <tr>
-      <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Props&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+      <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Props&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
       <th>Type</th>
       <th>Default</th>
       <th>Description</th>
     </tr>
     <tr>
+      <td><code>keeps</code></td>
+      <td>Number</td>
+      <td>30</td>
+      <td>How many items you are expecting the virtual list to keep rendering in the real dom.</td>
+    </tr>
+    <tr>
       <td><code>extra-props</code></td>
       <td>Object</td>
       <td>{}</td>
-      <td>Extra props pass to item component, notice: <code>index</code> and <code>source</code> are both occupied.</td>
+      <td>Extra props assign to item component that are not in <code>data-sources</code>. Notice: <code>index</code> and <code>source</code> are both occupied inner.</td>
     </tr>
     <tr>
-      <td><code>scroll</code></td>
-      <td>Event</td>
-      <td></td>
-      <td>Emited when scrolling, param <code>(event, range)</code>.</td>
-    </tr>
-    <tr>
-      <td><code>totop</code></td>
-      <td>Event</td>
-      <td></td>
-      <td>Emited when scrolled to top or left, no param.</td>
-    </tr>
-    <tr>
-      <td><code>tobottom</code></td>
-      <td>Event</td>
-      <td></td>
-      <td>Emited when scrolled to bottom or right, no param.</td>
+      <td><code>estimate-size</code></td>
+      <td>Number</td>
+      <td>50</td>
+      <td>The estimate size of each item, if it is closer to the average size, the scrollbar length looks more accurately. It is recommended to assign the average that calculate by yourself.</td>
     </tr>
   </table>
 </details>
@@ -187,13 +177,31 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td><code>start</code></td>
       <td>Number</td>
       <td>0</td>
-      <td>Setting scroll stay start index.</td>
+      <td>Setting scroll position stay start index.</td>
     </tr>
     <tr>
       <td><code>offset</code></td>
       <td>Number</td>
       <td>0</td>
-      <td>Setting scroll stay offset.</td>
+      <td>Setting scroll position stay offset.</td>
+    </tr>
+    <tr>
+      <td><code>scroll</code></td>
+      <td>Event</td>
+      <td></td>
+      <td>Emited when scrolling, param <code>(event, range)</code>.</td>
+    </tr>
+    <tr>
+      <td><code>totop</code></td>
+      <td>Event</td>
+      <td></td>
+      <td>Emited when scrolled to top or left, no param.</td>
+    </tr>
+    <tr>
+      <td><code>tobottom</code></td>
+      <td>Event</td>
+      <td></td>
+      <td>Emited when scrolled to bottom or right, no param.</td>
     </tr>
     <tr>
       <td><code>resized</code></td>
@@ -284,25 +292,53 @@ More usages or getting start you can refer to these clearly [examples](https://g
 
 ### Public methods
 
-Here are some usefull public methods you can call via [`ref`](https://vuejs.org/v2/guide/components-edge-cases.html#Accessing-Child-Component-Instances-amp-Child-Elements):
-
-* `reset()`: reset all state back to initial.
-
-* `scrollToBottom()`: manual set scroll position to bottom.
-
-* `scrollToIndex(index)`: manual set scroll position to a designated index.
-
-* `scrollToOffset(offset)`: manual set scroll position to a designated offset.
-
-* `getSize(id)`: get the designated item size by id (from data-key value).
-
-* `getSizes()`: get the total number of stored (rendered) items.
-
-* `getOffset()`: get current scroll offset.
-
-* `getClientSize()`: get wrapper element client viewport size (width or height).
-
-* `getScrollSize()`: get all scroll size (scrollHeight or scrollWidth).
+<details>
+  <summary><strong>Usefull public methods</strong></summary>
+  <p></p>
+  <p>You can call these methods via <code><a href="https://vuejs.org/v2/guide/components-edge-cases.html#Accessing-Child-Component-Instances-amp-Child-Elements">ref</a></code>:</p>
+  <table>
+    <tr>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code>reset()</code></td>
+      <td>Reset all state back to initial.</td>
+    </tr>
+    <tr>
+      <td><code>scrollToBottom()</code></td>
+      <td>Manual set scroll position to bottom.</td>
+    </tr>
+    <tr>
+      <td><code>scrollToIndex(index)</code></td>
+      <td>Manual set scroll position to a designated index.</td>
+    </tr>
+    <tr>
+      <td><code>scrollToOffset(offset)</code></td>
+      <td>Manual set scroll position to a designated offset.</td>
+    </tr>
+    <tr>
+      <td><code>getSize(id)</code></td>
+      <td>Get the designated item size by id (from `data-key` value).</td>
+    </tr>
+    <tr>
+      <td><code>getSizes()</code></td>
+      <td>Get the total number of stored (rendered) items.</td>
+    </tr>
+    <tr>
+      <td><code>getOffset()</code></td>
+      <td>Get current scroll offset.</td>
+    </tr>
+    <tr>
+      <td><code>getClientSize()</code></td>
+      <td>Get wrapper element client viewport size (width or height).</td>
+    </tr>
+    <tr>
+      <td><code>getScrollSize()</code></td>
+      <td>Get all scroll size (scrollHeight or scrollWidth).</td>
+    </tr>
+  </table>
+</details>
 
 
 ## Attentions

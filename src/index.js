@@ -150,10 +150,10 @@ const VirtualList = Vue.component('virtual-list', {
 
     installVirtual () {
       this.virtual = new Virtual({
-        size: this.size, // also could be a estimate value
         slotHeaderSize: 0,
         slotFooterSize: 0,
         keeps: this.keeps,
+        estimateSize: this.estimateSize,
         buffer: Math.round(this.keeps / 3), // recommend for a third of keeps
         uniqueIds: this.getUniqueIdFromDataSources()
       }, this.onRangeChanged)
