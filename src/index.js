@@ -125,7 +125,7 @@ const VirtualList = Vue.component('virtual-list', {
     scrollToBottom () {
       const { shepherd } = this.$refs
       if (shepherd) {
-        shepherd.scrollIntoView(false)
+        this.scrollToOffset(shepherd[this.isHorizontal ? 'offsetLeft' : 'offsetTop'])
 
         // check if it's really scrolled to the bottom
         // maybe list doesn't render and calculate to last range
