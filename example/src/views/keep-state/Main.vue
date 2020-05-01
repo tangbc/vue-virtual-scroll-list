@@ -10,13 +10,12 @@
 
       <div v-show="isShowView">
         <virtual-list class="list-keep scroll-touch"
-          :size="60"
-          :keeps="30"
-          :item-class="'list-item-keep'"
-
           :data-key="'id'"
           :data-sources="items"
           :data-component="itemComponent"
+
+          :estimate-size="60"
+          :item-class="'list-item-keep'"
         />
       </div>
 

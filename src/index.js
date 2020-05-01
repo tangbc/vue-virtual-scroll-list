@@ -125,7 +125,8 @@ const VirtualList = Vue.component('virtual-list', {
     scrollToBottom () {
       const { shepherd } = this.$refs
       if (shepherd) {
-        shepherd.scrollIntoView(false)
+        const offset = shepherd[this.isHorizontal ? 'offsetLeft' : 'offsetTop']
+        this.scrollToOffset(offset)
 
         // check if it's really scrolled to the bottom
         // maybe list doesn't render and calculate to last range
@@ -149,10 +150,10 @@ const VirtualList = Vue.component('virtual-list', {
 
     installVirtual () {
       this.virtual = new Virtual({
-        size: this.size, // also could be a estimate value
         slotHeaderSize: 0,
         slotFooterSize: 0,
         keeps: this.keeps,
+        estimateSize: this.estimateSize,
         buffer: Math.round(this.keeps / 3), // recommend for a third of keeps
         uniqueIds: this.getUniqueIdFromDataSources()
       }, this.onRangeChanged)
@@ -224,7 +225,7 @@ const VirtualList = Vue.component('virtual-list', {
       for (let index = start; index <= end; index++) {
         const dataSource = dataSources[index]
         if (dataSource) {
-          if (dataSource[dataKey]) {
+          if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
             slots.push(h(Item, {
               props: {
                 index,
@@ -254,8 +255,8 @@ const VirtualList = Vue.component('virtual-list', {
   render (h) {
     const { header, footer } = this.$slots
     const { padFront, padBehind } = this.range
-    const { rootTag, headerClass, headerTag, wrapTag, wrapClass, footerClass, footerTag } = this
-    const padding = this.isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px`
+    const { rootTag, headerClass, headerTag, wrapTag, wrapClass, footerClass, footerTag, isHorizontal } = this
+    const padding = isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px`
 
     return h(rootTag, {
       ref: 'root',
@@ -296,7 +297,11 @@ const VirtualList = Vue.component('virtual-list', {
 
       // an empty element use to scroll to bottom
       h('div', {
-        ref: 'shepherd'
+        ref: 'shepherd',
+        style: {
+          width: isHorizontal ? '0px' : '100%',
+          height: isHorizontal ? '100%' : '0px'
+        }
       })
     ])
   }

@@ -295,6 +295,6 @@ export default class Virtual {
 
   // get the item estimate size
   getEstimateSize () {
-    return this.firstRangeAverageSize || this.param.size
+    return this.firstRangeAverageSize || this.param.estimateSize
   }
 }

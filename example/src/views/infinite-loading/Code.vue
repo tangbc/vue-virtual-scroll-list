@@ -9,11 +9,10 @@
 const html =
 `
 <virtual-list
-  :size="70"
-  :keeps="30"
   :data-key="'id'"
   :data-sources="items"
   :data-component="itemComponent"
+  :estimate-size="70"
   v-on:tobottom="onScrollToBottom"
 >
   <div slot="footer" class="loading-spinner">Loading ...</div>

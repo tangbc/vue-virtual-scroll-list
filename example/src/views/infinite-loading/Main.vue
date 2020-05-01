@@ -10,16 +10,13 @@
 
       <div v-show="isShowView">
         <virtual-list class="list-infinite scroll-touch"
-          :size="70"
-          :keeps="30"
-          :item-class="'list-item-infinite'"
-          :footer-class="'loader-wrapper'"
-          :disabled="false"
-
           :data-key="'id'"
           :data-sources="items"
           :data-component="itemComponent"
 
+          :estimate-size="70"
+          :item-class="'list-item-infinite'"
+          :footer-class="'loader-wrapper'"
           v-on:totop="onScrollToTop"
           v-on:tobottom="onScrollToBottom"
         >

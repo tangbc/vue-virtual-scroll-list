@@ -1,5 +1,6 @@
 <template>
   <div class="example">
+    <github-corner />
 
     <h2 class="name">
       vue-virtual-scroll-list
@@ -71,7 +72,7 @@ export default {
   img {
     margin-right: .5em;
     width: auto;
-    height: 26px;
+    height: 24px;
   }
 }
 .title {
