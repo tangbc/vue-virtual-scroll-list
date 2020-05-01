@@ -258,7 +258,7 @@ const VirtualList = Vue.component('virtual-list', {
     const { padFront, padBehind } = this.range
     const { isHorizontal, rootTag, wrapTag, wrapClass, wrapStyle, headerTag, headerClass, headerStyle, footerTag, footerClass, footerStyle } = this
     const paddingStyle = { padding: isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px` }
-    const wrapperStyle = wrapStyle ? Object.assign(wrapStyle, paddingStyle) : paddingStyle
+    const wrapperStyle = wrapStyle ? Object.assign({}, wrapStyle, paddingStyle) : paddingStyle
 
     return h(rootTag, {
       ref: 'root',
