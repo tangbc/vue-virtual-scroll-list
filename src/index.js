@@ -237,7 +237,7 @@ const VirtualList = Vue.component('virtual-list', {
                 extraProps: extraProps,
                 component: dataComponent
               },
-              class: `${itemClass} ${this.itemClassAdd ? this.itemClassAdd(index) : ''}`
+              class: `${itemClass}${this.itemClassAdd ? ' ' + this.itemClassAdd(index) : ''}`
             }))
           } else {
             console.warn(`Cannot get the data-key '${dataKey}' from data-sources.`)
