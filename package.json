@@ -37,6 +37,7 @@
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@vue/test-utils": "^1.0.0-beta.33",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^25.5.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
@@ -50,6 +51,7 @@
     "rollup": "^2.1.0",
     "rollup-plugin-babel": "^4.4.0",
     "vue": "^2.6.11",
+    "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.11"
   }
 }
