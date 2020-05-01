@@ -221,7 +221,7 @@ const VirtualList = Vue.component('virtual-list', {
     getRenderSlots (h) {
       const slots = []
       const { start, end } = this.range
-      const { dataSources, dataKey, itemClass, itemTag, isHorizontal, extraProps, dataComponent } = this
+      const { dataSources, dataKey, itemClass, itemTag, itemStyle, isHorizontal, extraProps, dataComponent } = this
       for (let index = start; index <= end; index++) {
         const dataSource = dataSources[index]
         if (dataSource) {
@@ -237,6 +237,7 @@ const VirtualList = Vue.component('virtual-list', {
                 extraProps: extraProps,
                 component: dataComponent
               },
+              style: itemStyle,
               class: `${itemClass}${this.itemClassAdd ? ' ' + this.itemClassAdd(index) : ''}`
             }))
           } else {
@@ -255,8 +256,9 @@ const VirtualList = Vue.component('virtual-list', {
   render (h) {
     const { header, footer } = this.$slots
     const { padFront, padBehind } = this.range
-    const { rootTag, headerClass, headerTag, wrapTag, wrapClass, footerClass, footerTag, isHorizontal } = this
-    const padding = isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px`
+    const { isHorizontal, rootTag, wrapTag, wrapClass, wrapStyle, headerTag, headerClass, headerStyle, footerTag, footerClass, footerStyle } = this
+    const paddingStyle = { padding: isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px` }
+    const wrapperStyle = wrapStyle ? Object.assign(wrapStyle, paddingStyle) : paddingStyle
 
     return h(rootTag, {
       ref: 'root',
@@ -267,6 +269,7 @@ const VirtualList = Vue.component('virtual-list', {
       // header slot
       header ? h(Slot, {
         class: headerClass,
+        style: headerStyle,
         props: {
           tag: headerTag,
           event: EVENT_TYPE.SLOT,
@@ -280,14 +283,13 @@ const VirtualList = Vue.component('virtual-list', {
         attrs: {
           role: 'group'
         },
-        style: {
-          padding: padding
-        }
+        style: wrapperStyle
       }, this.getRenderSlots(h)),
 
       // footer slot
       footer ? h(Slot, {
         class: footerClass,
+        style: footerStyle,
         props: {
           tag: footerTag,
           event: EVENT_TYPE.SLOT,

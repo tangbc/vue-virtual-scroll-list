@@ -28,6 +28,26 @@ export const VirtualProps = {
     default: 50
   },
 
+  direction: {
+    type: String,
+    default: 'vertical' // the other value is horizontal
+  },
+  start: {
+    type: Number,
+    default: 0
+  },
+  offset: {
+    type: Number,
+    default: 0
+  },
+  topThreshold: {
+    type: Number,
+    default: 0
+  },
+  bottomThreshold: {
+    type: Number,
+    default: 0
+  },
   rootTag: {
     type: String,
     default: 'div'
@@ -40,25 +60,8 @@ export const VirtualProps = {
     type: String,
     default: ''
   },
-  direction: {
-    type: String,
-    default: 'vertical' // the other value is horizontal
-  },
-  topThreshold: {
-    type: Number,
-    default: 0
-  },
-  bottomThreshold: {
-    type: Number,
-    default: 0
-  },
-  start: {
-    type: Number,
-    default: 0
-  },
-  offset: {
-    type: Number,
-    default: 0
+  wrapStyle: {
+    type: Object
   },
   itemTag: {
     type: String,
@@ -71,6 +74,9 @@ export const VirtualProps = {
   itemClassAdd: {
     type: Function
   },
+  itemStyle: {
+    type: Object
+  },
   headerTag: {
     type: String,
     default: 'div'
@@ -79,6 +85,9 @@ export const VirtualProps = {
     type: String,
     default: ''
   },
+  headerStyle: {
+    type: Object
+  },
   footerTag: {
     type: String,
     default: 'div'
@@ -86,6 +95,9 @@ export const VirtualProps = {
   footerClass: {
     type: String,
     default: ''
+  },
+  footerStyle: {
+    type: Object
   }
 }
 
