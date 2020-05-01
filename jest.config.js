@@ -20,5 +20,5 @@ module.exports = {
     '.*\\.(vue)$': 'vue-jest',
     '^.+\\.js$': '<rootDir>/node_modules/babel-jest'
   },
-  testRegex: 'base.test.js?$'
+  // testRegex: 'slot.test.js?$'
 }
