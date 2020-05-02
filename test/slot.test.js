@@ -30,11 +30,6 @@ describe('slot', () => {
         items: getDatas(1000),
         item: Item
       }
-    },
-    methods: {
-      addItemClass (index) {
-        return 'extra-item-' + index
-      }
     }
   })
 

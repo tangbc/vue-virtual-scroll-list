@@ -35,7 +35,7 @@ describe('base', () => {
   })
 
   it('check list build by default', () => {
-    const InstanceData = Instance.vm.$data
+    const vmData = Instance.vm.$data
     const vslVm = Instance.find('.my-list').vm
     const rootEl = vslVm.$el
     expect(rootEl.tagName.toLowerCase()).toBe(VirtualProps.rootTag.default)
@@ -61,7 +61,7 @@ describe('base', () => {
       const itemInnerEl = itemEl.firstElementChild
       expect(itemInnerEl.className).toBe('inner')
       expect(itemInnerEl.querySelector('.index').textContent).toBe(`${i}`)
-      expect(itemInnerEl.querySelector('.source').textContent).toBe(InstanceData.items[i].text)
+      expect(itemInnerEl.querySelector('.source').textContent).toBe(vmData.items[i].text)
     }
   })
 })
