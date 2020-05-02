@@ -94,8 +94,6 @@ export default {
           return
         }
 
-        this.setVirtualListToOffset(1)
-
         const sids = getSids(messages)
         this.messages = messages.concat(this.messages)
         this.$nextTick(() => {
