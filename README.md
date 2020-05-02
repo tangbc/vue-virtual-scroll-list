@@ -207,7 +207,7 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td><code>resized</code></td>
       <td>Event</td>
       <td></td>
-      <td>Emited when each item resized (mounted), param <code>(id, size)</code>.</td>
+      <td>Emited when item resized (mounted), param <code>(id, size)</code>.</td>
     </tr>
     <tr>
       <td><code>root-tag</code></td>
@@ -219,19 +219,25 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td><code>wrap-tag</code></td>
       <td>String</td>
       <td>div</td>
-      <td>List wrapper element tag name.</td>
-    </tr>
-    <tr>
-      <td><code>item-tag</code></td>
-      <td>String</td>
-      <td>div</td>
-      <td>Item wrapper element tag name.</td>
+      <td>List wrapper element <code>(role=group)</code> tag name.</td>
     </tr>
     <tr>
       <td><code>wrap-class</code></td>
       <td>String</td>
       <td></td>
       <td>List wrapper element class name.</td>
+    </tr>
+    <tr>
+      <td><code>wrap-style</code></td>
+      <td>Object</td>
+      <td>{}</td>
+      <td>List wrapper element inline style.</td>
+    </tr>
+    <tr>
+      <td><code>item-tag</code></td>
+      <td>String</td>
+      <td>div</td>
+      <td>Item wrapper element <code>(role=item)</code> tag name.</td>
     </tr>
     <tr>
       <td><code>item-class</code></td>
@@ -246,16 +252,16 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>A function that you can return extra class (String) to item wrapper element, param <code>(index)</code>.</td>
     </tr>
     <tr>
+      <td><code>item-style</code></td>
+      <td>Object</td>
+      <td>{}</td>
+      <td>Item wrapper element inline style.</td>
+    </tr>
+    <tr>
       <td><code>header-tag</code></td>
       <td>String</td>
       <td>div</td>
-      <td>For using header slot, header slot wrapper element tag name.</td>
-    </tr>
-    <tr>
-      <td><code>footer-tag</code></td>
-      <td>String</td>
-      <td>div</td>
-      <td>For using footer slot, footer slot wrapper element tag name.</td>
+      <td>For using header slot, header slot wrapper element <code>(role=header)</code> tag name.</td>
     </tr>
     <tr>
       <td><code>header-class</code></td>
@@ -264,10 +270,28 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>For using header slot, header slot wrapper element class name.</td>
     </tr>
     <tr>
+      <td><code>header-style</code></td>
+      <td>Object</td>
+      <td>{}</td>
+      <td>For using header slot, header slot wrapper element inline style.</td>
+    </tr>
+    <tr>
+      <td><code>footer-tag</code></td>
+      <td>String</td>
+      <td>div</td>
+      <td>For using footer slot, footer slot wrapper element <code>(role=footer)</code> tag name.</td>
+    </tr>
+    <tr>
       <td><code>footer-class</code></td>
       <td>String</td>
       <td></td>
       <td>For using footer slot, footer slot wrapper element class name.</td>
+    </tr>
+    <tr>
+      <td><code>footer-style</code></td>
+      <td>Object</td>
+      <td>{}</td>
+      <td>For using using footer slot, footer slot wrapper element inline style.</td>
     </tr>
     <tr>
       <td><code>direction</code></td>
