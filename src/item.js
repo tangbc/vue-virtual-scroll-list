@@ -56,7 +56,9 @@ export const Item = Vue.component('virtual-list-item', {
     extraProps.index = index
 
     return h(tag, {
-      role: 'item'
+      attrs: {
+        role: 'item'
+      }
     }, [h(component, {
       props: extraProps
     })])
