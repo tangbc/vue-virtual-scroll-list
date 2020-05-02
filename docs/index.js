@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.5
+ * vue-virtual-scroll-list v2.1.6
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -386,6 +386,27 @@
       type: Number,
       "default": 50
     },
+    direction: {
+      type: String,
+      "default": 'vertical' // the other value is horizontal
+
+    },
+    start: {
+      type: Number,
+      "default": 0
+    },
+    offset: {
+      type: Number,
+      "default": 0
+    },
+    topThreshold: {
+      type: Number,
+      "default": 0
+    },
+    bottomThreshold: {
+      type: Number,
+      "default": 0
+    },
     rootTag: {
       type: String,
       "default": 'div'
@@ -398,26 +419,8 @@
       type: String,
       "default": ''
     },
-    direction: {
-      type: String,
-      "default": 'vertical' // the other value is horizontal
-
-    },
-    topThreshold: {
-      type: Number,
-      "default": 0
-    },
-    bottomThreshold: {
-      type: Number,
-      "default": 0
-    },
-    start: {
-      type: Number,
-      "default": 0
-    },
-    offset: {
-      type: Number,
-      "default": 0
+    wrapStyle: {
+      type: Object
     },
     itemTag: {
       type: String,
@@ -430,6 +433,9 @@
     itemClassAdd: {
       type: Function
     },
+    itemStyle: {
+      type: Object
+    },
     headerTag: {
       type: String,
       "default": 'div'
@@ -438,6 +444,9 @@
       type: String,
       "default": ''
     },
+    headerStyle: {
+      type: Object
+    },
     footerTag: {
       type: String,
       "default": 'div'
@@ -445,6 +454,9 @@
     footerClass: {
       type: String,
       "default": ''
+    },
+    footerStyle: {
+      type: Object
     }
   };
   var ItemProps = {
@@ -539,7 +551,9 @@
       extraProps.source = this.source;
       extraProps.index = index;
       return h(tag, {
-        role: 'item'
+        attrs: {
+          role: 'item'
+        }
       }, [h(component, {
         props: extraProps
       })]);
@@ -760,6 +774,7 @@
             dataKey = this.dataKey,
             itemClass = this.itemClass,
             itemTag = this.itemTag,
+            itemStyle = this.itemStyle,
             isHorizontal = this.isHorizontal,
             extraProps = this.extraProps,
             dataComponent = this.dataComponent;
@@ -780,7 +795,8 @@
                   extraProps: extraProps,
                   component: dataComponent
                 },
-                "class": "".concat(itemClass, " ").concat(this.itemClassAdd ? this.itemClassAdd(index) : '')
+                style: itemStyle,
+                "class": "".concat(itemClass).concat(this.itemClassAdd ? ' ' + this.itemClassAdd(index) : '')
               }));
             } else {
               console.warn("Cannot get the data-key '".concat(dataKey, "' from data-sources."));
@@ -802,15 +818,21 @@
       var _this$range2 = this.range,
           padFront = _this$range2.padFront,
           padBehind = _this$range2.padBehind;
-      var rootTag = this.rootTag,
-          headerClass = this.headerClass,
-          headerTag = this.headerTag,
+      var isHorizontal = this.isHorizontal,
+          rootTag = this.rootTag,
           wrapTag = this.wrapTag,
           wrapClass = this.wrapClass,
-          footerClass = this.footerClass,
+          wrapStyle = this.wrapStyle,
+          headerTag = this.headerTag,
+          headerClass = this.headerClass,
+          headerStyle = this.headerStyle,
           footerTag = this.footerTag,
-          isHorizontal = this.isHorizontal;
-      var padding = isHorizontal ? "0px ".concat(padBehind, "px 0px ").concat(padFront, "px") : "".concat(padFront, "px 0px ").concat(padBehind, "px");
+          footerClass = this.footerClass,
+          footerStyle = this.footerStyle;
+      var paddingStyle = {
+        padding: isHorizontal ? "0px ".concat(padBehind, "px 0px ").concat(padFront, "px") : "".concat(padFront, "px 0px ").concat(padBehind, "px")
+      };
+      var wrapperStyle = wrapStyle ? Object.assign({}, wrapStyle, paddingStyle) : paddingStyle;
       return h(rootTag, {
         ref: 'root',
         on: {
@@ -819,6 +841,7 @@
       }, [// header slot
       header ? h(Slot, {
         "class": headerClass,
+        style: headerStyle,
         props: {
           tag: headerTag,
           event: EVENT_TYPE.SLOT,
@@ -830,12 +853,11 @@
         attrs: {
           role: 'group'
         },
-        style: {
-          padding: padding
-        }
+        style: wrapperStyle
       }, this.getRenderSlots(h)), // footer slot
       footer ? h(Slot, {
         "class": footerClass,
+        style: footerStyle,
         props: {
           tag: footerTag,
           event: EVENT_TYPE.SLOT,
