@@ -63,15 +63,14 @@ export default {
   methods: {
     onKeydown (e) {
       if (e.keyCode === 13) {
+        this.checkDisable()
         this.eventSend()
         e.preventDefault()
       }
     },
 
     onInput () {
-      if (this.$refs.rich) {
-        this.disabledSend = !(this.$refs.rich.textContent || '').trim('')
-      }
+      this.checkDisable()
     },
 
     onPaste (e) {
@@ -80,11 +79,18 @@ export default {
       document.execCommand('insertText', false, plainText)
     },
 
+    checkDisable () {
+      if (this.$refs.rich) {
+        this.disabledSend = !(this.$refs.rich.textContent || '').trim('')
+      }
+    },
+
     eventSend () {
       if (this.$refs.rich && !this.disabledSend) {
         const content = (this.$refs.rich.textContent || '').trim()
         const message = genMessage(content)
         this.$refs.rich.innerHTML = ''
+        this.checkDisable()
         this.$emit('send', message)
       }
     },
