@@ -67,6 +67,19 @@ const VirtualList = Vue.component('virtual-list', {
     } else if (this.offset) {
       this.scrollToOffset(this.offset)
     }
+
+    // in page mode we bind scroll event to document
+    if (this.pageMode) {
+      document.addEventListener('scroll', this.onScroll, {
+        passive: false
+      })
+
+      // taking root offsetTop or offsetLeft as slot header size
+      const { root } = this.$refs
+      if (root) {
+        this.virtual.updateParam('slotHeaderSize', root[this.isHorizontal ? 'offsetLeft' : 'offsetTop'])
+      }
+    }
   },
 
   beforeDestroy () {
@@ -86,27 +99,45 @@ const VirtualList = Vue.component('virtual-list', {
 
     // return current scroll offset
     getOffset () {
-      const { root } = this.$refs
-      return root ? Math.ceil(root[this.directionKey]) : 0
+      if (this.pageMode) {
+        return document.documentElement[this.directionKey]
+      } else {
+        const { root } = this.$refs
+        return root ? Math.ceil(root[this.directionKey]) : 0
+      }
     },
 
     // return client viewport size
     getClientSize () {
-      const { root } = this.$refs
-      return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0
+      const key = this.isHorizontal ? 'clientWidth' : 'clientHeight'
+      if (this.pageMode) {
+        return document.documentElement[key]
+      } else {
+        const { root } = this.$refs
+        return root ? root[key] : 0
+      }
     },
 
     // return all scroll size
     getScrollSize () {
-      const { root } = this.$refs
-      return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0
+      const key = this.isHorizontal ? 'scrollWidth' : 'scrollHeight'
+      if (this.pageMode) {
+        return document.documentElement[key]
+      } else {
+        const { root } = this.$refs
+        return root ? root[key] : 0
+      }
     },
 
     // set current scroll position to a expectant offset
     scrollToOffset (offset) {
-      const { root } = this.$refs
-      if (root) {
-        root[this.directionKey] = offset || 0
+      if (this.pageMode) {
+        document.documentElement[this.directionKey] = offset
+      } else {
+        const { root } = this.$refs
+        if (root) {
+          root[this.directionKey] = offset
+        }
       }
     },
 
@@ -256,14 +287,14 @@ const VirtualList = Vue.component('virtual-list', {
   render (h) {
     const { header, footer } = this.$slots
     const { padFront, padBehind } = this.range
-    const { isHorizontal, rootTag, wrapTag, wrapClass, wrapStyle, headerTag, headerClass, headerStyle, footerTag, footerClass, footerStyle } = this
+    const { isHorizontal, pageMode, rootTag, wrapTag, wrapClass, wrapStyle, headerTag, headerClass, headerStyle, footerTag, footerClass, footerStyle } = this
     const paddingStyle = { padding: isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px` }
     const wrapperStyle = wrapStyle ? Object.assign({}, wrapStyle, paddingStyle) : paddingStyle
 
     return h(rootTag, {
       ref: 'root',
       on: {
-        '&scroll': this.onScroll
+        '&scroll': !pageMode && this.onScroll
       }
     }, [
       // header slot

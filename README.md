@@ -38,7 +38,7 @@
 
 * Big data list with high render performance and efficient.
 
-* You don't have to care about each item size, it will calculate automatic.
+* You don't have to care about item size, it will calculate automatic.
 
 
 ## Live demo
@@ -210,6 +210,30 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Emited when item resized (mounted), param <code>(id, size)</code>.</td>
     </tr>
     <tr>
+      <td><code>direction</code></td>
+      <td>String</td>
+      <td>vertical</td>
+      <td>Scroll direction, available values are <code>vertical</code> and <code>horizontal</code></td>
+    </tr>
+    <tr>
+      <td><code>page-mode</code></td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>Let virtual list using global document to scroll through the list.</td>
+    </tr>
+    <tr>
+      <td><code>top-threshold</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>The threshold to emit <code>totop</code> event, attention to multiple calls.</td>
+    </tr>
+    <tr>
+      <td><code>bottom-threshold</code></td>
+      <td>Number</td>
+      <td>0</td>
+      <td>The threshold to emit <code>tobottom</code> event, attention to multiple calls.</td>
+    </tr>
+    <tr>
       <td><code>root-tag</code></td>
       <td>String</td>
       <td>div</td>
@@ -292,24 +316,6 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Object</td>
       <td>{}</td>
       <td>For using using footer slot, footer slot wrapper element inline style.</td>
-    </tr>
-    <tr>
-      <td><code>direction</code></td>
-      <td>String</td>
-      <td>vertical</td>
-      <td>Scroll direction, available values are <code>vertical</code> and <code>horizontal</code></td>
-    </tr>
-    <tr>
-      <td><code>top-threshold</code></td>
-      <td>Number</td>
-      <td>0</td>
-      <td>The threshold to emit <code>totop</code> event, attention to multiple calls.</td>
-    </tr>
-    <tr>
-      <td><code>bottom-threshold</code></td>
-      <td>Number</td>
-      <td>0</td>
-      <td>The threshold to emit <code>tobottom</code> event, attention to multiple calls.</td>
     </tr>
   </table>
 </details>

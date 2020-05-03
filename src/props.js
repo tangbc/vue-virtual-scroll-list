@@ -48,6 +48,10 @@ export const VirtualProps = {
     type: Number,
     default: 0
   },
+  pageMode: {
+    type: Boolean,
+    default: false
+  },
   rootTag: {
     type: String,
     default: 'div'
