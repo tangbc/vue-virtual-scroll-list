@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.6
+ * vue-virtual-scroll-list v2.1.7
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -113,7 +113,7 @@
     }, {
       key: "getOffset",
       value: function getOffset(start) {
-        return start < 1 ? 0 : this.getIndexOffset(start);
+        return (start < 1 ? 0 : this.getIndexOffset(start)) + this.param.slotHeaderSize;
       }
     }, {
       key: "updateParam",
@@ -407,6 +407,10 @@
       type: Number,
       "default": 0
     },
+    pageMode: {
+      type: Boolean,
+      "default": false
+    },
     rootTag: {
       type: String,
       "default": 'div'
@@ -626,6 +630,19 @@
         this.scrollToIndex(this.start);
       } else if (this.offset) {
         this.scrollToOffset(this.offset);
+      } // in page mode we bind scroll event to document
+
+
+      if (this.pageMode) {
+        document.addEventListener('scroll', this.onScroll, {
+          passive: false
+        }); // taking root offsetTop or offsetLeft as slot header size
+
+        var root = this.$refs.root;
+
+        if (root) {
+          this.virtual.updateParam('slotHeaderSize', root[this.isHorizontal ? 'offsetLeft' : 'offsetTop']);
+        }
       }
     },
     beforeDestroy: function beforeDestroy() {
@@ -642,25 +659,45 @@
       },
       // return current scroll offset
       getOffset: function getOffset() {
-        var root = this.$refs.root;
-        return root ? Math.ceil(root[this.directionKey]) : 0;
+        if (this.pageMode) {
+          return document.documentElement[this.directionKey];
+        } else {
+          var root = this.$refs.root;
+          return root ? Math.ceil(root[this.directionKey]) : 0;
+        }
       },
       // return client viewport size
       getClientSize: function getClientSize() {
-        var root = this.$refs.root;
-        return root ? root[this.isHorizontal ? 'clientWidth' : 'clientHeight'] : 0;
+        var key = this.isHorizontal ? 'clientWidth' : 'clientHeight';
+
+        if (this.pageMode) {
+          return document.documentElement[key];
+        } else {
+          var root = this.$refs.root;
+          return root ? root[key] : 0;
+        }
       },
       // return all scroll size
       getScrollSize: function getScrollSize() {
-        var root = this.$refs.root;
-        return root ? root[this.isHorizontal ? 'scrollWidth' : 'scrollHeight'] : 0;
+        var key = this.isHorizontal ? 'scrollWidth' : 'scrollHeight';
+
+        if (this.pageMode) {
+          return document.documentElement[key];
+        } else {
+          var root = this.$refs.root;
+          return root ? root[key] : 0;
+        }
       },
       // set current scroll position to a expectant offset
       scrollToOffset: function scrollToOffset(offset) {
-        var root = this.$refs.root;
+        if (this.pageMode) {
+          document.documentElement[this.directionKey] = offset;
+        } else {
+          var root = this.$refs.root;
 
-        if (root) {
-          root[this.directionKey] = offset || 0;
+          if (root) {
+            root[this.directionKey] = offset;
+          }
         }
       },
       // set current scroll position to a expectant index
@@ -819,6 +856,7 @@
           padFront = _this$range2.padFront,
           padBehind = _this$range2.padBehind;
       var isHorizontal = this.isHorizontal,
+          pageMode = this.pageMode,
           rootTag = this.rootTag,
           wrapTag = this.wrapTag,
           wrapClass = this.wrapClass,
@@ -836,7 +874,7 @@
       return h(rootTag, {
         ref: 'root',
         on: {
-          '&scroll': this.onScroll
+          '&scroll': !pageMode && this.onScroll
         }
       }, [// header slot
       header ? h(Slot, {
