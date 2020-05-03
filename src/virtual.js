@@ -70,7 +70,7 @@ export default class Virtual {
 
   // return start index offset
   getOffset (start) {
-    return start < 1 ? 0 : this.getIndexOffset(start) + this.param.slotHeaderSize
+    return (start < 1 ? 0 : this.getIndexOffset(start)) + this.param.slotHeaderSize
   }
 
   updateParam (key, value) {
