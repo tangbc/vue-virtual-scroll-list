@@ -39,6 +39,11 @@ const routes = [
     path: '/chat-room',
     name: 'chat-room',
     component: () => import(/* webpackChunkName: "chat-room" */ '../views/chat-room/Main.vue')
+  },
+  {
+    path: '/page-mode',
+    name: 'page-mode',
+    component: () => import(/* webpackChunkName: "page-mode" */ '../views/page-mode/Main.vue')
   }
 ]
 
