@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.7
+ * vue-virtual-scroll-list v2.1.8
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -118,7 +118,18 @@
     }, {
       key: "updateParam",
       value: function updateParam(key, value) {
+        var _this = this;
+
         if (this.param && key in this.param) {
+          // if uniqueIds reducing, find out deleted id and remove from size map
+          if (key === 'uniqueIds' && value.length < this.param[key].length) {
+            this.sizes.forEach(function (v, key) {
+              if (!value.includes(key)) {
+                _this.sizes["delete"](key);
+              }
+            });
+          }
+
           this.param[key] = value;
         }
       } // save each size map by id
