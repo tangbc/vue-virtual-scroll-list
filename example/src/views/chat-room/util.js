@@ -61,7 +61,7 @@ export function setLoadType (type) {
 
 export function getLoadType () {
   try {
-    return sessionStorage.getItem('LOAD_TYPES') || LOAD_TYPES.EMPTY
+    return sessionStorage.getItem('LOAD_TYPES') || LOAD_TYPES.PAGES
   } catch (e) {
     console.error(e)
     return LOAD_TYPES.EMPTY

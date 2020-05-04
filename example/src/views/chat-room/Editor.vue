@@ -109,6 +109,7 @@ export default {
 <style lang="less" scoped>
 .editor {
   position: relative;
+  font-size: 16px;
 }
 .rich {
   border: 2px solid;

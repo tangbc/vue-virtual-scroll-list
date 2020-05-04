@@ -1,10 +1,10 @@
 <template>
   <div class="toolbar">
-    <button @click="eventClickEmpty" class="button button-clear item">reload with empty</button>
+    <button @click="eventClickPages" class="button button-clear item">reload with pages</button>
     <span class="line">|</span>
     <button @click="eventClickFew" class="button button-clear item">reload with few</button>
     <span class="line">|</span>
-    <button @click="eventClickPages" class="button button-clear item">reload with pages</button>
+    <button @click="eventClickEmpty" class="button button-clear item">reload with empty</button>
   </div>
 </template>
 
