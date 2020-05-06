@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.8
+ * vue-virtual-scroll-list v2.1.9
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -151,12 +151,14 @@
         } // calculate the average size only in the first range
 
 
-        if (this.sizes.size <= this.param.keeps) {
-          this.firstRangeTotalSize = this.firstRangeTotalSize + size;
-          this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size);
-        } else {
-          // it's done using
-          delete this.firstRangeTotalSize;
+        if (this.calcType !== CALC_TYPE.FIXED && typeof this.firstRangeTotalSize !== 'undefined') {
+          if (this.sizes.size < Math.min(this.param.keeps, this.param.uniqueIds.length)) {
+            this.firstRangeTotalSize = this.firstRangeTotalSize + size;
+            this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size);
+          } else {
+            // it's done using
+            delete this.firstRangeTotalSize;
+          }
         }
       } // in some special situation (e.g. length change) we need to update in a row
       // try goiong to render next range by a leading buffer according to current direction
@@ -363,7 +365,7 @@
     }, {
       key: "getEstimateSize",
       value: function getEstimateSize() {
-        return this.firstRangeAverageSize || this.param.estimateSize;
+        return this.isFixedType() ? this.fixedSizeValue : this.firstRangeAverageSize || this.param.estimateSize;
       }
     }]);
 
