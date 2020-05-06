@@ -104,12 +104,14 @@ export default class Virtual {
     }
 
     // calculate the average size only in the first range
-    if (this.sizes.size <= this.param.keeps) {
-      this.firstRangeTotalSize = this.firstRangeTotalSize + size
-      this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size)
-    } else {
-      // it's done using
-      delete this.firstRangeTotalSize
+    if (this.calcType !== CALC_TYPE.FIXED && typeof this.firstRangeTotalSize !== 'undefined') {
+      if (this.sizes.size < Math.min(this.param.keeps, this.param.uniqueIds.length)) {
+        this.firstRangeTotalSize = this.firstRangeTotalSize + size
+        this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size)
+      } else {
+        // it's done using
+        delete this.firstRangeTotalSize
+      }
     }
   }
 
@@ -303,6 +305,6 @@ export default class Virtual {
 
   // get the item estimate size
   getEstimateSize () {
-    return this.firstRangeAverageSize || this.param.estimateSize
+    return this.isFixedType() ? this.fixedSizeValue : (this.firstRangeAverageSize || this.param.estimateSize)
   }
 }
