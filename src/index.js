@@ -70,20 +70,19 @@ const VirtualList = Vue.component('virtual-list', {
 
     // in page mode we bind scroll event to document
     if (this.pageMode) {
+      this.updatePageModeFront()
+
       document.addEventListener('scroll', this.onScroll, {
         passive: false
       })
-
-      // taking root offsetTop or offsetLeft as slot header size
-      const { root } = this.$refs
-      if (root) {
-        this.virtual.updateParam('slotHeaderSize', root[this.isHorizontal ? 'offsetLeft' : 'offsetTop'])
-      }
     }
   },
 
   beforeDestroy () {
     this.virtual.destroy()
+    if (this.pageMode) {
+      document.removeEventListener('scroll', this.onScroll)
+    }
   },
 
   methods: {
@@ -167,6 +166,18 @@ const VirtualList = Vue.component('virtual-list', {
             this.scrollToBottom()
           }
         }, 3)
+      }
+    },
+
+    // when using page mode we need update slot header size manually
+    // taking root offset relative to the browser as slot header size
+    updatePageModeFront () {
+      const { root } = this.$refs
+      if (root) {
+        const rect = root.getBoundingClientRect()
+        const { defaultView } = root.ownerDocument
+        const offsetFront = this.isHorizontal ? (rect.left + defaultView.pageXOffset) : (rect.top + defaultView.pageYOffset)
+        this.virtual.updateParam('slotHeaderSize', offsetFront)
       }
     },
 
