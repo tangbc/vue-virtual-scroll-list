@@ -1,6 +1,6 @@
 <template>
   <a v-if="!isMobile" :href="url" class="github-corner" aria-label="View source on GitHub">
-    GITHUB
+    github
   </a>
 </template>
 
@@ -27,8 +27,10 @@ export default {
 
 <style lang="less" scoped>
 .github-corner {
+  z-index: 3;
+  text-transform: capitalize;
   padding-left: 30px;
-  width: 100px;
+  width: 90px;
   height: 40px;
   line-height: 40px;
   position: fixed;

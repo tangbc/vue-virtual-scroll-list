@@ -72,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
   .line {
     margin: 0 1em;
     font-size: 14px;
-    color: darkgray;
+    color: pink;
     @media (max-width: 640px) {
       display: none;
     }
