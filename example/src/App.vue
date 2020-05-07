@@ -105,6 +105,7 @@ h1, h2, h3, h4, h5, h6 {
 .example-content {
   margin-top: 1em;
   background-color: #fff;
+  position: relative;
 }
 
 .scroll-touch {
