@@ -367,6 +367,10 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td><code>getScrollSize()</code></td>
       <td>Get all scroll size (scrollHeight or scrollWidth).</td>
     </tr>
+    <tr>
+      <td><code>updatePageModeFront()</code></td>
+      <td>When using page mode and virtual list root element offsetTop or offsetLeft change, you need call this method manually.</td>
+    </tr>
   </table>
 </details>
 
