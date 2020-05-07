@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.1.9
+ * vue-virtual-scroll-list v2.2.0
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -647,19 +647,18 @@
 
 
       if (this.pageMode) {
+        this.updatePageModeFront();
         document.addEventListener('scroll', this.onScroll, {
           passive: false
-        }); // taking root offsetTop or offsetLeft as slot header size
-
-        var root = this.$refs.root;
-
-        if (root) {
-          this.virtual.updateParam('slotHeaderSize', root[this.isHorizontal ? 'offsetLeft' : 'offsetTop']);
-        }
+        });
       }
     },
     beforeDestroy: function beforeDestroy() {
       this.virtual.destroy();
+
+      if (this.pageMode) {
+        document.removeEventListener('scroll', this.onScroll);
+      }
     },
     methods: {
       // get item size by id
@@ -740,6 +739,18 @@
               _this.scrollToBottom();
             }
           }, 3);
+        }
+      },
+      // when using page mode we need update slot header size manually
+      // taking root offset relative to the browser as slot header size
+      updatePageModeFront: function updatePageModeFront() {
+        var root = this.$refs.root;
+
+        if (root) {
+          var rect = root.getBoundingClientRect();
+          var defaultView = root.ownerDocument.defaultView;
+          var offsetFront = this.isHorizontal ? rect.left + defaultView.pageXOffset : rect.top + defaultView.pageYOffset;
+          this.virtual.updateParam('slotHeaderSize', offsetFront);
         }
       },
       // reset all state back to initial
