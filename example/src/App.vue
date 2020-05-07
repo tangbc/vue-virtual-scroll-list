@@ -50,6 +50,7 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 1em;
   white-space: nowrap;
   overflow-x: auto;
+  z-index: 2;
   @media (max-width: 640px) {
     padding: 0;
     position: relative;
@@ -106,6 +107,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 1em;
   background-color: #fff;
   position: relative;
+  z-index: 1;
 }
 
 .scroll-touch {
