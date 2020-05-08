@@ -210,7 +210,6 @@ export default class Virtual {
   // return a scroll offset from given index, can efficiency be improved more here?
   // although the call frequency is very high, its only a superposition of numbers
   getIndexOffset (givenIndex) {
-    // we know this.
     if (!givenIndex) {
       return 0
     }
@@ -220,7 +219,7 @@ export default class Virtual {
     for (let index = 0; index < givenIndex; index++) {
       // this.__getIndexOffsetCalls++
       indexSize = this.sizes.get(this.param.uniqueIds[index])
-      offset = offset + (indexSize || this.getEstimateSize())
+      offset = offset + (typeof indexSize === 'number' ? indexSize : this.getEstimateSize())
     }
 
     // remember last calculate index
