@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.0
+ * vue-virtual-scroll-list v2.2.1
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -263,7 +263,6 @@
     }, {
       key: "getIndexOffset",
       value: function getIndexOffset(givenIndex) {
-        // we know this.
         if (!givenIndex) {
           return 0;
         }
@@ -274,7 +273,7 @@
         for (var index = 0; index < givenIndex; index++) {
           // this.__getIndexOffsetCalls++
           indexSize = this.sizes.get(this.param.uniqueIds[index]);
-          offset = offset + (indexSize || this.getEstimateSize());
+          offset = offset + (typeof indexSize === 'number' ? indexSize : this.getEstimateSize());
         } // remember last calculate index
 
 
