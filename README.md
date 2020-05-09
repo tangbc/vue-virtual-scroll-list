@@ -65,7 +65,7 @@ Root component:
 ```vue
 <template>
   <div>
-    <virtual-list
+    <virtual-list style="height: 360px; overflow-y: auto;" // make list scrollable
       :data-key="'uid'"
       :data-sources="items"
       :data-component="itemComponent"
@@ -84,7 +84,7 @@ Root component:
       return {
         itemComponent: Item,
         items: [{uid: 'unique_1', text: 'abc'}, {uid: 'unique_2', text: 'xyz'}, ...],
-        otherDataAssginToItemComponet: 'The Progressive JavaScript Framework',
+        otherDataAssginToItemComponet: 'The Progressive JavaScript Framework'
       }
     },
     components: { 'virtual-list': VirtualList }
