@@ -69,7 +69,7 @@ Root component:
       :data-key="'uid'"
       :data-sources="items"
       :data-component="itemComponent"
-      :extra-props="{ otherPropValue: otherDataAssginToItemComponet }"
+      :extra-props="{ otherPropValue: otherDataAssginToItemComponent }"
     />
   </div>
 </template>
@@ -84,7 +84,7 @@ Root component:
       return {
         itemComponent: Item,
         items: [{uid: 'unique_1', text: 'abc'}, {uid: 'unique_2', text: 'xyz'}, ...],
-        otherDataAssginToItemComponet: 'The Progressive JavaScript Framework'
+        otherDataAssginToItemComponent: 'The Progressive JavaScript Framework'
       }
     },
     components: { 'virtual-list': VirtualList }
