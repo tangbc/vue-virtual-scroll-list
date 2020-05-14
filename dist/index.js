@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.1
+ * vue-virtual-scroll-list v2.2.2
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -376,7 +376,7 @@
    */
   var VirtualProps = {
     dataKey: {
-      type: String,
+      type: [String, Number],
       required: true
     },
     dataSources: {
@@ -495,7 +495,7 @@
       type: [Object, Function]
     },
     uniqueKey: {
-      type: String
+      type: [String, Number]
     },
     extraProps: {
       type: Object
