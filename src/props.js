@@ -104,7 +104,7 @@ export const VirtualProps = {
     type: Object
   },
   scopedSlots: {
-    type: Object,
+    type: Object
   }
 }
 
@@ -134,7 +134,7 @@ export const ItemProps = {
     type: Object
   },
   scopedSlots: {
-    type: Object,
+    type: Object
   }
 }
 

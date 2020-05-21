@@ -61,7 +61,7 @@ export const Item = Vue.component('virtual-list-item', {
       }
     }, [h(component, {
       props: extraProps,
-      scopedSlots
+      scopedSlots: scopedSlots
     })])
   }
 })
