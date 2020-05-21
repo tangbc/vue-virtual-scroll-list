@@ -263,7 +263,7 @@ const VirtualList = Vue.component('virtual-list', {
     getRenderSlots (h) {
       const slots = []
       const { start, end } = this.range
-      const { dataSources, dataKey, itemClass, itemTag, itemStyle, isHorizontal, extraProps, dataComponent } = this
+      const { dataSources, dataKey, itemClass, itemTag, itemStyle, isHorizontal, extraProps, dataComponent, scopedSlots } = this
       for (let index = start; index <= end; index++) {
         const dataSource = dataSources[index]
         if (dataSource) {
@@ -277,7 +277,8 @@ const VirtualList = Vue.component('virtual-list', {
                 uniqueKey: dataSource[dataKey],
                 source: dataSource,
                 extraProps: extraProps,
-                component: dataComponent
+                component: dataComponent,
+                scopedSlots: scopedSlots
               },
               style: itemStyle,
               class: `${itemClass}${this.itemClassAdd ? ' ' + this.itemClassAdd(index) : ''}`

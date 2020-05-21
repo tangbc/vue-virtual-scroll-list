@@ -102,6 +102,9 @@ export const VirtualProps = {
   },
   footerStyle: {
     type: Object
+  },
+  scopedSlots: {
+    type: Object,
   }
 }
 
@@ -129,6 +132,9 @@ export const ItemProps = {
   },
   extraProps: {
     type: Object
+  },
+  scopedSlots: {
+    type: Object,
   }
 }
 
