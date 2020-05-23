@@ -103,7 +103,7 @@ export const VirtualProps = {
   footerStyle: {
     type: Object
   },
-  scopedSlots: {
+  itemScopedSlots: {
     type: Object
   }
 }

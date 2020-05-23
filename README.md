@@ -318,10 +318,10 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>For using using footer slot, footer slot wrapper element inline style.</td>
     </tr>
     <tr>
-      <td><code>scoped-slots</code></td>
+      <td><code>item-scoped-slots</code></td>
       <td>Object</td>
       <td>{}</td>
-      <td>$scopedSlots for item component</td>
+      <td>The <code>$scopedSlots</code> for item component</td>
     </tr>
   </table>
 </details>
