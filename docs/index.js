@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.0
+ * vue-virtual-scroll-list v2.2.4
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -263,7 +263,6 @@
     }, {
       key: "getIndexOffset",
       value: function getIndexOffset(givenIndex) {
-        // we know this.
         if (!givenIndex) {
           return 0;
         }
@@ -274,7 +273,7 @@
         for (var index = 0; index < givenIndex; index++) {
           // this.__getIndexOffsetCalls++
           indexSize = this.sizes.get(this.param.uniqueIds[index]);
-          offset = offset + (indexSize || this.getEstimateSize());
+          offset = offset + (typeof indexSize === 'number' ? indexSize : this.getEstimateSize());
         } // remember last calculate index
 
 
@@ -474,6 +473,9 @@
     },
     footerStyle: {
       type: Object
+    },
+    itemScopedSlots: {
+      type: Object
     }
   };
   var ItemProps = {
@@ -496,9 +498,12 @@
       type: [Object, Function]
     },
     uniqueKey: {
-      type: String
+      type: [String, Number]
     },
     extraProps: {
+      type: Object
+    },
+    scopedSlots: {
       type: Object
     }
   };
@@ -564,7 +569,9 @@
           component = this.component,
           _this$extraProps = this.extraProps,
           extraProps = _this$extraProps === void 0 ? {} : _this$extraProps,
-          index = this.index;
+          index = this.index,
+          _this$scopedSlots = this.scopedSlots,
+          scopedSlots = _this$scopedSlots === void 0 ? {} : _this$scopedSlots;
       extraProps.source = this.source;
       extraProps.index = index;
       return h(tag, {
@@ -572,7 +579,8 @@
           role: 'item'
         }
       }, [h(component, {
-        props: extraProps
+        props: extraProps,
+        scopedSlots: scopedSlots
       })]);
     }
   }); // wrapping for slot
@@ -838,7 +846,8 @@
             itemStyle = this.itemStyle,
             isHorizontal = this.isHorizontal,
             extraProps = this.extraProps,
-            dataComponent = this.dataComponent;
+            dataComponent = this.dataComponent,
+            itemScopedSlots = this.itemScopedSlots;
 
         for (var index = start; index <= end; index++) {
           var dataSource = dataSources[index];
@@ -846,6 +855,7 @@
           if (dataSource) {
             if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
               slots.push(h(Item, {
+                key: dataSource[dataKey],
                 props: {
                   index: index,
                   tag: itemTag,
@@ -854,7 +864,8 @@
                   uniqueKey: dataSource[dataKey],
                   source: dataSource,
                   extraProps: extraProps,
-                  component: dataComponent
+                  component: dataComponent,
+                  scopedSlots: itemScopedSlots
                 },
                 style: itemStyle,
                 "class": "".concat(itemClass).concat(this.itemClassAdd ? ' ' + this.itemClassAdd(index) : '')
