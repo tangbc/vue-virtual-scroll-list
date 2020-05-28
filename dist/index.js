@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.4
+ * vue-virtual-scroll-list v2.2.5
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -855,7 +855,7 @@
           if (dataSource) {
             if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
               slots.push(h(Item, {
-                key: dataSource[dataKey],
+                // key: dataSource[dataKey],
                 props: {
                   index: index,
                   tag: itemTag,
