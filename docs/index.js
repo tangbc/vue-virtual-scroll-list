@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.5
+ * vue-virtual-scroll-list v2.2.6
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -571,10 +571,12 @@
           extraProps = _this$extraProps === void 0 ? {} : _this$extraProps,
           index = this.index,
           _this$scopedSlots = this.scopedSlots,
-          scopedSlots = _this$scopedSlots === void 0 ? {} : _this$scopedSlots;
+          scopedSlots = _this$scopedSlots === void 0 ? {} : _this$scopedSlots,
+          uniqueKey = this.uniqueKey;
       extraProps.source = this.source;
       extraProps.index = index;
       return h(tag, {
+        key: uniqueKey,
         attrs: {
           role: 'item'
         }
@@ -592,6 +594,7 @@
       var tag = this.tag,
           uniqueKey = this.uniqueKey;
       return h(tag, {
+        key: uniqueKey,
         attrs: {
           role: uniqueKey
         }
