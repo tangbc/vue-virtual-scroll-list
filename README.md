@@ -69,7 +69,6 @@ Root component:
       :data-key="'uid'"
       :data-sources="items"
       :data-component="itemComponent"
-      :extra-props="{ otherPropValue: otherDataAssginToItemComponent }"
     />
   </div>
 </template>
@@ -83,8 +82,7 @@ Root component:
     data () {
       return {
         itemComponent: Item,
-        items: [{uid: 'unique_1', text: 'abc'}, {uid: 'unique_2', text: 'xyz'}, ...],
-        otherDataAssginToItemComponent: 'The Progressive JavaScript Framework'
+        items: [{uid: 'unique_1', text: 'abc'}, {uid: 'unique_2', text: 'xyz'}, ...]
       }
     },
     components: { 'virtual-list': VirtualList }
@@ -95,7 +93,7 @@ Root component:
 Item component:
 ```vue
 <template>
-  <div>{{ index }} - {{ source.text }} - {{ otherPropValue }}</div>
+  <div>{{ index }} - {{ source.text }}</div>
 </template>
 
 <script>
@@ -110,8 +108,7 @@ Item component:
         default () {
           return {}
         }
-      },
-      otherPropValue: String // here is: 'The Progressive JavaScript Framework'
+      }
     }
   }
 </script>
