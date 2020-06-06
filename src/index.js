@@ -279,7 +279,7 @@ const VirtualList = Vue.component('virtual-list', {
 
         if (dataSource) {
           if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
-            let itemProps = {
+            const itemProps = {
               index,
               tag: itemTag,
               event: EVENT_TYPE.ITEM,
