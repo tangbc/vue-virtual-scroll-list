@@ -923,7 +923,8 @@
           var prevDataSource = void 0;
 
           if (enablePrevSource) {
-            prevDataSource = dataSources[index + 1] || null;
+            console.log(dataSources[index - 1]);
+            prevDataSource = dataSources[index - 1] || null;
           }
 
           if (dataSource) {

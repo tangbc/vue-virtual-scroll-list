@@ -269,12 +269,12 @@ const VirtualList = Vue.component('virtual-list', {
 
         let nextDataSource
         if (enableNextSource) {
-          nextDataSource = dataSources[index + 1] || null
+          nextDataSource = dataSources[index + 1] !== undefined ? dataSources[index + 1] : null
         }
 
         let prevDataSource
         if (enablePrevSource) {
-          prevDataSource = dataSources[index + 1] || null
+          prevDataSource = dataSources[index - 1] !== undefined ? dataSources[index - 1] : null
         }
 
         if (dataSource) {
@@ -292,21 +292,11 @@ const VirtualList = Vue.component('virtual-list', {
             }
 
             if (prevDataSource) {
-              itemProps = {
-                ...itemProps,
-                ...{
-                  prevDataSource: prevDataSource
-                }
-              }
+              itemProps.prevDataSource = prevDataSource
             }
 
             if (nextDataSource) {
-              itemProps = {
-                ...itemProps,
-                ...{
-                  nextDataSource: nextDataSource
-                }
-              }
+              itemProps.nextDataSource = nextDataSource
             }
 
             slots.push(h(Item, {
