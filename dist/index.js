@@ -895,11 +895,11 @@
               };
 
               if (prevDataSource) {
-                itemProps.prevDataSource = prevDataSource;
+                itemProps.previousSource = prevDataSource;
               }
 
               if (nextDataSource) {
-                itemProps.nextDataSource = nextDataSource;
+                itemProps.nextSource = nextDataSource;
               }
 
               slots.push(h(Item, {
