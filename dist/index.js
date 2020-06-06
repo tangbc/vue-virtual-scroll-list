@@ -34,6 +34,55 @@
     return Constructor;
   }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
   /**
    * virtual list core calculating center
    */
@@ -476,6 +525,12 @@
     },
     itemScopedSlots: {
       type: Object
+    },
+    enableNextSource: {
+      type: Boolean
+    },
+    enablePreviousSource: {
+      type: Boolean
     }
   };
   var ItemProps = {
@@ -492,6 +547,12 @@
       type: Boolean
     },
     source: {
+      type: Object
+    },
+    previousSource: {
+      type: Object
+    },
+    nextSource: {
       type: Object
     },
     component: {
@@ -602,9 +663,6 @@
     }
   });
 
-  /**
-   * virtual list default component
-   */
   var EVENT_TYPE = {
     ITEM: 'item_resize',
     SLOT: 'slot_resize'
@@ -850,26 +908,53 @@
             isHorizontal = this.isHorizontal,
             extraProps = this.extraProps,
             dataComponent = this.dataComponent,
-            itemScopedSlots = this.itemScopedSlots;
+            itemScopedSlots = this.itemScopedSlots,
+            enableNextSource = this.enableNextSource,
+            enablePrevSource = this.enablePrevSource;
 
         for (var index = start; index <= end; index++) {
           var dataSource = dataSources[index];
+          var nextDataSource = void 0;
+
+          if (enableNextSource) {
+            nextDataSource = dataSources[index + 1] || null;
+          }
+
+          var prevDataSource = void 0;
+
+          if (enablePrevSource) {
+            prevDataSource = dataSources[index + 1] || null;
+          }
 
           if (dataSource) {
             if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
+              var itemProps = {
+                index: index,
+                tag: itemTag,
+                event: EVENT_TYPE.ITEM,
+                horizontal: isHorizontal,
+                uniqueKey: dataSource[dataKey],
+                source: dataSource,
+                extraProps: extraProps,
+                component: dataComponent,
+                scopedSlots: itemScopedSlots
+              };
+
+              if (prevDataSource) {
+                itemProps = _objectSpread2({}, itemProps, {}, {
+                  prevDataSource: prevDataSource
+                });
+              }
+
+              if (nextDataSource) {
+                itemProps = _objectSpread2({}, itemProps, {}, {
+                  nextDataSource: nextDataSource
+                });
+              }
+
               slots.push(h(Item, {
                 // key: dataSource[dataKey],
-                props: {
-                  index: index,
-                  tag: itemTag,
-                  event: EVENT_TYPE.ITEM,
-                  horizontal: isHorizontal,
-                  uniqueKey: dataSource[dataKey],
-                  source: dataSource,
-                  extraProps: extraProps,
-                  component: dataComponent,
-                  scopedSlots: itemScopedSlots
-                },
+                props: itemProps,
                 style: itemStyle,
                 "class": "".concat(itemClass).concat(this.itemClassAdd ? ' ' + this.itemClassAdd(index) : '')
               }));

@@ -105,6 +105,12 @@ export const VirtualProps = {
   },
   itemScopedSlots: {
     type: Object
+  },
+  enableNextSource: {
+    type: Boolean
+  },
+  enablePreviousSource: {
+    type: Boolean
   }
 }
 
@@ -122,6 +128,12 @@ export const ItemProps = {
     type: Boolean
   },
   source: {
+    type: Object
+  },
+  previousSource: {
+    type: Object
+  },
+  nextSource: {
     type: Object
   },
   component: {

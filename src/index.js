@@ -263,24 +263,55 @@ const VirtualList = Vue.component('virtual-list', {
     getRenderSlots (h) {
       const slots = []
       const { start, end } = this.range
-      const { dataSources, dataKey, itemClass, itemTag, itemStyle, isHorizontal, extraProps, dataComponent, itemScopedSlots } = this
+      const { dataSources, dataKey, itemClass, itemTag, itemStyle, isHorizontal, extraProps, dataComponent, itemScopedSlots, enableNextSource, enablePrevSource } = this
       for (let index = start; index <= end; index++) {
         const dataSource = dataSources[index]
+
+        let nextDataSource
+        if (enableNextSource) {
+          nextDataSource = dataSources[index + 1] || null
+        }
+
+        let prevDataSource
+        if (enablePrevSource) {
+          prevDataSource = dataSources[index + 1] || null
+        }
+
         if (dataSource) {
           if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
+            let itemProps = {
+              index,
+              tag: itemTag,
+              event: EVENT_TYPE.ITEM,
+              horizontal: isHorizontal,
+              uniqueKey: dataSource[dataKey],
+              source: dataSource,
+              extraProps: extraProps,
+              component: dataComponent,
+              scopedSlots: itemScopedSlots
+            }
+
+            if (prevDataSource) {
+              itemProps = {
+                ...itemProps,
+                ...{
+                  prevDataSource: prevDataSource
+                }
+              }
+            }
+
+            if (nextDataSource) {
+              itemProps = {
+                ...itemProps,
+                ...{
+                  nextDataSource: nextDataSource
+                }
+              }
+            }
+
             slots.push(h(Item, {
               // key: dataSource[dataKey],
-              props: {
-                index,
-                tag: itemTag,
-                event: EVENT_TYPE.ITEM,
-                horizontal: isHorizontal,
-                uniqueKey: dataSource[dataKey],
-                source: dataSource,
-                extraProps: extraProps,
-                component: dataComponent,
-                scopedSlots: itemScopedSlots
-              },
+              props: itemProps,
               style: itemStyle,
               class: `${itemClass}${this.itemClassAdd ? ' ' + this.itemClassAdd(index) : ''}`
             }))
