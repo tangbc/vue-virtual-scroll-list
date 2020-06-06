@@ -864,7 +864,7 @@
             dataComponent = this.dataComponent,
             itemScopedSlots = this.itemScopedSlots,
             enableNextSource = this.enableNextSource,
-            enablePrevSource = this.enablePrevSource;
+            enablePreviousSource = this.enablePreviousSource;
 
         for (var index = start; index <= end; index++) {
           var dataSource = dataSources[index];
@@ -876,7 +876,7 @@
 
           var prevDataSource = void 0;
 
-          if (enablePrevSource) {
+          if (enablePreviousSource) {
             prevDataSource = dataSources[index - 1] !== undefined ? dataSources[index - 1] : null;
           }
 
