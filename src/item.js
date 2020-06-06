@@ -54,6 +54,8 @@ export const Item = Vue.component('virtual-list-item', {
     const { tag, component, extraProps = {}, index, scopedSlots = {}, uniqueKey } = this
     extraProps.source = this.source
     extraProps.index = index
+    extraProps.nextSource = this.nextSource
+    extraProps.previousSource = this.previousSource
 
     return h(tag, {
       key: uniqueKey,
