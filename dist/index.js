@@ -587,6 +587,8 @@
           uniqueKey = this.uniqueKey;
       extraProps.source = this.source;
       extraProps.index = index;
+      extraProps.nextSource = this.nextSource;
+      extraProps.previousSource = this.previousSource;
       return h(tag, {
         key: uniqueKey,
         attrs: {
