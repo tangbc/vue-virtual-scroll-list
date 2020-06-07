@@ -205,7 +205,9 @@ const VirtualList = Vue.component('virtual-list', {
     },
 
     getUniqueIdFromDataSources () {
-      return this.dataSources.map((dataSource) => dataSource[this.dataKey])
+      return this.dataSources.map((dataSource) => {
+        return typeof this.dataKey === 'function' ? this.dataKey(dataSource) : dataSource[this.dataKey]
+      })
     },
 
     // event called when each item mounted or size changed
@@ -267,7 +269,8 @@ const VirtualList = Vue.component('virtual-list', {
       for (let index = start; index <= end; index++) {
         const dataSource = dataSources[index]
         if (dataSource) {
-          if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
+          const uniqueKey = typeof dataKey === 'function' ? dataKey(dataSource) : dataSource[dataKey]
+          if (uniqueKey) {
             slots.push(h(Item, {
               // key: dataSource[dataKey],
               props: {
@@ -275,7 +278,7 @@ const VirtualList = Vue.component('virtual-list', {
                 tag: itemTag,
                 event: EVENT_TYPE.ITEM,
                 horizontal: isHorizontal,
-                uniqueKey: dataSource[dataKey],
+                uniqueKey: uniqueKey,
                 source: dataSource,
                 extraProps: extraProps,
                 component: dataComponent,

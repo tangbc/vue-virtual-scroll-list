@@ -4,7 +4,7 @@
 
 export const VirtualProps = {
   dataKey: {
-    type: String,
+    type: [String, Function],
     required: true
   },
   dataSources: {
