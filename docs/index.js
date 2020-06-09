@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.6
+ * vue-virtual-scroll-list v2.2.7
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -376,7 +376,7 @@
    */
   var VirtualProps = {
     dataKey: {
-      type: String,
+      type: [String, Function],
       required: true
     },
     dataSources: {
@@ -785,10 +785,9 @@
         this.range = this.virtual.getRange();
       },
       getUniqueIdFromDataSources: function getUniqueIdFromDataSources() {
-        var _this2 = this;
-
+        var dataKey = this.dataKey;
         return this.dataSources.map(function (dataSource) {
-          return dataSource[_this2.dataKey];
+          return typeof dataKey === 'function' ? dataKey(dataSource) : dataSource[dataKey];
         });
       },
       // event called when each item mounted or size changed
@@ -856,15 +855,16 @@
           var dataSource = dataSources[index];
 
           if (dataSource) {
-            if (Object.prototype.hasOwnProperty.call(dataSource, dataKey)) {
+            var uniqueKey = typeof dataKey === 'function' ? dataKey(dataSource) : dataSource[dataKey];
+
+            if (typeof uniqueKey === 'string' || typeof uniqueKey === 'number') {
               slots.push(h(Item, {
-                // key: dataSource[dataKey],
                 props: {
                   index: index,
                   tag: itemTag,
                   event: EVENT_TYPE.ITEM,
                   horizontal: isHorizontal,
-                  uniqueKey: dataSource[dataKey],
+                  uniqueKey: uniqueKey,
                   source: dataSource,
                   extraProps: extraProps,
                   component: dataComponent,
