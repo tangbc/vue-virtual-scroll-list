@@ -75,8 +75,8 @@ export default class Virtual {
 
   updateParam (key, value) {
     if (this.param && (key in this.param)) {
-      // if uniqueIds reducing, find out deleted id and remove from size map
-      if (key === 'uniqueIds' && (value.length < this.param[key].length)) {
+      // if uniqueIds change, find out deleted id and remove from size map
+      if (key === 'uniqueIds') {
         this.sizes.forEach((v, key) => {
           if (!value.includes(key)) {
             this.sizes.delete(key)
