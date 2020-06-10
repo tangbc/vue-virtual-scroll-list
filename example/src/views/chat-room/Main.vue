@@ -60,7 +60,6 @@ export default {
 
   created () {
     const loadType = getLoadType()
-    console.log('loadType: ', loadType)
 
     this.param = {
       pageSize: loadType === LOAD_TYPES.FEW ? 2 : 10,
