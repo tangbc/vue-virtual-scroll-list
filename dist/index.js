@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.7
+ * vue-virtual-scroll-list v2.2.8
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -683,7 +683,7 @@
       // return current scroll offset
       getOffset: function getOffset() {
         if (this.pageMode) {
-          return document.documentElement[this.directionKey];
+          return document.documentElement[this.directionKey] || document.body[this.directionKey];
         } else {
           var root = this.$refs.root;
           return root ? Math.ceil(root[this.directionKey]) : 0;
@@ -694,10 +694,10 @@
         var key = this.isHorizontal ? 'clientWidth' : 'clientHeight';
 
         if (this.pageMode) {
-          return document.documentElement[key];
+          return document.documentElement[key] || document.body[key];
         } else {
           var root = this.$refs.root;
-          return root ? root[key] : 0;
+          return root ? Math.ceil(root[key]) : 0;
         }
       },
       // return all scroll size
@@ -705,15 +705,16 @@
         var key = this.isHorizontal ? 'scrollWidth' : 'scrollHeight';
 
         if (this.pageMode) {
-          return document.documentElement[key];
+          return document.documentElement[key] || document.body[key];
         } else {
           var root = this.$refs.root;
-          return root ? root[key] : 0;
+          return root ? Math.ceil(root[key]) : 0;
         }
       },
       // set current scroll position to a expectant offset
       scrollToOffset: function scrollToOffset(offset) {
         if (this.pageMode) {
+          document.body[this.directionKey] = offset;
           document.documentElement[this.directionKey] = offset;
         } else {
           var root = this.$refs.root;
