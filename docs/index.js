@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.8
+ * vue-virtual-scroll-list v2.2.9
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -121,8 +121,8 @@
         var _this = this;
 
         if (this.param && key in this.param) {
-          // if uniqueIds reducing, find out deleted id and remove from size map
-          if (key === 'uniqueIds' && value.length < this.param[key].length) {
+          // if uniqueIds change, find out deleted id and remove from size map
+          if (key === 'uniqueIds') {
             this.sizes.forEach(function (v, key) {
               if (!value.includes(key)) {
                 _this.sizes["delete"](key);
@@ -817,7 +817,7 @@
         var clientSize = this.getClientSize();
         var scrollSize = this.getScrollSize(); // iOS scroll-spring-back behavior will make direction mistake
 
-        if (offset < 0 || offset + clientSize > scrollSize || !scrollSize) {
+        if (offset < 0 || offset + clientSize > scrollSize + 1 || !scrollSize) {
           return;
         }
 
