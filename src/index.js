@@ -113,7 +113,7 @@ const VirtualList = Vue.component('virtual-list', {
         return document.documentElement[key] || document.body[key]
       } else {
         const { root } = this.$refs
-        return root ? root[key] : 0
+        return root ? Math.ceil(root[key]) : 0
       }
     },
 
@@ -124,7 +124,7 @@ const VirtualList = Vue.component('virtual-list', {
         return document.documentElement[key] || document.body[key]
       } else {
         const { root } = this.$refs
-        return root ? root[key] : 0
+        return root ? Math.ceil(root[key]) : 0
       }
     },
 
