@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.2.9
+ * vue-virtual-scroll-list v2.3.0
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -578,7 +578,7 @@
       return h(tag, {
         key: uniqueKey,
         attrs: {
-          role: 'item'
+          role: 'listitem'
         }
       }, [h(component, {
         props: extraProps,
