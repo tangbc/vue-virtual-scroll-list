@@ -31,6 +31,11 @@ const VirtualList = Vue.component('virtual-list', {
       this.virtual.handleDataSourcesChange()
     },
 
+    keeps (newValue) {
+      this.virtual.updateParam('keeps', newValue);
+      this.virtual.handleSlotSizeChange();
+    },
+
     start (newValue) {
       this.scrollToIndex(newValue)
     },
