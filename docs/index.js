@@ -1,5 +1,5 @@
 /*!
- * vue-virtual-scroll-list v2.3.0
+ * vue-virtual-scroll-list v2.3.1
  * open source under the MIT license
  * https://github.com/tangbc/vue-virtual-scroll-list#readme
  */
@@ -202,7 +202,7 @@
       value: function handleFront() {
         var overs = this.getScrollOvers(); // should not change range if start doesn't exceed overs
 
-        if (overs > this.range.start) {
+        if (overs > this.range.start || !this.param) {
           return;
         } // move up start by a buffer length, and make sure its safety
 
@@ -625,6 +625,10 @@
       'dataSources.length': function dataSourcesLength() {
         this.virtual.updateParam('uniqueIds', this.getUniqueIdFromDataSources());
         this.virtual.handleDataSourcesChange();
+      },
+      keeps: function keeps(newValue) {
+        this.virtual.updateParam('keeps', newValue);
+        this.virtual.handleSlotSizeChange();
       },
       start: function start(newValue) {
         this.scrollToIndex(newValue);
