@@ -153,7 +153,7 @@ export default class Virtual {
   handleFront () {
     const overs = this.getScrollOvers()
     // should not change range if start doesn't exceed overs
-    if (overs > this.range.start) {
+    if (overs > this.range.start || !this.param) {
       return
     }
 
