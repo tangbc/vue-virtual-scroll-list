@@ -141,6 +141,10 @@ export default class Virtual {
     this.direction = offset < this.offset ? DIRECTION_TYPE.FRONT : DIRECTION_TYPE.BEHIND
     this.offset = offset
 
+    if (!this.param) {
+      return
+    }
+
     if (this.direction === DIRECTION_TYPE.FRONT) {
       this.handleFront()
     } else if (this.direction === DIRECTION_TYPE.BEHIND) {
@@ -153,7 +157,7 @@ export default class Virtual {
   handleFront () {
     const overs = this.getScrollOvers()
     // should not change range if start doesn't exceed overs
-    if (overs > this.range.start || !this.param) {
+    if (overs > this.range.start) {
       return
     }
 
