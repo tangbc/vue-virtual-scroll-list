@@ -106,7 +106,7 @@ export default class Virtual {
     // calculate the average size only in the first range
     if (this.calcType !== CALC_TYPE.FIXED && typeof this.firstRangeTotalSize !== 'undefined') {
       if (this.sizes.size < Math.min(this.param.keeps, this.param.uniqueIds.length)) {
-        this.firstRangeTotalSize = this.firstRangeTotalSize + size
+        this.firstRangeTotalSize = [...this.sizes.values()].reduce((acc, val) => acc + val, 0)
         this.firstRangeAverageSize = Math.round(this.firstRangeTotalSize / this.sizes.size)
       } else {
         // it's done using
