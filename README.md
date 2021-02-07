@@ -23,7 +23,6 @@
 
 * [Advantages](#advantages)
 * [Live demo](#live-demo)
-* [What's new in v2.0](#whats-new-in-v20)
 * [Simple usage](#simple-usage)
 * [**Props type**](#props-type)
   * [Required props](#required-props)
@@ -46,13 +45,6 @@
 https://tangbc.github.io/vue-virtual-scroll-list
 
 https://codesandbox.io/s/live-demo-virtual-list-e1ww1
-
-
-## What's new in v2.0
-
-Here are the major of update informations with [release v2.0](https://github.com/tangbc/vue-virtual-scroll-list/releases/tag/v2.0.0).
-
-Since the `v2.0` is **not compatible** with `v1.x`, please note before upgrading, `v1.x` documentation see [v1.x.md](https://github.com/tangbc/vue-virtual-scroll-list/blob/master/v1.x.md).
 
 
 ## Simple usage
