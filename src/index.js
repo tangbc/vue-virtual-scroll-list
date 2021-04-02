@@ -12,8 +12,8 @@ const EVENT_TYPE = {
   SLOT: 'slot_resize'
 }
 const SLOT_TYPE = {
-  HEADER: 'header', // string value also use for aria role attribute
-  FOOTER: 'footer'
+  HEADER: 'thead', // string value also use for aria role attribute
+  FOOTER: 'tfoot'
 }
 
 const VirtualList = Vue.component('virtual-list', {
