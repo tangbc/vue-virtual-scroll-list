@@ -51,9 +51,12 @@ export const Item = Vue.component('virtual-list-item', {
   props: ItemProps,
 
   render (h) {
-    const { tag, component, extraProps = {}, index, scopedSlots = {}, uniqueKey } = this
-    extraProps.source = this.source
-    extraProps.index = index
+    const { tag, component, extraProps = {}, index, source, scopedSlots = {}, uniqueKey } = this;
+    const props = {
+        ...extraProps,
+        source,
+        index,
+    };
 
     return h(tag, {
       key: uniqueKey,
@@ -61,7 +64,7 @@ export const Item = Vue.component('virtual-list-item', {
         role: 'listitem'
       }
     }, [h(component, {
-      props: extraProps,
+      props,
       scopedSlots: scopedSlots
     })])
   }
