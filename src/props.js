@@ -127,6 +127,9 @@ export const ItemProps = {
   component: {
     type: [Object, Function]
   },
+  slotComponent: {
+    type: Function
+  },
   uniqueKey: {
     type: [String, Number]
   },
