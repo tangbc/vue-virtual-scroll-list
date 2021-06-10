@@ -33,6 +33,7 @@ const VirtualList = Vue.component('virtual-list', {
 
     keeps (newValue) {
       this.virtual.updateParam('keeps', newValue)
+      this.virtual.updateParam('buffer', Math.round(newValue / 3))
       this.virtual.handleSlotSizeChange()
     },
 

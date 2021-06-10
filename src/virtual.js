@@ -116,7 +116,7 @@ export default class Virtual {
   }
 
   // in some special situation (e.g. length change) we need to update in a row
-  // try goiong to render next range by a leading buffer according to current direction
+  // try going to render next range by a leading buffer according to current direction
   handleDataSourcesChange () {
     let start = this.range.start
 

@@ -20,7 +20,7 @@ const Wrapper = {
     }
   },
 
-  // since componet will be reused, so disptach when updated
+  // since component will be reused, dispatch when updated
   updated () {
     this.dispatchSizeChange()
   },
