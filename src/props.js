@@ -27,6 +27,10 @@ export const VirtualProps = {
     type: Number,
     default: 50
   },
+  dataPerRow: {
+    type: Number,
+    default: 2
+  },
 
   direction: {
     type: String,

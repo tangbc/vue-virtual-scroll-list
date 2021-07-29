@@ -186,7 +186,7 @@ export default class Virtual {
 
     // if is fixed type, that can be easily
     if (this.isFixedType()) {
-      return Math.floor(offset / this.fixedSizeValue)
+      return Math.floor(offset / this.fixedSizeValue * this.param.dataPerRow)
     }
 
     let low = 0
@@ -230,7 +230,7 @@ export default class Virtual {
     this.lastCalcIndex = Math.max(this.lastCalcIndex, givenIndex - 1)
     this.lastCalcIndex = Math.min(this.lastCalcIndex, this.getLastIndex())
 
-    return offset
+    return offset / this.param.dataPerRow
   }
 
   // is fixed size type
@@ -282,7 +282,7 @@ export default class Virtual {
   // return total front offset
   getPadFront () {
     if (this.isFixedType()) {
-      return this.fixedSizeValue * this.range.start
+      return this.fixedSizeValue * this.range.start / this.param.dataPerRow
     } else {
       return this.getIndexOffset(this.range.start)
     }
@@ -294,7 +294,7 @@ export default class Virtual {
     const lastIndex = this.getLastIndex()
 
     if (this.isFixedType()) {
-      return (lastIndex - end) * this.fixedSizeValue
+      return (lastIndex - end) * this.fixedSizeValue / this.param.dataPerRow
     }
 
     // if it's all calculated, return the exactly offset
@@ -302,7 +302,7 @@ export default class Virtual {
       return this.getIndexOffset(lastIndex) - this.getIndexOffset(end)
     } else {
       // if not, use a estimated value
-      return (lastIndex - end) * this.getEstimateSize()
+      return (lastIndex - end) * this.getEstimateSize() / this.param.dataPerRow
     }
   }
 

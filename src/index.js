@@ -200,7 +200,8 @@ const VirtualList = Vue.component('virtual-list', {
       this.virtual = new Virtual({
         slotHeaderSize: 0,
         slotFooterSize: 0,
-        keeps: this.keeps,
+        keeps: this.keeps * this.dataPerRow,
+        dataPerRow: this.dataPerRow,
         estimateSize: this.estimateSize,
         buffer: Math.round(this.keeps / 3), // recommend for a third of keeps
         uniqueIds: this.getUniqueIdFromDataSources()
@@ -270,7 +271,8 @@ const VirtualList = Vue.component('virtual-list', {
     getRenderSlots (h) {
       const slots = []
       const { start, end } = this.range
-      const { dataSources, dataKey, itemClass, itemTag, itemStyle, isHorizontal, extraProps, dataComponent, itemScopedSlots } = this
+      const { dataSources, dataKey, itemClass, itemTag, itemStyle, isHorizontal, extraProps, dataComponent, itemScopedSlots, dataPerRow } = this
+      const itemCustomStyle = isHorizontal ? { 'writing-mode': 'horizontal-tb', height: `calc(100% / ${dataPerRow})` } : { width: `calc(100% / ${dataPerRow})` }
       for (let index = start; index <= end; index++) {
         const dataSource = dataSources[index]
         if (dataSource) {
@@ -288,7 +290,7 @@ const VirtualList = Vue.component('virtual-list', {
                 component: dataComponent,
                 scopedSlots: itemScopedSlots
               },
-              style: itemStyle,
+              style: Object.assign({}, itemStyle, itemCustomStyle),
               class: `${itemClass}${this.itemClassAdd ? ' ' + this.itemClassAdd(index) : ''}`
             }))
           } else {
@@ -309,7 +311,19 @@ const VirtualList = Vue.component('virtual-list', {
     const { padFront, padBehind } = this.range
     const { isHorizontal, pageMode, rootTag, wrapTag, wrapClass, wrapStyle, headerTag, headerClass, headerStyle, footerTag, footerClass, footerStyle } = this
     const paddingStyle = { padding: isHorizontal ? `0px ${padBehind}px 0px ${padFront}px` : `${padFront}px 0px ${padBehind}px` }
-    const wrapperStyle = wrapStyle ? Object.assign({}, wrapStyle, paddingStyle) : paddingStyle
+    const layoutStyle = isHorizontal ? {
+      display: 'flex',
+      'flex-direction': 'row',
+      'flex-wrap': 'wrap',
+      'writing-mode': 'vertical-lr',
+      height: '200px',
+      overflow: 'hidden'
+    } : {
+      display: 'flex',
+      'flex-direction': 'row',
+      'flex-wrap': 'wrap'
+    }
+    const wrapperStyle = wrapStyle ? Object.assign({}, wrapStyle, paddingStyle, layoutStyle) : Object.assign({}, paddingStyle, layoutStyle)
 
     return h(rootTag, {
       ref: 'root',
