@@ -11,7 +11,7 @@ const CALC_TYPE = {
   FIXED: 'FIXED',
   DYNAMIC: 'DYNAMIC'
 }
-const LEADING_BUFFER = 2
+const LEADING_BUFFER = 0
 
 export default class Virtual {
   constructor (param, callUpdate) {
