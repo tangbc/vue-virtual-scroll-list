@@ -51,12 +51,12 @@ export const Item = Vue.component('virtual-list-item', {
   props: ItemProps,
 
   render (h) {
-    const { tag, component, extraProps = {}, index, source, scopedSlots = {}, uniqueKey, slotComponent } = this;
+    const { tag, component, extraProps = {}, index, source, scopedSlots = {}, uniqueKey, slotComponent } = this
     const props = {
-        ...extraProps,
-        source,
-        index,
-    };
+      ...extraProps,
+      source,
+      index
+    }
 
     return h(tag, {
       key: uniqueKey,
