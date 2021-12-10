@@ -60,9 +60,21 @@ const VirtualList = Vue.component('virtual-list', {
     }
   },
 
-  // set back offset when awake from keep-alive
   activated () {
+    // set back offset when awake from keep-alive
     this.scrollToOffset(this.virtual.offset)
+    
+    if (this.pageMode) {
+      document.addEventListener('scroll', this.onScroll, {
+        passive: false,
+      })
+    }
+  },
+  
+  deactivated() {
+    if (this.pageMode) {
+      document.removeEventListener('scroll', this.onScroll)
+    }
   },
 
   mounted () {
