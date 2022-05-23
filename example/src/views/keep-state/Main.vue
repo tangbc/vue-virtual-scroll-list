@@ -100,6 +100,7 @@ export default {
   border: 2px solid;
   border-radius: 3px;
   overflow-y: auto;
+  overscroll-behavior: contain;
   border-color: dimgray;
 
   .list-item-keep {

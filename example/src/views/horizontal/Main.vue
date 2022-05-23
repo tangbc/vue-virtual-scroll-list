@@ -75,6 +75,7 @@ export default {
   border: 2px solid;
   border-radius: 3px;
   overflow-x: auto;
+  overscroll-behavior: contain;
   border-color: dimgray;
   display: flex; // when using scrollToBottom()
 

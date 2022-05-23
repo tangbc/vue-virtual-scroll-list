@@ -189,6 +189,7 @@ export default {
   border: 2px solid;
   border-bottom: none;
   overflow-y: auto;
+  overscroll-behavior: contain;
   border-color: dimgray;
   display: flex;
   flex-direction: column-reverse;
