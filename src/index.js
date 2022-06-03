@@ -148,12 +148,22 @@ const VirtualList = Vue.component('virtual-list', {
     // set current scroll position to a expectant offset
     scrollToOffset (offset) {
       if (this.pageMode) {
+        // document.documentElement[this.directionKey] = offset
+        document.scrollingElement.scrollTo({
+          top: this.isHorizontal ? 0 : offset,
+          left: this.isHorizontal ? offset : 0,
+          behavior: 'smooth'
+        })
         document.body[this.directionKey] = offset
-        document.documentElement[this.directionKey] = offset
       } else {
         const { root } = this.$refs
         if (root) {
-          root[this.directionKey] = offset
+          // root[this.directionKey] = offset
+          root.scrollTo({
+            top: this.isHorizontal ? 0 : offset,
+            left: this.isHorizontal ? offset : 0,
+            behavior: 'smooth'
+          })
         }
       }
     },
