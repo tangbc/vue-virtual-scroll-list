@@ -5,15 +5,14 @@
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('vue'), require('animated-scroll-to')) :
-  typeof define === 'function' && define.amd ? define(['vue', 'animated-scroll-to'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.VirtualList = factory(global.Vue, global.animateScrollTo));
-})(this, (function (Vue, animateScrollTo) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('vue')) :
+  typeof define === 'function' && define.amd ? define(['vue'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.VirtualList = factory(global.Vue));
+})(this, (function (Vue) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
   var Vue__default = /*#__PURE__*/_interopDefaultLegacy(Vue);
-  var animateScrollTo__default = /*#__PURE__*/_interopDefaultLegacy(animateScrollTo);
 
   function ownKeys(object, enumerableOnly) {
     var keys = Object.keys(object);
@@ -826,14 +825,11 @@
         if (this.pageMode) {
           // document.documentElement[this.directionKey] = offset
           // document.body[this.directionKey] = offset
-          animateScrollTo__default["default"]([this.isHorizontal ? offset : 0, this.isHorizontal ? offset : 0], {
-            speed: 100,
-            elementToScroll: window
-          }); // window.scrollTo({
-          //   top: this.isHorizontal ? 0 : offset,
-          //   left: this.isHorizontal ? offset : 0,
-          //   behavior: 'smooth'
-          // })
+          window.scrollTo({
+            top: this.isHorizontal ? 0 : offset,
+            left: this.isHorizontal ? offset : 0,
+            behavior: 'smooth'
+          });
         } else {
           var root = this.$refs.root;
 

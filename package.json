@@ -32,9 +32,7 @@
     "url": "https://github.com/tangbc/vue-virtual-scroll-list/issues"
   },
   "homepage": "https://github.com/tangbc/vue-virtual-scroll-list#readme",
-  "dependencies": {
-    "animated-scroll-to": "^2.2.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
