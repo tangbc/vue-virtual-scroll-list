@@ -7,6 +7,8 @@ import Virtual from './virtual'
 import { Item, Slot } from './item'
 import { VirtualProps } from './props'
 
+import animateScrollTo from 'animated-scroll-to'
+
 const EVENT_TYPE = {
   ITEM: 'item_resize',
   SLOT: 'slot_resize'
@@ -149,12 +151,16 @@ const VirtualList = Vue.component('virtual-list', {
     scrollToOffset (offset) {
       if (this.pageMode) {
         // document.documentElement[this.directionKey] = offset
-        window.scrollTo({
-          top: this.isHorizontal ? 0 : offset,
-          left: this.isHorizontal ? offset : 0,
-          behavior: 'smooth'
-        })
         // document.body[this.directionKey] = offset
+        animateScrollTo([this.isHorizontal ? offset : 0, this.isHorizontal ? offset : 0], {
+          speed: 100,
+          elementToScroll: window
+        })
+        // window.scrollTo({
+        //   top: this.isHorizontal ? 0 : offset,
+        //   left: this.isHorizontal ? offset : 0,
+        //   behavior: 'smooth'
+        // })
       } else {
         const { root } = this.$refs
         if (root) {
