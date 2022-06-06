@@ -46,7 +46,7 @@ const VirtualList = Vue.component('virtual-list', {
   },
 
   created () {
-    this.expectAutomaticScroll = true
+    this.expectAutomaticScroll = false
     this.timer = null
     this.isHorizontal = this.direction === 'horizontal'
     this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
@@ -151,7 +151,7 @@ const VirtualList = Vue.component('virtual-list', {
     scrollToOffset (offset) {
       // This is a programmatic scroll as opposed to user scroll
       // UnSet the below prop to pass the context down to the scroll event
-      this.expectAutomaticScroll = false
+      this.expectAutomaticScroll = true
 
       if (this.pageMode) {
         window.scrollTo({
@@ -281,7 +281,7 @@ const VirtualList = Vue.component('virtual-list', {
         clearTimeout(this.timer)
       }
       this.timer = setTimeout(function () {
-        this.expectAutomaticScroll = true
+        this.expectAutomaticScroll = false
       }, 150)
       evt.expectAutomaticScroll = this.expectAutomaticScroll
       this.emitEvent(offset, clientSize, scrollSize, evt)
