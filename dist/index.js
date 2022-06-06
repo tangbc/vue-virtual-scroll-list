@@ -947,6 +947,7 @@
 
         if (this.timer !== null) {
           clearTimeout(this.timer);
+          this.timer = null;
         }
 
         this.timer = setTimeout(function () {
