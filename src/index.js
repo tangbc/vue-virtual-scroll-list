@@ -281,7 +281,7 @@ const VirtualList = Vue.component('virtual-list', {
         clearTimeout(this.timer)
         this.timer = null
       }
-      this.timer = setTimeout(function () {
+      this.timer = setTimeout(() => {
         this.expectAutomaticScroll = false
       }, 150)
       evt.expectAutomaticScroll = this.expectAutomaticScroll

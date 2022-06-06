@@ -935,6 +935,8 @@
         this.range = range;
       },
       onScroll: function onScroll(evt) {
+        var _this2 = this;
+
         var offset = this.getOffset();
         var clientSize = this.getClientSize();
         var scrollSize = this.getScrollSize(); // iOS scroll-spring-back behavior will make direction mistake
@@ -951,7 +953,7 @@
         }
 
         this.timer = setTimeout(function () {
-          this.expectAutomaticScroll = false;
+          _this2.expectAutomaticScroll = false;
         }, 150);
         evt.expectAutomaticScroll = this.expectAutomaticScroll;
         this.emitEvent(offset, clientSize, scrollSize, evt);
