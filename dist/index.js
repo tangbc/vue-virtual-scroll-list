@@ -732,6 +732,8 @@
       }
     },
     created: function created() {
+      this.expectAutomaticScroll = true;
+      this.timer = null;
       this.isHorizontal = this.direction === 'horizontal';
       this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop';
       this.installVirtual(); // listen item size change
@@ -822,9 +824,11 @@
       },
       // set current scroll position to a expectant offset
       scrollToOffset: function scrollToOffset(offset) {
+        // This is a programmatic scroll as opposed to user scroll
+        // UnSet the below prop to pass the context down to the scroll event
+        this.expectAutomaticScroll = false;
+
         if (this.pageMode) {
-          // document.documentElement[this.directionKey] = offset
-          // document.body[this.directionKey] = offset
           window.scrollTo({
             top: this.isHorizontal ? 0 : offset,
             left: this.isHorizontal ? offset : 0,
@@ -834,7 +838,6 @@
           var root = this.$refs.root;
 
           if (root) {
-            // root[this.directionKey] = offset
             root.scrollTo({
               top: this.isHorizontal ? 0 : offset,
               left: this.isHorizontal ? offset : 0,
@@ -940,7 +943,16 @@
           return;
         }
 
-        this.virtual.handleScroll(offset);
+        this.virtual.handleScroll(offset); // emit scroll event with context of automatic scroll
+
+        if (this.timer !== null) {
+          clearTimeout(this.timer);
+        }
+
+        this.timer = setTimeout(function () {
+          this.expectAutomaticScroll = true;
+        }, 150);
+        evt.expectAutomaticScroll = this.expectAutomaticScroll;
         this.emitEvent(offset, clientSize, scrollSize, evt);
       },
       // emit event in special position
