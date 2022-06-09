@@ -732,7 +732,6 @@
       }
     },
     created: function created() {
-      this.expectAutomaticScroll = false;
       this.timer = null;
       this.isHorizontal = this.direction === 'horizontal';
       this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop';
@@ -824,10 +823,6 @@
       },
       // set current scroll position to a expectant offset
       scrollToOffset: function scrollToOffset(offset) {
-        // This is a programmatic scroll as opposed to user scroll
-        // UnSet the below prop to pass the context down to the scroll event
-        this.expectAutomaticScroll = true;
-
         if (this.pageMode) {
           window.scrollTo({
             top: this.isHorizontal ? 0 : offset,
@@ -935,8 +930,6 @@
         this.range = range;
       },
       onScroll: function onScroll(evt) {
-        var _this2 = this;
-
         var offset = this.getOffset();
         var clientSize = this.getClientSize();
         var scrollSize = this.getScrollSize(); // iOS scroll-spring-back behavior will make direction mistake
@@ -945,18 +938,11 @@
           return;
         }
 
-        this.virtual.handleScroll(offset); // emit scroll event with context of automatic scroll
-
-        if (this.timer !== null) {
-          clearTimeout(this.timer);
-          this.timer = null;
-        }
-
-        this.timer = setTimeout(function () {
-          _this2.expectAutomaticScroll = false;
-        }, 150);
-        evt.expectAutomaticScroll = this.expectAutomaticScroll;
+        this.virtual.handleScroll(offset);
         this.emitEvent(offset, clientSize, scrollSize, evt);
+      },
+      onWheel: function onWheel(evt) {
+        this.$emit('wheel', evt);
       },
       // emit event in special position
       emitEvent: function emitEvent(offset, clientSize, scrollSize, evt) {
@@ -1049,7 +1035,8 @@
       return h(rootTag, {
         ref: 'root',
         on: {
-          '&scroll': !pageMode && this.onScroll
+          '&scroll': !pageMode && this.onScroll,
+          '&wheel': !pageMode && this.onWheel
         }
       }, [// header slot
       header ? h(Slot, {

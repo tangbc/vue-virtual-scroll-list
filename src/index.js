@@ -46,7 +46,6 @@ const VirtualList = Vue.component('virtual-list', {
   },
 
   created () {
-    this.expectAutomaticScroll = false
     this.timer = null
     this.isHorizontal = this.direction === 'horizontal'
     this.directionKey = this.isHorizontal ? 'scrollLeft' : 'scrollTop'
@@ -149,10 +148,6 @@ const VirtualList = Vue.component('virtual-list', {
 
     // set current scroll position to a expectant offset
     scrollToOffset (offset) {
-      // This is a programmatic scroll as opposed to user scroll
-      // UnSet the below prop to pass the context down to the scroll event
-      this.expectAutomaticScroll = true
-
       if (this.pageMode) {
         window.scrollTo({
           top: this.isHorizontal ? 0 : offset,
@@ -275,17 +270,11 @@ const VirtualList = Vue.component('virtual-list', {
       }
 
       this.virtual.handleScroll(offset)
-
-      // emit scroll event with context of automatic scroll
-      if (this.timer !== null) {
-        clearTimeout(this.timer)
-        this.timer = null
-      }
-      this.timer = setTimeout(() => {
-        this.expectAutomaticScroll = false
-      }, 150)
-      evt.expectAutomaticScroll = this.expectAutomaticScroll
       this.emitEvent(offset, clientSize, scrollSize, evt)
+    },
+
+    onWheel (evt) {
+      this.$emit('wheel', evt)
     },
 
     // emit event in special position
@@ -351,7 +340,8 @@ const VirtualList = Vue.component('virtual-list', {
     return h(rootTag, {
       ref: 'root',
       on: {
-        '&scroll': !pageMode && this.onScroll
+        '&scroll': !pageMode && this.onScroll,
+        '&wheel': !pageMode && this.onWheel
       }
     }, [
       // header slot
