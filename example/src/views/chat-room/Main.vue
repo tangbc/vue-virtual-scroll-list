@@ -98,9 +98,9 @@ export default {
         this.$nextTick(() => {
           const vsl = this.$refs.vsl
           const offset = sids.reduce((previousValue, currentSid) => {
-            const previousSize = typeof previousValue === 'string' ? vsl.getSize(previousValue) : previousValue
+            const previousSize = typeof previousValue === 'string' && previousValue !== 0 ? vsl.getSize(previousValue) : previousValue
             return previousSize + this.$refs.vsl.getSize(currentSid)
-          })
+          }, 0)
           this.setVirtualListToOffset(offset)
 
           this.param.isFetching = false
