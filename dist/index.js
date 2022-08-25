@@ -848,7 +848,7 @@
           // so we need retry in next event loop until it really at bottom
 
           setTimeout(function () {
-            if (_this.getOffset() + _this.getClientSize() < _this.getScrollSize()) {
+            if (_this.getOffset() + _this.getClientSize() + 1 < _this.getScrollSize()) {
               _this.scrollToBottom();
             }
           }, 3);

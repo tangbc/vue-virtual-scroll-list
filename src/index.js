@@ -180,7 +180,7 @@ const VirtualList = Vue.component('virtual-list', {
         // maybe list doesn't render and calculate to last range
         // so we need retry in next event loop until it really at bottom
         setTimeout(() => {
-          if (this.getOffset() + this.getClientSize() < this.getScrollSize()) {
+          if (this.getOffset() + this.getClientSize() + 1 < this.getScrollSize()) {
             this.scrollToBottom()
           }
         }, 3)
