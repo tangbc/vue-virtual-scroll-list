@@ -673,11 +673,11 @@
         attrs: {
           role: 'listitem'
         }
-      }, [slotComponent ? slotComponent({
+      }, [slotComponent ? h('div', slotComponent({
         item: source,
         index: index,
         scope: props
-      }) : h(component, {
+      })) : h(component, {
         props: props,
         scopedSlots: scopedSlots
       })]);
