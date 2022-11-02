@@ -22,7 +22,8 @@ const Wrapper = {
 
   // since componet will be reused, so disptach when updated
   updated () {
-    this.dispatchSizeChange()
+    // this.dispatchSizeChange()
+    this.resizeObserver.observe(this.$el)
   },
 
   beforeDestroy () {
