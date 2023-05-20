@@ -27,7 +27,6 @@ export default class Virtual {
     this.sizes = new Map()
     this.firstRangeTotalSize = 0
     this.firstRangeAverageSize = 0
-    this.lastCalcIndex = 0
     this.fixedSizeValue = 0
     this.calcType = CALC_TYPE.INIT
 
@@ -226,10 +225,6 @@ export default class Virtual {
       offset = offset + (typeof indexSize === 'number' ? indexSize : this.getEstimateSize())
     }
 
-    // remember last calculate index
-    this.lastCalcIndex = Math.max(this.lastCalcIndex, givenIndex - 1)
-    this.lastCalcIndex = Math.min(this.lastCalcIndex, this.getLastIndex())
-
     return offset
   }
 
@@ -297,13 +292,7 @@ export default class Virtual {
       return (lastIndex - end) * this.fixedSizeValue
     }
 
-    // if it's all calculated, return the exactly offset
-    if (this.lastCalcIndex === lastIndex) {
-      return this.getIndexOffset(lastIndex) - this.getIndexOffset(end)
-    } else {
-      // if not, use a estimated value
-      return (lastIndex - end) * this.getEstimateSize()
-    }
+    return (lastIndex - end) * this.getEstimateSize()
   }
 
   // get the item estimate size
