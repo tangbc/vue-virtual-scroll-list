@@ -137,7 +137,7 @@ export default class Virtual {
 
   // calculating range on scroll
   handleScroll (offset) {
-    this.direction = offset < this.offset ? DIRECTION_TYPE.FRONT : DIRECTION_TYPE.BEHIND
+    this.direction = offset < this.offset || offset == 0 ? DIRECTION_TYPE.FRONT : DIRECTION_TYPE.BEHIND
     this.offset = offset
 
     if (!this.param) {
