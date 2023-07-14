@@ -187,10 +187,22 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td>Emited when scrolled to top or left, no param.</td>
     </tr>
     <tr>
+      <td><code>toThresholdTop</code></td>
+      <td>Event</td>
+      <td></td>
+      <td>Emited when scrolled to top or left with topThreshold, no param.</td>
+    </tr>
+    <tr>
       <td><code>tobottom</code></td>
       <td>Event</td>
       <td></td>
       <td>Emited when scrolled to bottom or right, no param.</td>
+    </tr>
+    <tr>
+      <td><code>toThresholdBottom</code></td>
+      <td>Event</td>
+      <td></td>
+      <td>Emited when scrolled to bottom or right with bottomThreshold, no param.</td>
     </tr>
     <tr>
       <td><code>resized</code></td>
@@ -214,13 +226,13 @@ More usages or getting start you can refer to these clearly [examples](https://g
       <td><code>top-threshold</code></td>
       <td>Number</td>
       <td>0</td>
-      <td>The threshold to emit <code>totop</code> event, attention to multiple calls.</td>
+      <td>The threshold to emit <code>toThresholdTop</code> event, attention to multiple calls.</td>
     </tr>
     <tr>
       <td><code>bottom-threshold</code></td>
       <td>Number</td>
       <td>0</td>
-      <td>The threshold to emit <code>tobottom</code> event, attention to multiple calls.</td>
+      <td>The threshold to emit <code>toThresholdBottom</code> event, attention to multiple calls.</td>
     </tr>
     <tr>
       <td><code>root-tag</code></td>
