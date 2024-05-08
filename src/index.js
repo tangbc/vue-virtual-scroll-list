@@ -302,6 +302,7 @@ const VirtualList = Vue.component('virtual-list', {
                 slotComponent: slotComponent,
                 scopedSlots: itemScopedSlots
               },
+              key: uniqueKey,
               style: itemStyle,
               class: `${itemClass}${this.itemClassAdd ? ' ' + this.itemClassAdd(index) : ''}`
             }))
